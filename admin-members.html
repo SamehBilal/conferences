@@ -1,0 +1,1368 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Members Management - Conference Attendance System</title>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.4.24/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="min-h-screen bg-base-200">
+    <!-- Navigation -->
+    <div class="navbar bg-base-100 shadow-lg">
+        <div class="navbar-start">
+            <div class="dropdown">
+                <div tabindex="0" role="button" class="btn btn-ghost lg:hidden">
+                    <i class="fas fa-bars w-5 h-5"></i>
+                </div>
+                <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
+                    <li><a href="admin-dashboard.html">Dashboard</a></li>
+                    <li><a href="admin-members.html" class="active">Members</a></li>
+                    <li><a href="admin-scanner.html">Scanner</a></li>
+                    <li><a href="admin-conferences.html">Conferences</a></li>
+                    <li><a href="admin-reports.html">Reports</a></li>
+                    <li><a href="admin-timeline.html">Timeline</a></li>
+                </ul>
+            </div>
+            <a href="admin-dashboard.html" class="btn btn-ghost text-xl">
+                <i class="fas fa-calendar-check mr-2"></i>
+                ConfTrack Admin
+            </a>
+        </div>
+        <div class="navbar-center hidden lg:flex">
+            <ul class="menu menu-horizontal px-1">
+                <li><a href="admin-dashboard.html">Dashboard</a></li>
+                <li><a href="admin-members.html" class="active">Members</a></li>
+                <li><a href="admin-scanner.html">Scanner</a></li>
+                <li><a href="admin-conferences.html">Conferences</a></li>
+                <li><a href="admin-reports.html">Reports</a></li>
+                <li><a href="admin-timeline.html">Timeline</a></li>
+            </ul>
+        </div>
+        <div class="navbar-end gap-2">
+            <!-- Theme Toggle -->
+            <label class="swap swap-rotate">
+                <input type="checkbox" class="theme-controller" value="dark" />
+                <i class="fas fa-sun swap-off fill-current w-6 h-6"></i>
+                <i class="fas fa-moon swap-on fill-current w-6 h-6"></i>
+            </label>
+            <!-- Admin Menu -->
+            <div class="dropdown dropdown-end">
+                <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar">
+                    <div class="w-10 rounded-full">
+                        <img alt="Admin" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face" />
+                    </div>
+                </div>
+                <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
+                    <li><a href="#"><i class="fas fa-user mr-2"></i>Profile</a></li>
+                    <li><a href="#"><i class="fas fa-cog mr-2"></i>Settings</a></li>
+                    <li><a href="auth-login.html"><i class="fas fa-sign-out-alt mr-2"></i>Logout</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hero Header -->
+    <div class="bg-gradient-to-r from-primary to-secondary text-primary-content py-8">
+        <div class="container mx-auto px-4">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h1 class="text-3xl font-bold mb-2">Members Management</h1>
+                    <p class="opacity-90">Manage conference attendees and their profiles</p>
+                </div>
+                <div class="flex gap-3">
+                    <button class="btn btn-neutral" onclick="importMembers()">
+                        <i class="fas fa-upload mr-2"></i>Import
+                    </button>
+                    <button class="btn btn-neutral" onclick="exportMembers()">
+                        <i class="fas fa-download mr-2"></i>Export
+                    </button>
+                    <button class="btn btn-neutral" onclick="addMember()">
+                        <i class="fas fa-user-plus mr-2"></i>Add Member
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container mx-auto px-4 py-8">
+        <!-- Statistics Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div class="stat bg-base-100 rounded-lg shadow hover:shadow-lg transition-all duration-200">
+                <div class="stat-figure text-primary">
+                    <i class="fas fa-users text-3xl"></i>
+                </div>
+                <div class="stat-title">Total Members</div>
+                <div class="stat-value text-primary">2,847</div>
+                <div class="stat-desc">↗︎ 12 new this week</div>
+            </div>
+
+            <div class="stat bg-base-100 rounded-lg shadow hover:shadow-lg transition-all duration-200">
+                <div class="stat-figure text-success">
+                    <i class="fas fa-user-check text-3xl"></i>
+                </div>
+                <div class="stat-title">Active Members</div>
+                <div class="stat-value text-success">2,654</div>
+                <div class="stat-desc">93.2% of total</div>
+            </div>
+
+            <div class="stat bg-base-100 rounded-lg shadow hover:shadow-lg transition-all duration-200">
+                <div class="stat-figure text-warning">
+                    <i class="fas fa-user-clock text-3xl"></i>
+                </div>
+                <div class="stat-title">Currently Present</div>
+                <div class="stat-value text-warning">156</div>
+                <div class="stat-desc">5.5% of total</div>
+            </div>
+
+            <div class="stat bg-base-100 rounded-lg shadow hover:shadow-lg transition-all duration-200">
+                <div class="stat-figure text-error">
+                    <i class="fas fa-user-times text-3xl"></i>
+                </div>
+                <div class="stat-title">Inactive</div>
+                <div class="stat-value text-error">193</div>
+                <div class="stat-desc">6.8% of total</div>
+            </div>
+        </div>
+
+        <!-- Search and Filters -->
+        <div class="card bg-base-100 shadow-lg mb-8 border border-dashed border-base-content/10">
+            <div class="card-body">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-4">
+                    <!-- Search -->
+                    <div class="form-control">
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <i class="fas fa-search text-base-content/40"></i>
+                            </div>
+                            <input type="text" placeholder="Search members..." class="input input-bordered w-full pl-10" id="searchInput" />
+                        </div>
+                    </div>
+
+                    <!-- Status Filter -->
+                    <div class="form-control">
+                        <select class="select select-bordered w-full" id="statusFilter">
+                            <option value="all">All Status</option>
+                            <option value="active">Active</option>
+                            <option value="inactive">Inactive</option>
+                            <option value="present">Currently Present</option>
+                        </select>
+                    </div>
+
+                    <!-- Company Filter -->
+                    <div class="form-control">
+                        <select class="select select-bordered w-full" id="companyFilter">
+                            <option value="all">All Companies</option>
+                            <option value="tech-solutions">Tech Solutions Inc.</option>
+                            <option value="innovation-labs">Innovation Labs</option>
+                            <option value="startup-corp">StartupCorp</option>
+                            <option value="datatech">DataTech Ltd.</option>
+                        </select>
+                    </div>
+
+                    <!-- Date Range -->
+                    <div class="form-control">
+                        <select class="select select-bordered w-full" id="dateFilter">
+                            <option value="all">All Time</option>
+                            <option value="today">Today</option>
+                            <option value="week">This Week</option>
+                            <option value="month">This Month</option>
+                            <option value="year">This Year</option>
+                        </select>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="form-control">
+                        <div class="flex gap-2">
+                            <button class="btn btn-outline btn-sm flex-1" onclick="clearFilters()">
+                                <i class="fas fa-times mr-2"></i>Clear
+                            </button>
+                            <button class="btn btn-primary btn-sm flex-1" onclick="applyFilters()">
+                                <i class="fas fa-filter mr-2"></i>Filter
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Advanced Filters Toggle -->
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-4">
+                        <label class="cursor-pointer flex items-center gap-2">
+                            <input type="checkbox" class="toggle toggle-primary toggle-sm" id="advancedFilters" />
+                            <span class="text-sm">Advanced Filters</span>
+                        </label>
+                        <div class="text-sm text-base-content/70">
+                            Showing <span class="font-semibold" id="resultCount">6</span> members
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <div class="flex items-center gap-2">
+                            <span class="text-sm">Per page:</span>
+                            <select class="select select-bordered select-sm w-20" id="perPage">
+                                <option value="12" selected>12</option>
+                                <option value="24">24</option>
+                                <option value="48">48</option>
+                            </select>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="text-sm">Sort by:</span>
+                            <select class="select select-bordered select-sm w-32" id="sortBy">
+                                <option value="name">Name</option>
+                                <option value="company">Company</option>
+                                <option value="created" selected>Date Added</option>
+                                <option value="last_activity">Last Activity</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Advanced Filters Panel - Using DaisyUI Collapse -->
+                <div class="collapse" id="advancedPanel">
+                    <input type="checkbox" id="advancedPanelToggle" />
+                    <div class="collapse-content">
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 pt-4 border-t border-dashed border-base-content/10 mt-4">
+                            <div class="form-control">
+                                <label class="label">
+                                    <span class="label-text">Profession</span>
+                                </label>
+                                <input type="text" placeholder="e.g. Software Developer" class="input input-bordered input-sm" />
+                            </div>
+                            <div class="form-control">
+                                <label class="label">
+                                    <span class="label-text">Nationality</span>
+                                </label>
+                                <select class="select select-bordered select-sm">
+                                    <option>All Countries</option>
+                                    <option>United States</option>
+                                    <option>Canada</option>
+                                    <option>United Kingdom</option>
+                                    <option>Germany</option>
+                                </select>
+                            </div>
+                            <div class="form-control">
+                                <label class="label">
+                                    <span class="label-text">Conference Count</span>
+                                </label>
+                                <select class="select select-bordered select-sm">
+                                    <option>Any</option>
+                                    <option>0 conferences</option>
+                                    <option>1-5 conferences</option>
+                                    <option>6+ conferences</option>
+                                </select>
+                            </div>
+                            <div class="form-control">
+                                <label class="label">
+                                    <span class="label-text">Registration Date</span>
+                                </label>
+                                <input type="date" class="input input-bordered input-sm" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bulk Actions -->
+        <div class="card bg-base-100 shadow-lg mb-8" id="bulkActions" style="display: none;">
+            <div class="card-body py-4">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-4">
+                        <span class="text-sm font-medium">
+                            <span id="selectedCount">0</span> members selected
+                        </span>
+                        <button class="btn btn-ghost btn-sm" onclick="clearSelection()">Clear Selection</button>
+                    </div>
+                    <div class="flex gap-2">
+                        <button class="btn btn-error btn-sm" onclick="bulkDelete()">
+                            <i class="fas fa-trash mr-2"></i>Delete
+                        </button>
+                        <button class="btn btn-warning btn-sm" onclick="bulkDeactivate()">
+                            <i class="fas fa-user-slash mr-2"></i>Deactivate
+                        </button>
+                        <button class="btn btn-success btn-sm" onclick="bulkActivate()">
+                            <i class="fas fa-user-check mr-2"></i>Activate
+                        </button>
+                        <button class="btn btn-info btn-sm" onclick="bulkExport()">
+                            <i class="fas fa-download mr-2"></i>Export Selected
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- View Toggle Tabs - Using DaisyUI Tabs with Custom Styling -->
+        <div class="card bg-base-100 shadow-lg mb-8">
+            <div class="card-body p-0">
+                <!-- Tab Headers -->
+                <div class="tabs tabs-boxed bg-base-100 justify-center mx-6 mt-6 mb-0">
+                    <a class="tab tab-active" id="gridTabBtn" onclick="switchTab('grid')">
+                        <i class="fas fa-th w-4 h-4 mr-2"></i>
+                        Grid View
+                    </a>
+                    <a class="tab" id="listTabBtn" onclick="switchTab('list')">
+                        <i class="fas fa-list w-4 h-4 mr-2"></i>
+                        List View
+                    </a>
+                    <a class="tab" id="tableTabBtn" onclick="switchTab('table')">
+                        <i class="fas fa-table w-4 h-4 mr-2"></i>
+                        Table View
+                    </a>
+                </div>
+
+                <!-- Tab Content -->
+                <div class="p-6">
+                    <div id="gridTabContent" class="tab-content" style="display: block;">
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" id="gridView">
+                            <!-- Grid items will be populated by JavaScript -->
+                        </div>
+                    </div>
+
+                    <div id="listTabContent" class="tab-content" style="display: none;">
+                        <div class="space-y-4" id="listView">
+                            <!-- List items will be populated by JavaScript -->
+                        </div>
+                    </div>
+
+                    <div id="tableTabContent" class="tab-content" style="display: none;">
+                        <div class="overflow-x-auto">
+                            <table class="table table-pin-rows border border-dashed border-base-content/20 rounded-lg overflow-hidden">
+                                <thead class="bg-primary/10">
+                                    <tr class="border-b border-dashed border-base-content/20">
+                                        <th class="bg-primary/10 border-r border-dashed border-base-content/20">
+                                            <label>
+                                                <input type="checkbox" class="checkbox checkbox-primary checkbox-sm" id="selectAll" />
+                                            </label>
+                                        </th>
+                                        <th class="bg-primary/10 border-r border-dashed border-base-content/20">
+                                            <div class="flex items-center gap-2">
+                                                <i class="fas fa-user text-primary"></i>
+                                                <span class="font-bold">Member</span>
+                                            </div>
+                                        </th>
+                                        <th class="bg-primary/10 border-r border-dashed border-base-content/20">
+                                            <div class="flex items-center gap-2">
+                                                <i class="fas fa-building text-secondary"></i>
+                                                <span class="font-bold">Company</span>
+                                            </div>
+                                        </th>
+                                        <th class="bg-primary/10 border-r border-dashed border-base-content/20">
+                                            <div class="flex items-center gap-2">
+                                                <i class="fas fa-check-circle text-success"></i>
+                                                <span class="font-bold">Status</span>
+                                            </div>
+                                        </th>
+                                        <th class="bg-primary/10 border-r border-dashed border-base-content/20">
+                                            <div class="flex items-center gap-2">
+                                                <i class="fas fa-clock text-warning"></i>
+                                                <span class="font-bold">Last Activity</span>
+                                            </div>
+                                        </th>
+                                        <th class="bg-primary/10 border-r border-dashed border-base-content/20">
+                                            <div class="flex items-center gap-2">
+                                                <i class="fas fa-calendar-alt text-info"></i>
+                                                <span class="font-bold">Conferences</span>
+                                            </div>
+                                        </th>
+                                        <th class="bg-primary/10">
+                                            <div class="flex items-center gap-2">
+                                                <i class="fas fa-cogs text-base-content/70"></i>
+                                                <span class="font-bold">Actions</span>
+                                            </div>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tableView">
+                                    <!-- Table rows will be populated by JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pagination -->
+        <div class="flex justify-center">
+            <div class="join">
+                <button class="join-item btn btn-outline">«</button>
+                <button class="join-item btn btn-outline btn-active">1</button>
+                <button class="join-item btn btn-outline">2</button>
+                <button class="join-item btn btn-outline">3</button>
+                <button class="join-item btn btn-outline">4</button>
+                <button class="join-item btn btn-outline">»</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add/Edit Member Modal -->
+    <dialog id="memberModal" class="modal">
+        <div class="modal-box w-11/12 max-w-2xl">
+            <form method="dialog">
+                <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+            </form>
+            <h3 class="font-bold text-lg mb-4" id="modalTitle">Add New Member</h3>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <!-- Avatar Upload -->
+                <div class="form-control md:col-span-2">
+                    <label class="label">
+                        <span class="label-text">Profile Picture</span>
+                    </label>
+                    <div class="flex items-center gap-4">
+                        <div class="avatar placeholder">
+                            <div class="bg-neutral-focus text-neutral-content rounded-full w-16">
+                                <i class="fas fa-user text-2xl"></i>
+                            </div>
+                        </div>
+                        <input type="file" class="file-input file-input-bordered file-input-sm w-full max-w-xs" accept="image/*" />
+                    </div>
+                </div>
+
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text">First Name</span>
+                    </label>
+                    <input type="text" placeholder="John" class="input input-bordered" required />
+                </div>
+
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text">Last Name</span>
+                    </label>
+                    <input type="text" placeholder="Doe" class="input input-bordered" required />
+                </div>
+
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text">Email</span>
+                    </label>
+                    <input type="email" placeholder="john.doe@example.com" class="input input-bordered" required />
+                </div>
+
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text">Phone</span>
+                    </label>
+                    <input type="tel" placeholder="+1 (555) 123-4567" class="input input-bordered" required />
+                </div>
+
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text">Company</span>
+                    </label>
+                    <input type="text" placeholder="Tech Solutions Inc." class="input input-bordered" required />
+                </div>
+
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text">Position</span>
+                    </label>
+                    <input type="text" placeholder="Senior Developer" class="input input-bordered" required />
+                </div>
+
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text">Profession</span>
+                    </label>
+                    <input type="text" placeholder="Software Developer" class="input input-bordered" required />
+                </div>
+
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text">Nationality</span>
+                    </label>
+                    <select class="select select-bordered">
+                        <option disabled selected>Choose nationality</option>
+                        <option>United States</option>
+                        <option>Canada</option>
+                        <option>United Kingdom</option>
+                        <option>Germany</option>
+                        <option>France</option>
+                        <option>Other</option>
+                    </select>
+                </div>
+
+                <div class="form-control md:col-span-2">
+                    <label class="label">
+                        <span class="label-text">Bio</span>
+                    </label>
+                    <textarea class="textarea textarea-bordered h-24" placeholder="Tell us about this member..."></textarea>
+                </div>
+
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text">NFC Card ID</span>
+                        <span class="label-text-alt">Leave blank to auto-generate</span>
+                    </label>
+                    <div class="relative">
+                        <input type="text" placeholder="NFC-XXXXXXXXX" class="input input-bordered pr-20" />
+                        <button type="button" class="btn btn-ghost btn-sm absolute right-1 top-1" onclick="generateCardId()">
+                            <i class="fas fa-random mr-1"></i>Generate
+                        </button>
+                    </div>
+                </div>
+
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text">Status</span>
+                    </label>
+                    <select class="select select-bordered">
+                        <option value="active" selected>Active</option>
+                        <option value="inactive">Inactive</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="modal-action">
+                <form method="dialog" class="flex gap-3">
+                    <button class="btn btn-outline">Cancel</button>
+                    <button type="button" class="btn btn-primary" onclick="saveMember()">
+                        <i class="fas fa-save mr-2"></i>Save Member
+                    </button>
+                </form>
+            </div>
+        </div>
+    </dialog>
+
+    <!-- Import Modal -->
+    <dialog id="importModal" class="modal">
+        <div class="modal-box">
+            <form method="dialog">
+                <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+            </form>
+            <h3 class="font-bold text-lg mb-4">Import Members</h3>
+            
+            <div class="space-y-4">
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle"></i>
+                    <div>
+                        <div class="font-semibold">Supported formats: CSV, Excel</div>
+                        <div class="text-sm">Download our template for the correct format</div>
+                    </div>
+                </div>
+
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text">Select File</span>
+                    </label>
+                    <input type="file" class="file-input file-input-bordered w-full" accept=".csv,.xlsx,.xls" />
+                </div>
+
+                <div class="form-control">
+                    <label class="cursor-pointer flex items-center gap-3">
+                        <input type="checkbox" class="checkbox" />
+                        <span class="label-text">Skip duplicates (based on email)</span>
+                    </label>
+                </div>
+
+                <div class="form-control">
+                    <label class="cursor-pointer flex items-center gap-3">
+                        <input type="checkbox" class="checkbox" />
+                        <span class="label-text">Send welcome emails to new members</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="modal-action">
+                <form method="dialog" class="flex gap-3">
+                    <button class="btn btn-outline">Cancel</button>
+                    <button class="btn btn-ghost" onclick="downloadTemplate()">
+                        <i class="fas fa-download mr-2"></i>Download Template
+                    </button>
+                    <button type="button" class="btn btn-primary" onclick="startImport()">
+                        <i class="fas fa-upload mr-2"></i>Import
+                    </button>
+                </form>
+            </div>
+        </div>
+    </dialog>
+
+    <!-- Toast -->
+    <div class="toast toast-top toast-end" id="toast" style="display: none;">
+        <div class="alert alert-success">
+            <i class="fas fa-check-circle"></i>
+            <span>Action completed successfully!</span>
+        </div>
+    </div>
+
+    <script>
+        // Sample member data
+        const sampleMembers = [
+            {
+                id: 1,
+                name: 'John Doe',
+                email: 'john.doe@techsolutions.com',
+                company: 'Tech Solutions Inc.',
+                position: 'Senior Developer',
+                profession: 'Software Developer',
+                nationality: 'United States',
+                phone: '+1 (555) 123-4567',
+                nfcId: 'NFC-A1B2C3D4E',
+                status: 'active',
+                isPresent: true,
+                lastActivity: '2024-12-15 14:30',
+                conferences: 12,
+                avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face'
+            },
+            {
+                id: 2,
+                name: 'Jane Smith',
+                email: 'jane.smith@innovationlabs.com',
+                company: 'Innovation Labs',
+                position: 'Product Manager',
+                profession: 'Product Management',
+                nationality: 'Canada',
+                phone: '+1 (555) 234-5678',
+                nfcId: 'NFC-B2C3D4E5F',
+                status: 'active',
+                isPresent: false,
+                lastActivity: '2024-12-14 16:45',
+                conferences: 8,
+                avatar: 'https://images.unsplash.com/photo-1494790108755-2616b6d4b5d1?w=150&h=150&fit=crop&crop=face'
+            },
+            {
+                id: 3,
+                name: 'Mike Johnson',
+                email: 'mike.johnson@startupcorp.com',
+                company: 'StartupCorp',
+                position: 'CTO',
+                profession: 'Technology Leadership',
+                nationality: 'United States',
+                phone: '+1 (555) 345-6789',
+                nfcId: 'NFC-C3D4E5F6G',
+                status: 'active',
+                isPresent: true,
+                lastActivity: '2024-12-15 13:20',
+                conferences: 15,
+                avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face'
+            },
+            {
+                id: 4,
+                name: 'Sarah Wilson',
+                email: 'sarah.wilson@datatech.com',
+                company: 'DataTech Ltd.',
+                position: 'Data Scientist',
+                profession: 'Data Science',
+                nationality: 'United Kingdom',
+                phone: '+44 20 1234 5678',
+                nfcId: 'NFC-D4E5F6G7H',
+                status: 'active',
+                isPresent: false,
+                lastActivity: '2024-12-13 10:15',
+                conferences: 6,
+                avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face'
+            },
+            {
+                id: 5,
+                name: 'Bob Brown',
+                email: 'bob.brown@cloudsys.com',
+                company: 'CloudSys Inc.',
+                position: 'DevOps Engineer',
+                profession: 'DevOps',
+                nationality: 'Australia',
+                phone: '+61 2 1234 5678',
+                nfcId: 'NFC-E5F6G7H8I',
+                status: 'inactive',
+                isPresent: false,
+                lastActivity: '2024-11-28 14:22',
+                conferences: 3,
+                avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop&crop=face'
+            },
+            {
+                id: 6,
+                name: 'Alice Cooper',
+                email: 'alice.cooper@techflow.com',
+                company: 'TechFlow Systems',
+                position: 'UX Designer',
+                profession: 'Design',
+                nationality: 'Germany',
+                phone: '+49 30 12345678',
+                nfcId: 'NFC-F6G7H8I9J',
+                status: 'active',
+                isPresent: true,
+                lastActivity: '2024-12-15 15:45',
+                conferences: 9,
+                avatar: 'https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=150&h=150&fit=crop&crop=face'
+            }
+        ];
+
+        let selectedMembers = [];
+        let filteredMembers = [...sampleMembers];
+
+        // Theme toggle functionality
+        const themeController = document.querySelector('.theme-controller');
+        const html = document.documentElement;
+        
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        html.setAttribute('data-theme', savedTheme);
+        if (savedTheme === 'dark') {
+            themeController.checked = true;
+        }
+        
+        themeController.addEventListener('change', function() {
+            const theme = this.checked ? 'dark' : 'light';
+            html.setAttribute('data-theme', theme);
+            localStorage.setItem('theme', theme);
+        });
+
+        // Advanced filters toggle - Fixed to work with DaisyUI collapse
+        document.getElementById('advancedFilters').addEventListener('change', function() {
+            const panelToggle = document.getElementById('advancedPanelToggle');
+            panelToggle.checked = this.checked;
+        });
+
+        function renderGridView() {
+            const container = document.getElementById('gridView');
+            console.log('Grid container found:', !!container); // Debug log
+            console.log('Members to render:', filteredMembers.length); // Debug log
+            
+            if (!container) {
+                console.error('Grid container not found!');
+                return;
+            }
+            
+            container.innerHTML = '';
+
+            if (filteredMembers.length === 0) {
+                container.innerHTML = '<div class="col-span-full text-center py-8"><p class="text-base-content/50">No members found</p></div>';
+                return;
+            }
+
+            filteredMembers.forEach(member => {
+                const card = document.createElement('div');
+                card.className = 'card bg-base-100 shadow hover:shadow-lg transition-all duration-300 border border-dashed border-base-content/20 hover:border-primary/50';
+                card.innerHTML = `
+                    <div class="card-body p-6">
+                        <div class="flex items-start justify-between mb-4">
+                            <label class="flex items-center">
+                                <input type="checkbox" class="checkbox checkbox-primary checkbox-sm" 
+                                       onchange="toggleSelection(${member.id}, this.checked)" 
+                                       ${selectedMembers.includes(member.id) ? 'checked' : ''} />
+                            </label>
+                            <div class="dropdown dropdown-end">
+                                <div tabindex="0" role="button" class="btn btn-ghost btn-sm hover:bg-base-200 rounded-full">
+                                    <i class="fas fa-ellipsis-v text-base-content/60"></i>
+                                </div>
+                                <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52 border border-dashed border-base-content/20">
+                                    <li><a onclick="viewMember(${member.id})" class="hover:bg-primary/10"><i class="fas fa-eye mr-2 text-primary"></i>View</a></li>
+                                    <li><a onclick="editMember(${member.id})" class="hover:bg-secondary/10"><i class="fas fa-edit mr-2 text-secondary"></i>Edit</a></li>
+                                    <li><a onclick="deleteMember(${member.id})" class="hover:bg-error/10"><i class="fas fa-trash mr-2 text-error"></i>Delete</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div class="text-center mb-6">
+                            <div class="avatar mb-3">
+                                <div class="w-20 rounded-full ring-2 ring-base-300 ring-offset-base-100 ring-offset-2">
+                                    <img src="${member.avatar}" alt="${member.name}" />
+                                </div>
+                            </div>
+                            <h3 class="font-bold text-lg text-base-content">${member.name}</h3>
+                            <p class="text-sm text-primary font-medium">${member.position}</p>
+                            <p class="text-xs text-base-content/60 mt-1">${member.company}</p>
+                        </div>
+
+                        <div class="space-y-3 text-sm mb-6">
+                            <div class="flex justify-between items-center p-2 bg-base-200/50 rounded-lg">
+                                <span class="text-base-content/70">Status:</span>
+                                <span class="badge ${member.status === 'active' ? 'badge-success' : 'badge-error'} badge-sm">
+                                    <i class="fas fa-${member.status === 'active' ? 'check' : 'times'} mr-1 text-xs"></i>
+                                    ${member.status}
+                                </span>
+                            </div>
+                            <div class="flex justify-between items-center p-2 bg-base-200/50 rounded-lg">
+                                <span class="text-base-content/70">Present:</span>
+                                <span class="badge ${member.isPresent ? 'badge-warning' : 'badge-ghost'} badge-sm">
+                                    <i class="fas fa-${member.isPresent ? 'user-clock' : 'user-times'} mr-1 text-xs"></i>
+                                    ${member.isPresent ? 'Yes' : 'No'}
+                                </span>
+                            </div>
+                            <div class="flex justify-between items-center p-2 bg-base-200/50 rounded-lg">
+                                <span class="text-base-content/70">Conferences:</span>
+                                <span class="font-bold text-primary">
+                                    <i class="fas fa-calendar-alt mr-1 text-xs"></i>
+                                    ${member.conferences}
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="card-actions justify-between">
+                            <button class="btn btn-primary btn-sm flex-1 mr-2" onclick="viewMember(${member.id})">
+                                <i class="fas fa-eye mr-2"></i>View Profile
+                            </button>
+                            <div class="form-control">
+                                <label class="cursor-pointer flex items-center gap-2">
+                                    <span class="text-xs text-base-content/60">Active</span>
+                                    <input type="checkbox" class="toggle toggle-success toggle-sm" 
+                                           ${member.status === 'active' ? 'checked' : ''} 
+                                           onchange="toggleStatus(${member.id}, this.checked)" />
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+            
+            console.log('Grid rendered with', container.children.length, 'items'); // Debug log
+        }
+
+        function renderListView() {
+            const container = document.getElementById('listView');
+            container.innerHTML = '';
+
+            filteredMembers.forEach(member => {
+                const item = document.createElement('div');
+                item.className = 'card bg-base-100 shadow hover:shadow-lg transition-all duration-300 border border-dashed border-base-content/20 hover:border-primary/50';
+                item.innerHTML = `
+                    <div class="card-body p-6">
+                        <div class="flex items-center gap-6">
+                            <label class="flex items-center">
+                                <input type="checkbox" class="checkbox checkbox-primary" 
+                                       onchange="toggleSelection(${member.id}, this.checked)" 
+                                       ${selectedMembers.includes(member.id) ? 'checked' : ''} />
+                            </label>
+                            
+                            <div class="avatar">
+                                <div class="w-16 rounded-full ring-2 ring-base-300 ring-offset-base-100 ring-offset-2">
+                                    <img src="${member.avatar}" alt="${member.name}" />
+                                </div>
+                            </div>
+                            
+                            <div class="flex-1">
+                                <div class="flex items-start justify-between">
+                                    <div>
+                                        <h3 class="font-bold text-lg text-base-content">${member.name}</h3>
+                                        <p class="text-primary font-medium">${member.position}</p>
+                                        <p class="text-base-content/60 text-sm">${member.company}</p>
+                                    </div>
+                                    <div class="text-right">
+                                        <p class="text-xs text-base-content/50">Last Activity</p>
+                                        <p class="text-sm font-medium">${member.lastActivity}</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="flex items-center gap-6 mt-4">
+                                    <div class="flex items-center gap-2 bg-base-200/50 px-3 py-1 rounded-full">
+                                        <span class="badge ${member.status === 'active' ? 'badge-success' : 'badge-error'} badge-sm">
+                                            <i class="fas fa-${member.status === 'active' ? 'check' : 'times'} mr-1 text-xs"></i>
+                                            ${member.status}
+                                        </span>
+                                    </div>
+                                    
+                                    <div class="flex items-center gap-2 bg-base-200/50 px-3 py-1 rounded-full">
+                                        <span class="badge ${member.isPresent ? 'badge-warning' : 'badge-ghost'} badge-sm">
+                                            <i class="fas fa-${member.isPresent ? 'user-clock' : 'user-times'} mr-1 text-xs"></i>
+                                            ${member.isPresent ? 'Present' : 'Absent'}
+                                        </span>
+                                    </div>
+                                    
+                                    <div class="flex items-center gap-2 text-sm text-base-content/60 bg-base-200/50 px-3 py-1 rounded-full">
+                                        <i class="fas fa-calendar-alt text-primary"></i>
+                                        <span class="font-semibold text-base-content">${member.conferences} conferences</span>
+                                    </div>
+                                    
+                                    <div class="flex items-center gap-2 text-sm text-base-content/60 bg-base-200/50 px-3 py-1 rounded-full">
+                                        <i class="fas fa-phone text-secondary"></i>
+                                        <span>${member.phone}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-center gap-3">
+                                <div class="form-control">
+                                    <label class="cursor-pointer flex flex-col items-center gap-1">
+                                        <span class="text-xs text-base-content/60">Active</span>
+                                        <input type="checkbox" class="toggle toggle-success toggle-sm" 
+                                               ${member.status === 'active' ? 'checked' : ''} 
+                                               onchange="toggleStatus(${member.id}, this.checked)" />
+                                    </label>
+                                </div>
+                                
+                                <div class="flex gap-2">
+                                    <button class="btn btn-primary btn-sm" onclick="viewMember(${member.id})">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                    <button class="btn btn-secondary btn-sm" onclick="editMember(${member.id})">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <div class="dropdown dropdown-end">
+                                        <div tabindex="0" role="button" class="btn btn-ghost btn-sm hover:bg-base-200 rounded-full">
+                                            <i class="fas fa-ellipsis-v text-base-content/60"></i>
+                                        </div>
+                                        <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52 border border-dashed border-base-content/20">
+                                            <li><a onclick="viewMember(${member.id})" class="hover:bg-primary/10"><i class="fas fa-eye mr-2 text-primary"></i>View Profile</a></li>
+                                            <li><a onclick="editMember(${member.id})" class="hover:bg-secondary/10"><i class="fas fa-edit mr-2 text-secondary"></i>Edit Member</a></li>
+                                            <li><a onclick="deleteMember(${member.id})" class="hover:bg-error/10"><i class="fas fa-trash mr-2 text-error"></i>Delete</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        // Render functions for different views
+        function renderTableView() {
+            const container = document.getElementById('tableView');
+            container.innerHTML = '';
+
+            filteredMembers.forEach(member => {
+                const row = document.createElement('tr');
+                row.className = 'hover hover:bg-base-200/50 transition-all duration-200 border-b border-dashed border-base-content/10';
+                row.innerHTML = `
+                    <td class="w-12">
+                        <label>
+                            <input type="checkbox" class="checkbox checkbox-primary checkbox-sm" 
+                                   onchange="toggleSelection(${member.id}, this.checked)" 
+                                   ${selectedMembers.includes(member.id) ? 'checked' : ''} />
+                        </label>
+                    </td>
+                    <td class="py-4">
+                        <div class="flex items-center gap-4">
+                            <div class="avatar">
+                                <div class="w-12 h-12 rounded-full ring-2 ring-base-300 ring-offset-base-100 ring-offset-1">
+                                    <img src="${member.avatar}" alt="${member.name}" />
+                                </div>
+                            </div>
+                            <div>
+                                <div class="font-bold text-base-content">${member.name}</div>
+                                <div class="text-sm text-base-content/60">${member.email}</div>
+                                <div class="text-xs text-base-content/40">${member.phone}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="py-4">
+                        <div class="bg-base-200/30 p-3 rounded-lg border border-dashed border-base-content/10">
+                            <div class="font-medium text-primary">${member.company}</div>
+                            <div class="text-sm text-base-content/70">${member.position}</div>
+                            <div class="text-xs text-base-content/50 mt-1">
+                                <i class="fas fa-globe mr-1"></i>${member.nationality}
+                            </div>
+                        </div>
+                    </td>
+                    <td class="py-4">
+                        <div class="flex flex-col gap-2">
+                            <span class="badge ${member.status === 'active' ? 'badge-success' : 'badge-error'} badge-sm">
+                                <i class="fas fa-${member.status === 'active' ? 'check' : 'times'} mr-1 text-sm"></i>
+                                ${member.status}
+                            </span>
+                            ${member.isPresent ? 
+                                '<span class="badge badge-warning badge-sm"><i class="fas fa-user-clock mr-1"></i>Present</span>' : 
+                                '<span class="badge badge-ghost badge-sm"><i class="fas fa-user-times mr-1"></i>Absent</span>'
+                            }
+                        </div>
+                    </td>
+                    <td class="py-4">
+                        <div class="bg-base-200/30 p-2 rounded-lg text-center border border-dashed border-base-content/10">
+                            <div class="text-sm font-medium text-base-content">${member.lastActivity}</div>
+                            <div class="text-xs text-base-content/50 mt-1">
+                                <i class="fas fa-clock mr-1"></i>Last seen
+                            </div>
+                        </div>
+                    </td>
+                    <td class="py-4">
+                        <div class="text-center bg-primary/10 p-3 rounded-lg border border-dashed border-primary/30">
+                            <div class="flex items-center justify-center gap-2">
+                                <i class="fas fa-calendar-alt text-primary"></i>
+                                <span class="font-bold text-primary text-lg">${member.conferences}</span>
+                            </div>
+                            <div class="text-xs text-primary/70 mt-1">conferences</div>
+                            <div class="rating rating-xs mt-1 justify-center">
+                                ${Array.from({length: Math.min(Math.floor(member.conferences/3), 5)}).map(() => 
+                                    '<input type="radio" class="mask mask-star-2 bg-primary" disabled />').join('')}
+                            </div>
+                        </div>
+                    </td>
+                    <td class="py-4">
+                        <div class="flex items-center gap-3">
+                            <div class="form-control">
+                                <label class="cursor-pointer flex flex-col items-center gap-1">
+                                    <!-- <span class="text-xs text-base-content/60">Active</span>-->
+                                    <input type="checkbox" class="toggle toggle-success toggle-xs" 
+                                           ${member.status === 'active' ? 'checked' : ''} 
+                                           onchange="toggleStatus(${member.id}, this.checked)" />
+                                </label>
+                            </div>
+                            
+                            <div class="flex gap-1">
+                                <button class="btn btn-primary btn-xs" onclick="viewMember(${member.id})" title="View Profile">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button class="btn btn-secondary btn-xs" onclick="editMember(${member.id})" title="Edit Member">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <div class="dropdown dropdown-end">
+                                    <div tabindex="0" role="button" class="btn btn-ghost btn-xs hover:bg-base-200" title="More Actions">
+                                        <i class="fas fa-ellipsis-v"></i>
+                                    </div>
+                                    <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-48 border border-dashed border-base-content/20">
+                                        <li><a onclick="viewMember(${member.id})" class="text-xs hover:bg-primary/10">
+                                            <i class="fas fa-eye mr-2 text-primary"></i>View Profile
+                                        </a></li>
+                                        <li><a onclick="editMember(${member.id})" class="text-xs hover:bg-secondary/10">
+                                            <i class="fas fa-edit mr-2 text-secondary"></i>Edit Member
+                                        </a></li>
+                                        <li class="menu-title"><span class="text-xs">Card Actions</span></li>
+                                        <li><a onclick="generateNewCard(${member.id})" class="text-xs hover:bg-info/10">
+                                            <i class="fas fa-id-card mr-2 text-info"></i>New NFC Card
+                                        </a></li>
+                                        <li><a onclick="exportMember(${member.id})" class="text-xs hover:bg-warning/10">
+                                            <i class="fas fa-download mr-2 text-warning"></i>Export Data
+                                        </a></li>
+                                        <div class="divider"></div>
+                                        <li><a onclick="deleteMember(${member.id})" class="text-xs hover:bg-error/10">
+                                            <i class="fas fa-trash mr-2 text-error"></i>Delete
+                                        </a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                `;
+                container.appendChild(row);
+            });
+        }
+
+        // Selection functions
+        function toggleSelection(memberId, checked) {
+            if (checked) {
+                if (!selectedMembers.includes(memberId)) {
+                    selectedMembers.push(memberId);
+                }
+            } else {
+                selectedMembers = selectedMembers.filter(id => id !== memberId);
+            }
+            updateBulkActions();
+        }
+
+        function updateBulkActions() {
+            const bulkActions = document.getElementById('bulkActions');
+            const selectedCount = document.getElementById('selectedCount');
+            
+            selectedCount.textContent = selectedMembers.length;
+            
+            if (selectedMembers.length > 0) {
+                bulkActions.style.display = 'block';
+            } else {
+                bulkActions.style.display = 'none';
+            }
+        }
+
+        function clearSelection() {
+            selectedMembers = [];
+            updateBulkActions();
+            // Update all checkboxes
+            document.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+                if (cb.id !== 'selectAll' && cb.id !== 'advancedFilters' && cb.id !== 'advancedPanelToggle') {
+                    cb.checked = false;
+                }
+            });
+        }
+
+        // Select all functionality
+        document.getElementById('selectAll').addEventListener('change', function() {
+            const checked = this.checked;
+            selectedMembers = checked ? filteredMembers.map(m => m.id) : [];
+            updateBulkActions();
+            // Update individual checkboxes
+            document.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+                if (cb !== this && cb.id !== 'advancedFilters' && cb.id !== 'advancedPanelToggle' && !cb.classList.contains('toggle')) {
+                    cb.checked = checked;
+                }
+            });
+        });
+
+        // Action functions
+        function addMember() {
+            document.getElementById('modalTitle').textContent = 'Add New Member';
+            document.getElementById('memberModal').showModal();
+        }
+
+        function editMember(id) {
+            const member = sampleMembers.find(m => m.id === id);
+            if (member) {
+                document.getElementById('modalTitle').textContent = `Edit ${member.name}`;
+                // Populate form with member data
+                document.getElementById('memberModal').showModal();
+            }
+        }
+
+        function viewMember(id) {
+            const member = sampleMembers.find(m => m.id === id);
+            if (member) {
+                showToast(`Viewing ${member.name}'s profile`, 'info');
+                // In real app, navigate to member detail page
+            }
+        }
+
+        function deleteMember(id) {
+            const member = sampleMembers.find(m => m.id === id);
+            if (member && confirm(`Delete ${member.name}? This action cannot be undone.`)) {
+                showToast(`${member.name} has been deleted`, 'success');
+                // In real app, delete from database
+            }
+        }
+
+        function toggleStatus(id, active) {
+            const member = sampleMembers.find(m => m.id === id);
+            if (member) {
+                member.status = active ? 'active' : 'inactive';
+                showToast(`${member.name} is now ${member.status}`, 'success');
+                renderCurrentView();
+            }
+        }
+
+        // Additional utility functions for table dropdown
+        function generateNewCard(id) {
+            const member = sampleMembers.find(m => m.id === id);
+            if (member) {
+                showToast(`Generating new NFC card for ${member.name}...`, 'info');
+                // In real app, generate new NFC card
+            }
+        }
+
+        function exportMember(id) {
+            const member = sampleMembers.find(m => m.id === id);
+            if (member) {
+                showToast(`Exporting ${member.name}'s data...`, 'info');
+                // In real app, export member data
+            }
+        }
+
+        // Filter functions
+        function applyFilters() {
+            const search = document.getElementById('searchInput').value.toLowerCase();
+            const status = document.getElementById('statusFilter').value;
+            const company = document.getElementById('companyFilter').value;
+            const date = document.getElementById('dateFilter').value;
+
+            filteredMembers = sampleMembers.filter(member => {
+                const matchesSearch = !search || 
+                    member.name.toLowerCase().includes(search) ||
+                    member.email.toLowerCase().includes(search) ||
+                    member.company.toLowerCase().includes(search);
+
+                const matchesStatus = status === 'all' || 
+                    (status === 'active' && member.status === 'active') ||
+                    (status === 'inactive' && member.status === 'inactive') ||
+                    (status === 'present' && member.isPresent);
+
+                const matchesCompany = company === 'all' || 
+                    member.company.toLowerCase().includes(company.replace('-', ' '));
+
+                // Date filtering would be implemented based on actual date logic
+                const matchesDate = true; // Simplified for demo
+
+                return matchesSearch && matchesStatus && matchesCompany && matchesDate;
+            });
+
+            document.getElementById('resultCount').textContent = filteredMembers.length;
+            clearSelection();
+            renderCurrentView();
+        }
+
+        function clearFilters() {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('statusFilter').value = 'all';
+            document.getElementById('companyFilter').value = 'all';
+            document.getElementById('dateFilter').value = 'all';
+            
+            filteredMembers = [...sampleMembers];
+            document.getElementById('resultCount').textContent = filteredMembers.length;
+            clearSelection();
+            renderCurrentView();
+        }
+
+        // Real-time search
+        document.getElementById('searchInput').addEventListener('input', function() {
+            clearTimeout(this.searchTimeout);
+            this.searchTimeout = setTimeout(() => {
+                applyFilters();
+            }, 300);
+        });
+
+        // Bulk actions
+        function bulkDelete() {
+            if (selectedMembers.length > 0 && confirm(`Delete ${selectedMembers.length} members? This action cannot be undone.`)) {
+                showToast(`${selectedMembers.length} members deleted`, 'success');
+                clearSelection();
+            }
+        }
+
+        function bulkActivate() {
+            if (selectedMembers.length > 0) {
+                selectedMembers.forEach(id => {
+                    const member = sampleMembers.find(m => m.id === id);
+                    if (member) member.status = 'active';
+                });
+                showToast(`${selectedMembers.length} members activated`, 'success');
+                clearSelection();
+                renderCurrentView();
+            }
+        }
+
+        function bulkDeactivate() {
+            if (selectedMembers.length > 0) {
+                selectedMembers.forEach(id => {
+                    const member = sampleMembers.find(m => m.id === id);
+                    if (member) member.status = 'inactive';
+                });
+                showToast(`${selectedMembers.length} members deactivated`, 'warning');
+                clearSelection();
+                renderCurrentView();
+            }
+        }
+
+        function bulkExport() {
+            if (selectedMembers.length > 0) {
+                showToast(`Exporting ${selectedMembers.length} members...`, 'info');
+                // In real app, trigger export
+            }
+        }
+
+        // Import/Export functions
+        function importMembers() {
+            document.getElementById('importModal').showModal();
+        }
+
+        function exportMembers() {
+            showToast('Exporting all members...', 'info');
+            // In real app, trigger full export
+        }
+
+        function downloadTemplate() {
+            showToast('Downloading CSV template...', 'info');
+            // In real app, download template file
+        }
+
+        function startImport() {
+            showToast('Starting import process...', 'info');
+            document.getElementById('importModal').close();
+        }
+
+        // Member modal functions
+        function generateCardId() {
+            const input = document.querySelector('#memberModal input[placeholder="NFC-XXXXXXXXX"]');
+            const randomId = 'NFC-' + Math.random().toString(36).substr(2, 9).toUpperCase();
+            input.value = randomId;
+        }
+
+        function saveMember() {
+            // Simulate saving
+            const button = event.target;
+            const originalText = button.innerHTML;
+            button.innerHTML = '<span class="loading loading-spinner loading-sm"></span> Saving...';
+            button.disabled = true;
+
+            setTimeout(() => {
+                button.innerHTML = originalText;
+                button.disabled = false;
+                document.getElementById('memberModal').close();
+                showToast('Member saved successfully!', 'success');
+                renderCurrentView();
+            }, 2000);
+        }
+
+        // Utility functions
+        function renderCurrentView() {
+            switchTab(currentView);
+        }
+
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            const alert = toast.querySelector('.alert');
+            
+            alert.className = `alert alert-${type}`;
+            alert.querySelector('span').textContent = message;
+            
+            const icon = alert.querySelector('i');
+            if (type === 'success') {
+                icon.className = 'fas fa-check-circle';
+            } else if (type === 'error') {
+                icon.className = 'fas fa-exclamation-circle';
+            } else if (type === 'warning') {
+                icon.className = 'fas fa-exclamation-triangle';
+            } else if (type === 'info') {
+                icon.className = 'fas fa-info-circle';
+            }
+            
+            toast.style.display = 'block';
+            
+            setTimeout(() => {
+                toast.style.display = 'none';
+            }, 3000);
+        }
+
+        let currentView = 'grid'; // Track current active view
+        
+        // Tab switching function
+        function switchTab(view) {
+            console.log('Switching to view:', view); // Debug log
+            
+            // Remove active class from all tabs
+            document.getElementById('gridTabBtn').classList.remove('tab-active');
+            document.getElementById('listTabBtn').classList.remove('tab-active');
+            document.getElementById('tableTabBtn').classList.remove('tab-active');
+            
+            // Hide all tab contents using inline styles
+            document.getElementById('gridTabContent').style.display = 'none';
+            document.getElementById('listTabContent').style.display = 'none';
+            document.getElementById('tableTabContent').style.display = 'none';
+            
+            // Show selected tab and add active class
+            if (view === 'grid') {
+                document.getElementById('gridTabBtn').classList.add('tab-active');
+                document.getElementById('gridTabContent').style.display = 'block';
+                currentView = 'grid';
+                console.log('Rendering grid view, members count:', filteredMembers.length); // Debug log
+                renderGridView();
+            } else if (view === 'list') {
+                document.getElementById('listTabBtn').classList.add('tab-active');
+                document.getElementById('listTabContent').style.display = 'block';
+                currentView = 'list';
+                console.log('Rendering list view, members count:', filteredMembers.length); // Debug log
+                renderListView();
+            } else if (view === 'table') {
+                document.getElementById('tableTabBtn').classList.add('tab-active');
+                document.getElementById('tableTabContent').style.display = 'block';
+                currentView = 'table';
+                console.log('Rendering table view, members count:', filteredMembers.length); // Debug log
+                renderTableView();
+            }
+        }
+
+        // Initialize - Fixed timing
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize with grid view and render data immediately
+            switchTab('grid');
+        });
+        
+        // Backup initialization in case DOMContentLoaded already fired
+        window.addEventListener('load', function() {
+            // Only initialize if no data is showing
+            if (document.getElementById('gridView').children.length === 0) {
+                switchTab('grid');
+            }
+        });
+
+        // File upload preview
+        document.querySelector('input[type="file"][accept="image/*"]').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const avatar = document.querySelector('.avatar.placeholder .bg-neutral-focus');
+                    avatar.innerHTML = `<img src="${e.target.result}" alt="Avatar" class="rounded-full w-16 h-16 object-cover">`;
+                    avatar.className = 'rounded-full w-16';
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    </script>
+</body>
+</html>

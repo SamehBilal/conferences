@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Conference Attendance System</title>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.4.24/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
+</head>
+<body class="min-h-screen bg-base-200">
+    <!-- Navigation -->
+    <div class="navbar bg-base-100 shadow-lg">
+        <div class="navbar-start">
+            <div class="dropdown">
+                <div tabindex="0" role="button" class="btn btn-ghost lg:hidden">
+                    <i class="fas fa-bars w-5 h-5"></i>
+                </div>
+                <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
+                    <li><a href="admin-dashboard.html">Dashboard</a></li>
+                    <li><a href="admin-members.html">Members</a></li>
+                    <li><a href="admin-scanner.html">Scanner</a></li>
+                    <li><a href="admin-conferences.html">Conferences</a></li>
+                    <li><a href="admin-reports.html">Reports</a></li>
+                    <li><a href="admin-timeline.html">Timeline</a></li>
+                </ul>
+            </div>
+            <a href="admin-dashboard.html" class="btn btn-ghost text-xl">
+                <i class="fas fa-calendar-check mr-2"></i>
+                ConfTrack Admin
+            </a>
+        </div>
+        <div class="navbar-center hidden lg:flex">
+            <ul class="menu menu-horizontal px-1">
+                <li><a href="admin-dashboard.html" class="active">Dashboard</a></li>
+                <li><a href="admin-members.html">Members</a></li>
+                <li><a href="admin-scanner.html">Scanner</a></li>
+                <li><a href="admin-conferences.html">Conferences</a></li>
+                <li><a href="admin-reports.html">Reports</a></li>
+                <li><a href="admin-timeline.html">Timeline</a></li>
+            </ul>
+        </div>
+        <div class="navbar-end gap-2">
+            <!-- Auto Refresh Toggle -->
+            <div class="form-control">
+                <label class="cursor-pointer flex items-center gap-2">
+                    <input type="checkbox" class="toggle toggle-primary toggle-sm" id="autoRefresh" checked />
+                    <span class="text-sm">Auto Refresh</span>
+                </label>
+            </div>
+            <!-- Theme Toggle -->
+            <label class="swap swap-rotate">
+                <input type="checkbox" class="theme-controller" value="dark" />
+                <i class="fas fa-sun swap-off fill-current w-6 h-6"></i>
+                <i class="fas fa-moon swap-on fill-current w-6 h-6"></i>
+            </label>
+            <!-- Admin Menu -->
+            <div class="dropdown dropdown-end">
+                <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar">
+                    <div class="w-10 rounded-full">
+                        <img alt="Admin" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face" />
+                    </div>
+                </div>
+                <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
+                    <li><a href="#"><i class="fas fa-user mr-2"></i>Profile</a></li>
+                    <li><a href="#"><i class="fas fa-cog mr-2"></i>Settings</a></li>
+                    <li><a href="auth-login.html"><i class="fas fa-sign-out-alt mr-2"></i>Logout</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hero Header -->
+    <div class="bg-gradient-to-r from-primary to-secondary text-primary-content py-8">
+        <div class="container mx-auto px-4">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h1 class="text-3xl font-bold mb-2">Dashboard Overview</h1>
+                    <p class="opacity-90">Monitor conference attendance and manage your events</p>
+                </div>
+                <div class="text-center">
+                    <div class="text-sm opacity-75">Last Updated</div>
+                    <div class="text-lg font-semibold" id="lastUpdated">--</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container mx-auto px-4 py-8">
+        <!-- Key Statistics -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div class="stat bg-base-100 rounded-lg shadow hover:shadow-lg transition-all duration-200">
+                <div class="stat-figure text-primary">
+                    <i class="fas fa-users text-3xl"></i>
+                </div>
+                <div class="stat-title">Total Members</div>
+                <div class="stat-value text-primary">2,847</div>
+                <div class="stat-desc">↗︎ 12% more than last month</div>
+            </div>
+
+            <div class="stat bg-base-100 rounded-lg shadow hover:shadow-lg transition-all duration-200">
+                <div class="stat-figure text-secondary">
+                    <i class="fas fa-user-check text-3xl"></i>
+                </div>
+                <div class="stat-title">Currently Present</div>
+                <div class="stat-value text-secondary">156</div>
+                <div class="stat-desc">↗︎ 23 checked in recently</div>
+            </div>
+
+            <div class="stat bg-base-100 rounded-lg shadow hover:shadow-lg transition-all duration-200">
+                <div class="stat-figure text-accent">
+                    <i class="fas fa-calendar-check text-3xl"></i>
+                </div>
+                <div class="stat-title">Active Conferences</div>
+                <div class="stat-value text-accent">3</div>
+                <div class="stat-desc">2 ending today</div>
+            </div>
+
+            <div class="stat bg-base-100 rounded-lg shadow hover:shadow-lg transition-all duration-200">
+                <div class="stat-figure text-info">
+                    <i class="fas fa-chart-line text-3xl"></i>
+                </div>
+                <div class="stat-title">Attendance Rate</div>
+                <div class="stat-value text-info">89%</div>
+                <div class="stat-desc">↗︎ 4% above average</div>
+            </div>
+        </div>
+
+        <!-- Real-time Activity & Charts -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+            <!-- Real-time Activity Feed -->
+            <div class="card bg-base-100 shadow-lg">
+                <div class="card-body">
+                    <div class="flex items-center justify-between mb-4">
+                        <h2 class="card-title">
+                            <i class="fas fa-bolt mr-2 text-warning"></i>
+                            Real-time Activity
+                        </h2>
+                        <div class="flex items-center gap-2">
+                            <div class="w-3 h-3 bg-success rounded-full animate-pulse"></div>
+                            <span class="text-sm text-success">Live</span>
+                        </div>
+                    </div>
+
+                    <div class="space-y-3 max-h-80 overflow-y-auto" id="activityFeed">
+                        <!-- Activity items will be populated by JavaScript -->
+                    </div>
+
+                    <div class="text-center mt-4">
+                        <button class="btn btn-outline btn-sm" onclick="loadMoreActivity()">
+                            <i class="fas fa-sync-alt mr-2"></i>Load More
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Attendance Chart -->
+            <div class="card bg-base-100 shadow-lg">
+                <div class="card-body">
+                    <div class="flex items-center justify-between mb-4">
+                        <h2 class="card-title">
+                            <i class="fas fa-chart-area mr-2 text-info"></i>
+                            Today's Attendance
+                        </h2>
+                        <select class="select select-bordered select-sm">
+                            <option>Today</option>
+                            <option>This Week</option>
+                            <option>This Month</option>
+                        </select>
+                    </div>
+                    <div class="h-64">
+                        <canvas id="attendanceChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Current Conference Status -->
+        <div class="card bg-base-100 shadow-lg mb-8">
+            <div class="card-body">
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="card-title text-2xl">
+                        <i class="fas fa-calendar-alt mr-2 text-primary"></i>
+                        Active Conferences
+                    </h2>
+                    <div class="flex gap-2">
+                        <button class="btn btn-primary btn-sm" onclick="window.location.href='admin-conferences.html'">
+                            <i class="fas fa-plus mr-2"></i>New Conference
+                        </button>
+                        <button class="btn btn-outline btn-sm" onclick="refreshConferences()">
+                            <i class="fas fa-sync-alt mr-2"></i>Refresh
+                        </button>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Conference 1 -->
+                    <div class="card bg-gradient-to-br from-primary/10 to-primary/5 border border-primary/20 hover:shadow-lg transition-all duration-200">
+                        <div class="card-body">
+                            <div class="flex items-start justify-between mb-3">
+                                <h3 class="card-title text-lg">DevSummit 2024</h3>
+                                <div class="badge badge-warning badge-sm">Starting Soon</div>
+                            </div>
+                            <p class="text-base-content/70 mb-4">Developer Summit & Networking</p>
+                            
+                            <div class="space-y-2 mb-4">
+                                <div class="flex justify-between text-sm">
+                                    <span>Registered:</span>
+                                    <span class="font-semibold text-info">156/200</span>
+                                </div>
+                                <div class="flex justify-between text-sm">
+                                    <span>Pre-checked:</span>
+                                    <span class="font-semibold">12</span>
+                                </div>
+                                <div class="flex justify-between text-sm">
+                                    <span>Starts:</span>
+                                    <span class="font-semibold">14:00 Today</span>
+                                </div>
+                            </div>
+
+                            <div class="progress progress-warning w-full h-2 mb-4">
+                                <div class="progress-value" style="width: 78%"></div>
+                            </div>
+
+                            <div class="flex gap-2">
+                                <button class="btn btn-secondary btn-xs flex-1" onclick="viewConference(2)">
+                                    <i class="fas fa-eye mr-1"></i>View
+                                </button>
+                                <button class="btn btn-outline btn-xs flex-1" onclick="manageConference(2)">
+                                    <i class="fas fa-cog mr-1"></i>Manage
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Conference 2 -->
+                    <div class="card bg-gradient-to-br from-secondary/10 to-secondary/5 border border-secondary/20 hover:shadow-lg transition-all duration-200">
+                        <div class="card-body">
+                            <div class="flex items-start justify-between mb-3">
+                                <h3 class="card-title text-lg">TechConf 2024</h3>
+                                <div class="badge badge-success badge-sm">Active</div>
+                            </div>
+                            <p class="text-base-content/70 mb-4">Technology & Innovation Conference</p>
+                            
+                            <div class="space-y-2 mb-4">
+                                <div class="flex justify-between text-sm">
+                                    <span>Present:</span>
+                                    <span class="font-semibold text-success">89/120</span>
+                                </div>
+                                <div class="flex justify-between text-sm">
+                                    <span>Attendance Rate:</span>
+                                    <span class="font-semibold">74.2%</span>
+                                </div>
+                                <div class="flex justify-between text-sm">
+                                    <span>Duration:</span>
+                                    <span class="font-semibold">09:00 - 17:00</span>
+                                </div>
+                            </div>
+
+                            <div class="progress progress-success w-full h-2 mb-4">
+                                <div class="progress-value" style="width: 74.2%"></div>
+                            </div>
+
+                            <div class="flex gap-2">
+                                <button class="btn btn-primary btn-xs flex-1" onclick="viewConference(1)">
+                                    <i class="fas fa-eye mr-1"></i>View
+                                </button>
+                                <button class="btn btn-outline btn-xs flex-1" onclick="manageConference(1)">
+                                    <i class="fas fa-cog mr-1"></i>Manage
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    
+
+                    <!-- Conference 3 -->
+                    <div class="card bg-gradient-to-br from-accent/10 to-accent/5 border border-accent/20 hover:shadow-lg transition-all duration-200">
+                        <div class="card-body">
+                            <div class="flex items-start justify-between mb-3">
+                                <h3 class="card-title text-lg">AI Workshop</h3>
+                                <div class="badge badge-info badge-sm">In Progress</div>
+                            </div>
+                            <p class="text-base-content/70 mb-4">Machine Learning Workshop</p>
+                            
+                            <div class="space-y-2 mb-4">
+                                <div class="flex justify-between text-sm">
+                                    <span>Present:</span>
+                                    <span class="font-semibold text-success">45/50</span>
+                                </div>
+                                <div class="flex justify-between text-sm">
+                                    <span>Attendance Rate:</span>
+                                    <span class="font-semibold">90%</span>
+                                </div>
+                                <div class="flex justify-between text-sm">
+                                    <span>Ends:</span>
+                                    <span class="font-semibold">16:30</span>
+                                </div>
+                            </div>
+
+                            <div class="progress progress-info w-full h-2 mb-4">
+                                <div class="progress-value" style="width: 90%"></div>
+                            </div>
+
+                            <div class="flex gap-2">
+                                <button class="btn btn-accent btn-xs flex-1" onclick="viewConference(3)">
+                                    <i class="fas fa-eye mr-1"></i>View
+                                </button>
+                                <button class="btn btn-outline btn-xs flex-1" onclick="manageConference(3)">
+                                    <i class="fas fa-cog mr-1"></i>Manage
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Actions & Recent Members -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- Quick Actions -->
+            <div class="card bg-base-100 shadow-lg">
+                <div class="card-body">
+                    <h2 class="card-title mb-6">
+                        <i class="fas fa-bolt mr-2 text-warning"></i>
+                        Quick Actions
+                    </h2>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <button class="btn btn-primary btn-lg" onclick="window.location.href='admin-scanner.html'">
+                            <i class="fas fa-qrcode mr-2"></i>
+                            <div class="text-left">
+                                <div class="font-bold">Scan QR</div>
+                                <div class="text-xs opacity-75">Quick check-in</div>
+                            </div>
+                        </button>
+
+                        <button class="btn btn-secondary btn-lg" onclick="window.location.href='admin-members.html'">
+                            <i class="fas fa-user-plus mr-2"></i>
+                            <div class="text-left">
+                                <div class="font-bold">Add Member</div>
+                                <div class="text-xs opacity-75">New registration</div>
+                            </div>
+                        </button>
+
+                        <button class="btn btn-accent btn-lg" onclick="window.location.href='admin-reports.html'">
+                            <i class="fas fa-file-export mr-2"></i>
+                            <div class="text-left">
+                                <div class="font-bold">Export Report</div>
+                                <div class="text-xs opacity-75">Generate CSV</div>
+                            </div>
+                        </button>
+
+                        <button class="btn btn-info btn-lg" onclick="window.location.href='admin-timeline.html'">
+                            <i class="fas fa-history mr-2"></i>
+                            <div class="text-left">
+                                <div class="font-bold">View Timeline</div>
+                                <div class="text-xs opacity-75">Activity log</div>
+                            </div>
+                        </button>
+                    </div>
+
+                    <!-- Emergency Actions -->
+                    <div class="divider">Emergency Actions</div>
+                    <div class="grid grid-cols-1 gap-2">
+                        <button class="btn btn-error btn-outline btn-sm" onclick="emergencyCheckout()">
+                            <i class="fas fa-exclamation-triangle mr-2"></i>
+                            Mass Check-out All
+                        </button>
+                        <button class="btn btn-warning btn-outline btn-sm" onclick="sendAlert()">
+                            <i class="fas fa-bullhorn mr-2"></i>
+                            Send Alert to All Present
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Members -->
+            <div class="card bg-base-100 shadow-lg">
+                <div class="card-body">
+                    <div class="flex items-center justify-between mb-6">
+                        <h2 class="card-title">
+                            <i class="fas fa-user-clock mr-2 text-info"></i>
+                            Recent Check-ins
+                        </h2>
+                        <button class="btn btn-ghost btn-sm" onclick="window.location.href='admin-members.html'">
+                            View All
+                        </button>
+                    </div>
+
+                    <div class="space-y-4" id="recentMembers">
+                        <!-- Recent member items will be populated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- System Status -->
+        <div class="card bg-base-100 shadow-lg mt-8">
+            <div class="card-body">
+                <h2 class="card-title mb-6">
+                    <i class="fas fa-server mr-2 text-success"></i>
+                    System Status
+                </h2>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div class="text-center">
+                        <div class="radial-progress text-success mb-2" style="--value:98;" role="progressbar">98%</div>
+                        <div class="text-sm font-semibold">Server Uptime</div>
+                        <div class="text-xs text-base-content/60">Last 30 days</div>
+                    </div>
+                    
+                    <div class="text-center">
+                        <div class="radial-progress text-info mb-2" style="--value:85;" role="progressbar">85%</div>
+                        <div class="text-sm font-semibold">Database Health</div>
+                        <div class="text-xs text-base-content/60">Optimal</div>
+                    </div>
+                    
+                    <div class="text-center">
+                        <div class="radial-progress text-warning mb-2" style="--value:92;" role="progressbar">92%</div>
+                        <div class="text-sm font-semibold">Scanner Response</div>
+                        <div class="text-xs text-base-content/60">Average 120ms</div>
+                    </div>
+                    
+                    <div class="text-center">
+                        <div class="radial-progress text-primary mb-2" style="--value:94;" role="progressbar">94%</div>
+                        <div class="text-sm font-semibold">API Performance</div>
+                        <div class="text-xs text-base-content/60">Good</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast for notifications -->
+    <div class="toast toast-top toast-end" id="toast" style="display: none;">
+        <div class="alert alert-success">
+            <i class="fas fa-check-circle"></i>
+            <span>Action completed successfully!</span>
+        </div>
+    </div>
+
+    <script>
+        // Theme toggle functionality
+        const themeController = document.querySelector('.theme-controller');
+        const html = document.documentElement;
+        
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        html.setAttribute('data-theme', savedTheme);
+        if (savedTheme === 'dark') {
+            themeController.checked = true;
+        }
+        
+        themeController.addEventListener('change', function() {
+            const theme = this.checked ? 'dark' : 'light';
+            html.setAttribute('data-theme', theme);
+            localStorage.setItem('theme', theme);
+        });
+
+        // Auto-refresh functionality
+        let autoRefreshInterval;
+        const autoRefreshToggle = document.getElementById('autoRefresh');
+
+        function updateLastUpdated() {
+            document.getElementById('lastUpdated').textContent = new Date().toLocaleTimeString();
+        }
+
+        function startAutoRefresh() {
+            autoRefreshInterval = setInterval(() => {
+                updateActivityFeed();
+                updateRecentMembers();
+                updateLastUpdated();
+                showToast('Data refreshed', 'info');
+            }, 30000); // 30 seconds
+        }
+
+        function stopAutoRefresh() {
+            if (autoRefreshInterval) {
+                clearInterval(autoRefreshInterval);
+            }
+        }
+
+        autoRefreshToggle.addEventListener('change', function() {
+            if (this.checked) {
+                startAutoRefresh();
+            } else {
+                stopAutoRefresh();
+            }
+        });
+
+        // Sample data for real-time activity
+        const sampleActivities = [
+            { type: 'checkin', user: 'John Doe', event: 'TechConf 2024', time: 'Just now', id: 'NFC-A1B2C3D4E' },
+            { type: 'checkout', user: 'Jane Smith', event: 'DevSummit 2024', time: '2 min ago', id: 'NFC-B2C3D4E5F' },
+            { type: 'checkin', user: 'Mike Johnson', event: 'AI Workshop', time: '3 min ago', id: 'NFC-C3D4E5F6G' },
+            { type: 'admin', user: 'Admin User', action: 'Added new member', time: '5 min ago' },
+            { type: 'checkin', user: 'Sarah Wilson', event: 'TechConf 2024', time: '7 min ago', id: 'NFC-D4E5F6G7H' },
+            { type: 'checkout', user: 'Bob Brown', event: 'AI Workshop', time: '10 min ago', id: 'NFC-E5F6G7H8I' },
+        ];
+
+        const sampleMembers = [
+            { name: 'John Doe', company: 'Tech Solutions Inc.', checkin: '09:15 AM', event: 'TechConf 2024', avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face' },
+            { name: 'Jane Smith', company: 'Innovation Labs', checkin: '09:12 AM', event: 'TechConf 2024', avatar: 'https://images.unsplash.com/photo-1494790108755-2616b6d4b5d1?w=100&h=100&fit=crop&crop=face' },
+            { name: 'Mike Johnson', company: 'StartupCorp', checkin: '09:08 AM', event: 'AI Workshop', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face' },
+            { name: 'Sarah Wilson', company: 'DataTech Ltd.', checkin: '09:05 AM', event: 'TechConf 2024', avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&crop=face' },
+            { name: 'Bob Brown', company: 'CloudSys Inc.', checkin: '09:02 AM', event: 'DevSummit 2024', avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop&crop=face' },
+        ];
+
+        // Update activity feed
+        function updateActivityFeed() {
+            const feed = document.getElementById('activityFeed');
+            feed.innerHTML = '';
+
+            sampleActivities.forEach(activity => {
+                const div = document.createElement('div');
+                div.className = 'flex items-start gap-3 p-3 rounded-lg hover:bg-base-200 transition-colors';
+                
+                let icon, color, text;
+                if (activity.type === 'checkin') {
+                    icon = 'fa-sign-in-alt';
+                    color = 'text-success';
+                    text = `${activity.user} checked in to ${activity.event}`;
+                } else if (activity.type === 'checkout') {
+                    icon = 'fa-sign-out-alt';
+                    color = 'text-warning';
+                    text = `${activity.user} checked out from ${activity.event}`;
+                } else {
+                    icon = 'fa-cog';
+                    color = 'text-info';
+                    text = `${activity.user} ${activity.action}`;
+                }
+
+                div.innerHTML = `
+                    <div class="badge badge-sm ${color} mt-1">
+                        <i class="fas ${icon} w-3 h-3"></i>
+                    </div>
+                    <div class="flex-1">
+                        <p class="text-sm font-medium">${text}</p>
+                        <div class="flex items-center gap-2 text-xs text-base-content/60">
+                            <span>${activity.time}</span>
+                            ${activity.id ? `<span class="badge badge-ghost badge-xs">${activity.id}</span>` : ''}
+                        </div>
+                    </div>
+                `;
+                
+                feed.appendChild(div);
+            });
+        }
+
+        // Update recent members
+        function updateRecentMembers() {
+            const members = document.getElementById('recentMembers');
+            members.innerHTML = '';
+
+            sampleMembers.forEach(member => {
+                const div = document.createElement('div');
+                div.className = 'flex items-center gap-3 p-3 rounded-lg hover:bg-base-200 transition-colors cursor-pointer';
+                div.onclick = () => viewMember(member.name);
+                
+                div.innerHTML = `
+                    <div class="avatar">
+                        <div class="w-12 rounded-full">
+                            <img src="${member.avatar}" alt="${member.name}" />
+                        </div>
+                    </div>
+                    <div class="flex-1">
+                        <div class="font-medium">${member.name}</div>
+                        <div class="text-sm text-base-content/70">${member.company}</div>
+                        <div class="text-xs text-base-content/50">${member.event}</div>
+                    </div>
+                    <div class="text-right">
+                        <div class="text-sm font-medium">${member.checkin}</div>
+                        <div class="badge badge-success badge-xs">Present</div>
+                    </div>
+                `;
+                
+                members.appendChild(div);
+            });
+        }
+
+        // Chart initialization
+        let attendanceChart;
+        
+        function initializeChart() {
+            const ctx = document.getElementById('attendanceChart').getContext('2d');
+            
+            attendanceChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00'],
+                    datasets: [{
+                        label: 'Check-ins',
+                        data: [12, 45, 67, 89, 92, 78, 134, 145, 156, 134],
+                        borderColor: 'rgb(34, 197, 94)',
+                        backgroundColor: 'rgba(34, 197, 94, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }, {
+                        label: 'Check-outs',
+                        data: [0, 2, 8, 15, 25, 34, 12, 28, 45, 67],
+                        borderColor: 'rgb(239, 68, 68)',
+                        backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+
+        // Action functions
+        function viewConference(id) {
+            showToast(`Viewing conference ${id}`, 'info');
+            // In real implementation, navigate to conference details
+        }
+
+        function manageConference(id) {
+            showToast(`Managing conference ${id}`, 'info');
+            // In real implementation, open management panel
+        }
+
+        function refreshConferences() {
+            showToast('Refreshing conference data...', 'info');
+            // In real implementation, reload conference data
+        }
+
+        function loadMoreActivity() {
+            showToast('Loading more activity...', 'info');
+            // In real implementation, load additional activity items
+        }
+
+        function viewMember(name) {
+            showToast(`Viewing ${name}'s profile`, 'info');
+            // In real implementation, navigate to member profile
+        }
+
+        function emergencyCheckout() {
+            if (confirm('This will check out ALL currently present members. Are you sure?')) {
+                showToast('Emergency check-out initiated', 'warning');
+                // In real implementation, perform mass check-out
+            }
+        }
+
+        function sendAlert() {
+            if (confirm('Send alert message to all present members?')) {
+                showToast('Alert sent to all present members', 'success');
+                // In real implementation, send alert
+            }
+        }
+
+        // Utility functions
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            const alert = toast.querySelector('.alert');
+            
+            alert.className = `alert alert-${type}`;
+            alert.querySelector('span').textContent = message;
+            
+            const icon = alert.querySelector('i');
+            if (type === 'success') {
+                icon.className = 'fas fa-check-circle';
+            } else if (type === 'error') {
+                icon.className = 'fas fa-exclamation-circle';
+            } else if (type === 'warning') {
+                icon.className = 'fas fa-exclamation-triangle';
+            } else if (type === 'info') {
+                icon.className = 'fas fa-info-circle';
+            }
+            
+            toast.style.display = 'block';
+            
+            setTimeout(() => {
+                toast.style.display = 'none';
+            }, 3000);
+        }
+
+        // Initialize everything
+        document.addEventListener('DOMContentLoaded', function() {
+            updateActivityFeed();
+            updateRecentMembers();
+            initializeChart();
+            updateLastUpdated();
+            
+            // Start auto-refresh if enabled
+            if (autoRefreshToggle.checked) {
+                startAutoRefresh();
+            }
+        });
+
+        // Update activity feed periodically to simulate real-time updates
+        setInterval(() => {
+            // Randomly shuffle activities for demo
+            sampleActivities.unshift(sampleActivities.pop());
+            updateActivityFeed();
+        }, 5000);
+    </script>
+</body>
+</html>
+                                

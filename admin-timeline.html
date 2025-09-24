@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Timeline - Conference Attendance System</title>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.4.24/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="min-h-screen bg-base-200">
+    <!-- Navigation -->
+    <div class="navbar bg-base-100 shadow-lg">
+        <div class="navbar-start">
+            <div class="dropdown">
+                <div tabindex="0" role="button" class="btn btn-ghost lg:hidden">
+                    <i class="fas fa-bars w-5 h-5"></i>
+                </div>
+                <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
+                    <li><a href="admin-dashboard.html">Dashboard</a></li>
+                    <li><a href="admin-members.html">Members</a></li>
+                    <li><a href="admin-scanner.html">Scanner</a></li>
+                    <li><a href="admin-conferences.html">Conferences</a></li>
+                    <li><a href="admin-reports.html">Reports</a></li>
+                    <li><a href="admin-timeline.html" class="active">Timeline</a></li>
+                </ul>
+            </div>
+            <a href="admin-dashboard.html" class="btn btn-ghost text-xl">
+                <i class="fas fa-calendar-check mr-2"></i>
+                ConfTrack Admin
+            </a>
+        </div>
+        <div class="navbar-center hidden lg:flex">
+            <ul class="menu menu-horizontal px-1">
+                <li><a href="admin-dashboard.html">Dashboard</a></li>
+                <li><a href="admin-members.html">Members</a></li>
+                <li><a href="admin-scanner.html">Scanner</a></li>
+                <li><a href="admin-conferences.html">Conferences</a></li>
+                <li><a href="admin-reports.html">Reports</a></li>
+                <li><a href="admin-timeline.html" class="active">Timeline</a></li>
+            </ul>
+        </div>
+        <div class="navbar-end gap-2">
+            <!-- Auto Refresh Toggle -->
+            <div class="form-control">
+                <label class="cursor-pointer flex items-center gap-2">
+                    <input type="checkbox" class="toggle toggle-primary toggle-sm" id="autoRefresh" checked />
+                    <span class="text-sm">Live</span>
+                </label>
+            </div>
+            <!-- Theme Toggle -->
+            <label class="swap swap-rotate">
+                <input type="checkbox" class="theme-controller" value="dark" />
+                <i class="fas fa-sun swap-off fill-current w-6 h-6"></i>
+                <i class="fas fa-moon swap-on fill-current w-6 h-6"></i>
+            </label>
+            <!-- Admin Menu -->
+            <div class="dropdown dropdown-end">
+                <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar">
+                    <div class="w-10 rounded-full">
+                        <img alt="Admin" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face" />
+                    </div>
+                </div>
+                <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
+                    <li><a href="#"><i class="fas fa-user mr-2"></i>Profile</a></li>
+                    <li><a href="#"><i class="fas fa-cog mr-2"></i>Settings</a></li>
+                    <li><a href="auth-login.html"><i class="fas fa-sign-out-alt mr-2"></i>Logout</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hero Header -->
+    <div class="bg-gradient-to-r from-primary to-secondary text-primary-content py-8">
+        <div class="container mx-auto px-4">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h1 class="text-3xl font-bold mb-2">Activity Timeline</h1>
+                    <p class="opacity-90">Real-time activity log with detailed audit trail</p>
+                </div>
+                <div class="text-center">
+                    <div class="text-sm opacity-75">Last Updated</div>
+                    <div class="text-lg font-semibold" id="lastUpdated">--</div>
+                    <div class="flex items-center justify-center gap-2 mt-1">
+                        <div class="w-2 h-2 bg-success rounded-full animate-pulse"></div>
+                        <span class="text-sm">Live Feed</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container mx-auto px-4 py-8">
+        <!-- Quick Stats -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div class="stat bg-base-100 rounded-lg shadow hover:shadow-lg transition-all duration-200">
+                <div class="stat-figure text-success">
+                    <i class="fas fa-sign-in-alt text-3xl"></i>
+                </div>
+                <div class="stat-title">Check-ins Today</div>
+                <div class="stat-value text-success">234</div>
+                <div class="stat-desc">↗︎ 23 in last hour</div>
+            </div>
+
+            <div class="stat bg-base-100 rounded-lg shadow hover:shadow-lg transition-all duration-200">
+                <div class="stat-figure text-warning">
+                    <i class="fas fa-sign-out-alt text-3xl"></i>
+                </div>
+                <div class="stat-title">Check-outs Today</div>
+                <div class="stat-value text-warning">89</div>
+                <div class="stat-desc">↗︎ 8 in last hour</div>
+            </div>
+
+            <div class="stat bg-base-100 rounded-lg shadow hover:shadow-lg transition-all duration-200">
+                <div class="stat-figure text-info">
+                    <i class="fas fa-cogs text-3xl"></i>
+                </div>
+                <div class="stat-title">Admin Actions</div>
+                <div class="stat-value text-info">45</div>
+                <div class="stat-desc">Today's total</div>
+            </div>
+
+            <div class="stat bg-base-100 rounded-lg shadow hover:shadow-lg transition-all duration-200">
+                <div class="stat-figure text-error">
+                    <i class="fas fa-exclamation-triangle text-3xl"></i>
+                </div>
+                <div class="stat-title">Failed Attempts</div>
+                <div class="stat-value text-error">3</div>
+                <div class="stat-desc">0.9% error rate</div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+            <!-- Timeline Filters -->
+            <div class="lg:col-span-1">
+                <div class="card bg-base-100 shadow-lg sticky top-8">
+                    <div class="card-body">
+                        <h2 class="card-title mb-4">
+                            <i class="fas fa-filter mr-2 text-primary"></i>
+                            Filters
+                        </h2>
+
+                        <div class="space-y-4">
+                            <!-- Time Filter -->
+                            <div class="form-control">
+                                <label class="label">
+                                    <span class="label-text font-semibold">Time Period</span>
+                                </label>
+                                <select class="select select-bordered select-sm" id="timeFilter">
+                                    <option value="live" selected>Live (Last 5 min)</option>
+                                    <option value="hour">Last Hour</option>
+                                    <option value="today">Today</option>
+                                    <option value="week">This Week</option>
+                                    <option value="month">This Month</option>
+                                    <option value="custom">Custom Range</option>
+                                </select>
+                            </div>
+
+                            <!-- Activity Type Filter -->
+                            <div class="form-control">
+                                <label class="label">
+                                    <span class="label-text font-semibold">Activity Type</span>
+                                </label>
+                                <div class="space-y-2">
+                                    <label class="cursor-pointer flex items-center gap-2">
+                                        <input type="checkbox" class="checkbox checkbox-success checkbox-sm" checked />
+                                        <span class="text-sm">Check-ins</span>
+                                    </label>
+                                    <label class="cursor-pointer flex items-center gap-2">
+                                        <input type="checkbox" class="checkbox checkbox-warning checkbox-sm" checked />
+                                        <span class="text-sm">Check-outs</span>
+                                    </label>
+                                    <label class="cursor-pointer flex items-center gap-2">
+                                        <input type="checkbox" class="checkbox checkbox-info checkbox-sm" checked />
+                                        <span class="text-sm">Admin Actions</span>
+                                    </label>
+                                    <label class="cursor-pointer flex items-center gap-2">
+                                        <input type="checkbox" class="checkbox checkbox-secondary checkbox-sm" checked />
+                                        <span class="text-sm">System Events</span>
+                                    </label>
+                                    <label class="cursor-pointer flex items-center gap-2">
+                                        <input type="checkbox" class="checkbox checkbox-error checkbox-sm" checked />
+                                        <span class="text-sm">Errors</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- Conference Filter -->
+                            <div class="form-control">
+                                <label class="label">
+                                    <span class="label-text font-semibold">Conference</span>
+                                </label>
+                                <select class="select select-bordered select-sm">
+                                    <option value="all" selected>All Conferences</option>
+                                    <option value="techconf">TechConf 2024</option>
+                                    <option value="devsummit">DevSummit 2024</option>
+                                    <option value="aiworkshop">AI Workshop</option>
+                                </select>
+                            </div>
+
+                            <!-- Admin Filter -->
+                            <div class="form-control">
+                                <label class="label">
+                                    <span class="label-text font-semibold">Admin User</span>
+                                </label>
+                                <select class="select select-bordered select-sm">
+                                    <option value="all" selected>All Admins</option>
+                                    <option value="admin1">Admin User</option>
+                                    <option value="scanner1">Scanner Operator</option>
+                                    <option value="system">System</option>
+                                </select>
+                            </div>
+
+                            <!-- Search -->
+                            <div class="form-control">
+                                <label class="label">
+                                    <span class="label-text font-semibold">Search</span>
+                                </label>
+                                <input type="text" placeholder="Search activities..." class="input input-bordered input-sm" />
+                            </div>
+                        </div>
+
+                        <div class="divider"></div>
+
+                        <div class="flex gap-2">
+                            <button class="btn btn-outline btn-sm flex-1" onclick="clearFilters()">
+                                <i class="fas fa-times mr-1"></i>Clear
+                            </button>
+                            <button class="btn btn-primary btn-sm flex-1" onclick="applyFilters()">
+                                <i class="fas fa-filter mr-1"></i>Apply
+                            </button>
+                        </div>
+
+                        <!-- Export Options -->
+                        <div class="mt-4 space-y-2">
+                            <button class="btn btn-secondary btn-sm w-full" onclick="exportTimeline()">
+                                <i class="fas fa-download mr-2"></i>Export Timeline
+                            </button>
+                            <button class="btn btn-outline btn-sm w-full" onclick="printTimeline()">
+                                <i class="fas fa-print mr-2"></i>Print Report
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Timeline Content -->
+            <div class="lg:col-span-3">
+                <div class="card bg-base-100 shadow-lg">
+                    <div class="card-body">
+                        <div class="flex items-center justify-between mb-6">
+                            <h2 class="card-title">
+                                <i class="fas fa-history mr-2 text-info"></i>
+                                Activity Timeline
+                            </h2>
+                            <div class="flex items-center gap-4">
+                                <div class="text-sm text-base-content/70">
+                                    Showing <span id="activityCount">156</span> activities
+                                </div>
+                                <div class="flex gap-2">
+                                    <button class="btn btn-ghost btn-sm" onclick="pauseTimeline()" id="pauseBtn">
+                                        <i class="fas fa-pause mr-2"></i>Pause
+                                    </button>
+                                    <button class="btn btn-ghost btn-sm" onclick="refreshTimeline()">
+                                        <i class="fas fa-sync-alt mr-2"></i>Refresh
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Timeline Container -->
+                        <div class="relative">
+                            <div class="absolute left-8 top-0 bottom-0 w-0.5 bg-base-300"></div>
+                            <div class="space-y-4" id="timelineContainer">
+                                <!-- Timeline items will be populated by JavaScript -->
+                            </div>
+                        </div>
+
+                        <!-- Load More Button -->
+                        <div class="text-center mt-8">
+                            <button class="btn btn-outline" onclick="loadMoreActivities()">
+                                <i class="fas fa-chevron-down mr-2"></i>Load More Activities
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Activity Detail Modal -->
+    <dialog id="activityModal" class="modal">
+        <div class="modal-box w-11/12 max-w-2xl">
+            <form method="dialog">
+                <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+            </form>
+            <h3 class="font-bold text-lg mb-4" id="modalTitle">Activity Details</h3>
+            
+            <div class="space-y-4" id="modalContent">
+                <!-- Activity details will be populated by JavaScript -->
+            </div>
+
+            <div class="modal-action">
+                <form method="dialog">
+                    <button class="btn btn-outline">Close</button>
+                </form>
+            </div>
+        </div>
+    </dialog>
+
+    <!-- Toast -->
+    <div class="toast toast-top toast-end" id="toast" style="display: none;">
+        <div class="alert alert-success">
+            <i class="fas fa-check-circle"></i>
+            <span>Action completed successfully!</span>
+        </div>
+    </div>
+
+    <script>
+        // Sample timeline data
+        const timelineData = [
+            {
+                id: 1,
+                time: new Date(Date.now() - 2 * 60000).toLocaleTimeString(), // 2 min ago
+                type: 'checkin',
+                title: 'John Doe checked in',
+                description: 'Check-in to TechConf 2024',
+                user: 'John Doe',
+                admin: 'Scanner Operator',
+                conference: 'TechConf 2024',
+                method: 'QR Code',
+                details: {
+                    memberId: 'NFC-A1B2C3D4E',
+                    location: 'Main Entrance',
+                    device: 'Scanner #1',
+                    ipAddress: '192.168.1.105',
+                    sessionId: 'sess_abc123'
+                }
+            },
+            {
+                id: 2,
+                time: new Date(Date.now() - 5 * 60000).toLocaleTimeString(), // 5 min ago
+                type: 'admin',
+                title: 'New member added',
+                description: 'Added Sarah Wilson to the system',
+                user: 'Sarah Wilson',
+                admin: 'Admin User',
+                conference: 'N/A',
+                method: 'Manual Entry',
+                details: {
+                    memberId: 'NFC-F6G7H8I9J',
+                    action: 'CREATE_MEMBER',
+                    changes: ['Name', 'Email', 'Company', 'NFC ID'],
+                    ipAddress: '192.168.1.102'
+                }
+            },
+            {
+                id: 3,
+                time: new Date(Date.now() - 8 * 60000).toLocaleTimeString(), // 8 min ago
+                type: 'checkout',
+                title: 'Jane Smith checked out',
+                description: 'Check-out from DevSummit 2024',
+                user: 'Jane Smith',
+                admin: 'Scanner Operator',
+                conference: 'DevSummit 2024',
+                method: 'NFC Card',
+                details: {
+                    memberId: 'NFC-B2C3D4E5F',
+                    duration: '3h 45m',
+                    location: 'Exit Gate B',
+                    device: 'Scanner #2'
+                }
+            },
+            {
+                id: 4,
+                time: new Date(Date.now() - 12 * 60000).toLocaleTimeString(), // 12 min ago
+                type: 'system',
+                title: 'Conference started',
+                description: 'AI Workshop session began',
+                user: 'System',
+                admin: 'System',
+                conference: 'AI Workshop',
+                method: 'Automated',
+                details: {
+                    eventType: 'CONFERENCE_START',
+                    expectedAttendees: 50,
+                    currentAttendees: 45,
+                    startTime: '14:00'
+                }
+            },
+            {
+                id: 5,
+                time: new Date(Date.now() - 15 * 60000).toLocaleTimeString(), // 15 min ago
+                type: 'error',
+                title: 'Failed check-in attempt',
+                description: 'Invalid QR code scanned',
+                user: 'Unknown',
+                admin: 'Scanner Operator',
+                conference: 'TechConf 2024',
+                method: 'QR Code',
+                details: {
+                    errorCode: 'INVALID_QR_CODE',
+                    qrContent: 'INVALID_CODE_123',
+                    device: 'Scanner #1',
+                    retryCount: 3
+                }
+            }
+        ];
+
+        let timelineFiltered = [...timelineData];
+        let isPaused = false;
+        let autoRefreshInterval;
+
+        // Theme toggle functionality
+        const themeController = document.querySelector('.theme-controller');
+        const html = document.documentElement;
+        
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        html.setAttribute('data-theme', savedTheme);
+        if (savedTheme === 'dark') {
+            themeController.checked = true;
+        }
+        
+        themeController.addEventListener('change', function() {
+            const theme = this.checked ? 'dark' : 'light';
+            html.setAttribute('data-theme', theme);
+            localStorage.setItem('theme', theme);
+        });
+
+        // Timeline rendering
+        function renderTimeline() {
+            const container = document.getElementById('timelineContainer');
+            container.innerHTML = '';
+
+            timelineFiltered.forEach((activity, index) => {
+                const item = document.createElement('div');
+                item.className = 'relative flex items-start gap-4 p-4 hover:bg-base-200 rounded-lg transition-colors cursor-pointer';
+                item.onclick = () => showActivityDetails(activity);
+
+                const iconClass = getActivityIcon(activity.type);
+                const colorClass = getActivityColor(activity.type);
+
+                item.innerHTML = `
+                    <div class="relative z-10">
+                        <div class="w-10 h-10 ${colorClass} rounded-full flex items-center justify-center">
+                            <i class="fas ${iconClass} text-white"></i>
+                        </div>
+                        ${index === 0 ? '<div class="absolute -top-2 -right-2 w-4 h-4 bg-success rounded-full animate-ping"></div>' : ''}
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <div class="flex items-center justify-between mb-1">
+                            <h3 class="font-semibold flex gap-2 text-base-content">
+                                ${activity.type === 'checkin' || activity.type === 'checkout' ? '<div tabindex="0" class=" avatar"><div class="w-6 rounded-full"><img alt="Profile" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face" /></div></div>' : ''}
+                                ${activity.title}</h3>
+                            <span class="text-xs text-base-content/60 font-mono">${activity.time}</span>
+                        </div>
+                        <p class="text-sm text-base-content/80 mb-2">${activity.description}</p>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="badge badge-info badge-sm">
+                                <i class="fas fa-user mr-1"></i>${activity.user}
+                            </span>
+                            <span class="badge badge-ghost badge-sm">
+                                <i class="fas fa-calendar mr-1"></i>${activity.conference}
+                            </span>
+                            <span class="badge ${activity.method === 'QR Code' ? 'badge-primary' : activity.method === 'NFC Card' ? 'badge-error' : 'badge-outline'} badge-sm">
+                                <i class="fas ${activity.method === 'QR Code' ? 'fa-qrcode' : activity.method === 'NFC Card' ? 'fa-credit-card' : 'fa-hand-pointer'} mr-1"></i>${activity.method}
+                            </span>
+                            <span class="badge badge-success badge-sm">
+                                <i class="fas fa-user-shield mr-1"></i>${activity.admin}
+                            </span>
+                        </div>
+                    </div>
+                `;
+
+                container.appendChild(item);
+            });
+
+            document.getElementById('activityCount').textContent = timelineFiltered.length;
+        }
+
+        function getActivityIcon(type) {
+            const icons = {
+                'checkin': 'fa-sign-in-alt',
+                'checkout': 'fa-sign-out-alt',
+                'admin': 'fa-cog',
+                'system': 'fa-server',
+                'error': 'fa-exclamation-triangle'
+            };
+            return icons[type] || 'fa-info';
+        }
+
+        function getActivityColor(type) {
+            const colors = {
+                'checkin': 'bg-success',
+                'checkout': 'bg-warning',
+                'admin': 'bg-info',
+                'system': 'bg-secondary',
+                'error': 'bg-error'
+            };
+            return colors[type] || 'bg-base-content';
+        }
+
+        // Activity details modal
+        function showActivityDetails(activity) {
+            const modal = document.getElementById('activityModal');
+            const title = document.getElementById('modalTitle');
+            const content = document.getElementById('modalContent');
+
+            title.textContent = activity.title;
+
+            content.innerHTML = `
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="space-y-3">
+                        <div>
+                            <label class="text-sm font-semibold text-base-content/70">Time</label>
+                            <div class="font-mono">${activity.time}</div>
+                        </div>
+                        <div>
+                            <label class="text-sm font-semibold text-base-content/70">User</label>
+                            <div>${activity.user}</div>
+                        </div>
+                        <div>
+                            <label class="text-sm font-semibold text-base-content/70">Admin</label>
+                            <div>${activity.admin}</div>
+                        </div>
+                        <div>
+                            <label class="text-sm font-semibold text-base-content/70">Conference</label>
+                            <div>${activity.conference}</div>
+                        </div>
+                    </div>
+                    <div class="space-y-3">
+                        <div>
+                            <label class="text-sm font-semibold text-base-content/70">Method</label>
+                            <div>${activity.method}</div>
+                        </div>
+                        <div>
+                            <label class="text-sm font-semibold text-base-content/70">Type</label>
+                            <div>
+                                <span class="badge ${getActivityColor(activity.type)} text-white">
+                                    <i class="fas ${getActivityIcon(activity.type)} mr-1"></i>
+                                    ${activity.type.toUpperCase()}
+                                </span>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="text-sm font-semibold text-base-content/70">Description</label>
+                            <div>${activity.description}</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="divider">Technical Details</div>
+
+                <div class="bg-base-200 rounded-lg p-4">
+                    <h4 class="font-semibold mb-3">Additional Information</h4>
+                    <div class="space-y-2 text-sm">
+                        ${Object.entries(activity.details).map(([key, value]) => `
+                            <div class="flex justify-between">
+                                <span class="text-base-content/70">${key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}:</span>
+                                <span class="font-mono">${Array.isArray(value) ? value.join(', ') : value}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+
+            modal.showModal();
+        }
+
+        // Filter functions
+        function applyFilters() {
+            // In real implementation, apply actual filters based on form values
+            showToast('Filters applied', 'success');
+            renderTimeline();
+        }
+
+        function clearFilters() {
+            // Reset all filter controls
+            document.getElementById('timeFilter').value = 'live';
+            document.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+                if (!cb.classList.contains('toggle')) cb.checked = true;
+            });
+            document.querySelector('input[placeholder="Search activities..."]').value = '';
+            
+            timelineFiltered = [...timelineData];
+            renderTimeline();
+            showToast('Filters cleared', 'info');
+        }
+
+        // Timeline controls
+        function pauseTimeline() {
+            isPaused = !isPaused;
+            const btn = document.getElementById('pauseBtn');
+            
+            if (isPaused) {
+                btn.innerHTML = '<i class="fas fa-play mr-2"></i>Resume';
+                stopAutoRefresh();
+                showToast('Timeline paused', 'info');
+            } else {
+                btn.innerHTML = '<i class="fas fa-pause mr-2"></i>Pause';
+                startAutoRefresh();
+                showToast('Timeline resumed', 'success');
+            }
+        }
+
+        function refreshTimeline() {
+            // Simulate new activities
+            const newActivities = [
+                {
+                    id: timelineData.length + 1,
+                    time: new Date().toLocaleTimeString(),
+                    type: 'checkin',
+                    title: 'Mike Johnson checked in',
+                    description: 'Check-in to TechConf 2024',
+                    user: 'Mike Johnson',
+                    admin: 'Scanner Operator',
+                    conference: 'TechConf 2024',
+                    method: 'NFC Card',
+                    details: {
+                        memberId: 'NFC-C3D4E5F6G',
+                        location: 'Main Entrance',
+                        device: 'Scanner #1'
+                    }
+                }
+            ];
+
+            timelineData.unshift(...newActivities);
+            timelineFiltered = [...timelineData];
+            renderTimeline();
+            updateLastUpdated();
+            showToast('Timeline refreshed', 'success');
+        }
+
+        function loadMoreActivities() {
+            // Simulate loading more historical data
+            showToast('Loading more activities...', 'info');
+            
+            setTimeout(() => {
+                showToast('More activities loaded', 'success');
+            }, 1000);
+        }
+
+        // Export functions
+        function exportTimeline() {
+            showToast('Exporting timeline data...', 'info');
+            // In real implementation, generate and download CSV/PDF
+        }
+
+        function printTimeline() {
+            showToast('Preparing timeline report for printing...', 'info');
+            // In real implementation, open print dialog with formatted report
+        }
+
+        // Auto-refresh functionality
+        function startAutoRefresh() {
+            if (autoRefreshInterval) return;
+            
+            autoRefreshInterval = setInterval(() => {
+                if (!isPaused) {
+                    // Simulate real-time updates
+                    if (Math.random() > 0.7) { // 30% chance of new activity
+                        refreshTimeline();
+                    } else {
+                        updateLastUpdated();
+                    }
+                }
+            }, 10000); // Update every 10 seconds
+        }
+
+        function stopAutoRefresh() {
+            if (autoRefreshInterval) {
+                clearInterval(autoRefreshInterval);
+                autoRefreshInterval = null;
+            }
+        }
+
+        function updateLastUpdated() {
+            document.getElementById('lastUpdated').textContent = new Date().toLocaleTimeString();
+        }
+
+        // Auto-refresh toggle
+        document.getElementById('autoRefresh').addEventListener('change', function() {
+            if (this.checked) {
+                startAutoRefresh();
+            } else {
+                stopAutoRefresh();
+            }
+        });
+
+        // Utility functions
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            const alert = toast.querySelector('.alert');
+            
+            alert.className = `alert alert-${type}`;
+            alert.querySelector('span').textContent = message;
+            
+            const icon = alert.querySelector('i');
+            if (type === 'success') {
+                icon.className = 'fas fa-check-circle';
+            } else if (type === 'error') {
+                icon.className = 'fas fa-exclamation-circle';
+            } else if (type === 'warning') {
+                icon.className = 'fas fa-exclamation-triangle';
+            } else if (type === 'info') {
+                icon.className = 'fas fa-info-circle';
+            }
+            
+            toast.style.display = 'block';
+            
+            setTimeout(() => {
+                toast.style.display = 'none';
+            }, 3000);
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            renderTimeline();
+            updateLastUpdated();
+            
+            // Start auto-refresh if enabled
+            if (document.getElementById('autoRefresh').checked) {
+                startAutoRefresh();
+            }
+        });
+
+        // Cleanup on page unload
+        window.addEventListener('beforeunload', function() {
+            stopAutoRefresh();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reports - Conference Attendance System</title>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.4.24/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
+</head>
+<body class="min-h-screen bg-base-200">
+    <!-- Navigation -->
+    <div class="navbar bg-base-100 shadow-lg">
+        <div class="navbar-start">
+            <div class="dropdown">
+                <div tabindex="0" role="button" class="btn btn-ghost lg:hidden">
+                    <i class="fas fa-bars w-5 h-5"></i>
+                </div>
+                <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
+                    <li><a href="admin-dashboard.html">Dashboard</a></li>
+                    <li><a href="admin-members.html">Members</a></li>
+                    <li><a href="admin-scanner.html">Scanner</a></li>
+                    <li><a href="admin-conferences.html">Conferences</a></li>
+                    <li><a href="admin-reports.html" class="active">Reports</a></li>
+                    <li><a href="admin-timeline.html">Timeline</a></li>
+                </ul>
+            </div>
+            <a href="admin-dashboard.html" class="btn btn-ghost text-xl">
+                <i class="fas fa-calendar-check mr-2"></i>
+                ConfTrack Admin
+            </a>
+        </div>
+        <div class="navbar-center hidden lg:flex">
+            <ul class="menu menu-horizontal px-1">
+                <li><a href="admin-dashboard.html">Dashboard</a></li>
+                <li><a href="admin-members.html">Members</a></li>
+                <li><a href="admin-scanner.html">Scanner</a></li>
+                <li><a href="admin-conferences.html">Conferences</a></li>
+                <li><a href="admin-reports.html" class="active">Reports</a></li>
+                <li><a href="admin-timeline.html">Timeline</a></li>
+            </ul>
+        </div>
+        <div class="navbar-end gap-2">
+            <!-- Theme Toggle -->
+            <label class="swap swap-rotate">
+                <input type="checkbox" class="theme-controller" value="dark" />
+                <i class="fas fa-sun swap-off fill-current w-6 h-6"></i>
+                <i class="fas fa-moon swap-on fill-current w-6 h-6"></i>
+            </label>
+            <!-- Admin Menu -->
+            <div class="dropdown dropdown-end">
+                <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar">
+                    <div class="w-10 rounded-full">
+                        <img alt="Admin" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face" />
+                    </div>
+                </div>
+                <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
+                    <li><a href="#"><i class="fas fa-user mr-2"></i>Profile</a></li>
+                    <li><a href="#"><i class="fas fa-cog mr-2"></i>Settings</a></li>
+                    <li><a href="auth-login.html"><i class="fas fa-sign-out-alt mr-2"></i>Logout</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hero Header -->
+    <div class="bg-gradient-to-r from-primary to-secondary text-primary-content py-8">
+        <div class="container mx-auto px-4">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h1 class="text-3xl font-bold mb-2">Reports & Analytics</h1>
+                    <p class="opacity-90">Generate comprehensive reports and analyze conference data</p>
+                </div>
+                <div class="flex gap-3">
+                    <button class="btn btn-neutral" onclick="scheduleReport()">
+                        <i class="fas fa-clock mr-2"></i>Schedule Report
+                    </button>
+                    <button class="btn btn-neutral" onclick="viewSavedReports()">
+                        <i class="fas fa-archive mr-2"></i>Saved Reports
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container mx-auto px-4 py-8">
+        <!-- Quick Report Generation -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div class="card bg-gradient-to-br from-success/10 to-success/5 border border-success/20 hover:shadow-lg transition-all duration-200 cursor-pointer" onclick="generateQuickReport('attendance')">
+                <div class="card-body text-center">
+                    <div class="text-4xl text-success mb-2">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3 class="card-title justify-center text-lg">Attendance Report</h3>
+                    <p class="text-sm text-base-content/70">Check-in/out statistics and trends</p>
+                    <div class="badge badge-success badge-sm mt-2">Quick Generate</div>
+                </div>
+            </div>
+
+            <div class="card bg-gradient-to-br from-info/10 to-info/5 border border-info/20 hover:shadow-lg transition-all duration-200 cursor-pointer" onclick="generateQuickReport('members')">
+                <div class="card-body text-center">
+                    <div class="text-4xl text-info mb-2">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3 class="card-title justify-center text-lg">Member Report</h3>
+                    <p class="text-sm text-base-content/70">Member demographics and activity</p>
+                    <div class="badge badge-info badge-sm mt-2">Quick Generate</div>
+                </div>
+            </div>
+
+            <div class="card bg-gradient-to-br from-warning/10 to-warning/5 border border-warning/20 hover:shadow-lg transition-all duration-200 cursor-pointer" onclick="generateQuickReport('conferences')">
+                <div class="card-body text-center">
+                    <div class="text-4xl text-warning mb-2">
+                        <i class="fas fa-calendar-alt"></i>
+                    </div>
+                    <h3 class="card-title justify-center text-lg">Conference Report</h3>
+                    <p class="text-sm text-base-content/70">Conference performance metrics</p>
+                    <div class="badge badge-warning badge-sm mt-2">Quick Generate</div>
+                </div>
+            </div>
+
+            <div class="card bg-gradient-to-br from-secondary/10 to-secondary/5 border border-secondary/20 hover:shadow-lg transition-all duration-200 cursor-pointer" onclick="generateQuickReport('custom')">
+                <div class="card-body text-center">
+                    <div class="text-4xl text-secondary mb-2">
+                        <i class="fas fa-cog"></i>
+                    </div>
+                    <h3 class="card-title justify-center text-lg">Custom Report</h3>
+                    <p class="text-sm text-base-content/70">Build your own custom report</p>
+                    <div class="badge badge-secondary badge-sm mt-2">Advanced</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Report Builder -->
+            <div class="lg:col-span-2">
+                <div class="card bg-base-100 shadow-lg">
+                    <div class="card-body">
+                        <h2 class="card-title mb-6">
+                            <i class="fas fa-hammer mr-2 text-primary"></i>
+                            Report Builder
+                        </h2>
+
+                        <div class="space-y-6">
+                            <!-- Report Type -->
+                            <div class="form-control">
+                                <label class="label">
+                                    <span class="label-text font-semibold">Report Type</span>
+                                </label>
+                                <select class="select select-bordered" id="reportType">
+                                    <option value="attendance">Attendance Analysis</option>
+                                    <option value="members">Member Demographics</option>
+                                    <option value="conferences">Conference Performance</option>
+                                    <option value="timeline">Activity Timeline</option>
+                                    <option value="financial">Financial Summary</option>
+                                    <option value="custom">Custom Report</option>
+                                </select>
+                            </div>
+
+                            <!-- Date Range -->
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="form-control">
+                                    <label class="label">
+                                        <span class="label-text font-semibold">Start Date</span>
+                                    </label>
+                                    <input type="date" class="input input-bordered" id="startDate" />
+                                </div>
+                                <div class="form-control">
+                                    <label class="label">
+                                        <span class="label-text font-semibold">End Date</span>
+                                    </label>
+                                    <input type="date" class="input input-bordered" id="endDate" />
+                                </div>
+                            </div>
+
+                            <!-- Conference Selection -->
+                            <div class="form-control">
+                                <label class="label">
+                                    <span class="label-text font-semibold">Conferences</span>
+                                </label>
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                    <label class="cursor-pointer flex items-center gap-3 p-3 border border-dashed rounded-lg hover:bg-base-200">
+                                        <input type="checkbox" class="checkbox checkbox-primary" checked />
+                                        <div class="flex-1">
+                                            <div class="font-medium">TechConf 2024</div>
+                                            <div class="text-xs text-base-content/60">89/120 attended</div>
+                                        </div>
+                                    </label>
+                                    <label class="cursor-pointer flex items-center gap-3 p-3 border border-dashed rounded-lg hover:bg-base-200">
+                                        <input type="checkbox" class="checkbox checkbox-primary" checked />
+                                        <div class="flex-1">
+                                            <div class="font-medium">DevSummit 2024</div>
+                                            <div class="text-xs text-base-content/60">156/200 registered</div>
+                                        </div>
+                                    </label>
+                                    <label class="cursor-pointer flex items-center gap-3 p-3 border border-dashed rounded-lg hover:bg-base-200">
+                                        <input type="checkbox" class="checkbox checkbox-primary" />
+                                        <div class="flex-1">
+                                            <div class="font-medium">AI Workshop</div>
+                                            <div class="text-xs text-base-content/60">45/50 attended</div>
+                                        </div>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- Report Options -->
+                            <div class="form-control">
+                                <label class="label">
+                                    <span class="label-text font-semibold">Include in Report</span>
+                                </label>
+                                <div class="grid grid-cols-2 gap-2">
+                                    <label class="cursor-pointer flex items-center gap-2">
+                                        <input type="checkbox" class="checkbox checkbox-sm" checked />
+                                        <span class="text-sm">Summary Statistics</span>
+                                    </label>
+                                    <label class="cursor-pointer flex items-center gap-2">
+                                        <input type="checkbox" class="checkbox checkbox-sm" checked />
+                                        <span class="text-sm">Charts & Graphs</span>
+                                    </label>
+                                    <label class="cursor-pointer flex items-center gap-2">
+                                        <input type="checkbox" class="checkbox checkbox-sm" checked />
+                                        <span class="text-sm">Member Details</span>
+                                    </label>
+                                    <label class="cursor-pointer flex items-center gap-2">
+                                        <input type="checkbox" class="checkbox checkbox-sm" />
+                                        <span class="text-sm">Raw Data Tables</span>
+                                    </label>
+                                    <label class="cursor-pointer flex items-center gap-2">
+                                        <input type="checkbox" class="checkbox checkbox-sm" checked />
+                                        <span class="text-sm">Time Analysis</span>
+                                    </label>
+                                    <label class="cursor-pointer flex items-center gap-2">
+                                        <input type="checkbox" class="checkbox checkbox-sm" />
+                                        <span class="text-sm">Geographic Data</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- Output Format -->
+                            <div class="form-control">
+                                <label class="label">
+                                    <span class="label-text font-semibold">Output Format</span>
+                                </label>
+                                <div class="flex gap-4">
+                                    <label class="cursor-pointer flex items-center gap-2">
+                                        <input type="radio" name="format" class="radio radio-primary" value="pdf" checked />
+                                        <span class="text-sm">PDF Report</span>
+                                    </label>
+                                    <label class="cursor-pointer flex items-center gap-2">
+                                        <input type="radio" name="format" class="radio radio-primary" value="excel" />
+                                        <span class="text-sm">Excel Spreadsheet</span>
+                                    </label>
+                                    <label class="cursor-pointer flex items-center gap-2">
+                                        <input type="radio" name="format" class="radio radio-primary" value="csv" />
+                                        <span class="text-sm">CSV Data</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- Generate Button -->
+                            <div class="flex gap-3">
+                                <button class="btn btn-outline flex-1" onclick="previewReport()">
+                                    <i class="fas fa-eye mr-2"></i>Preview Report
+                                </button>
+                                <button class="btn btn-primary flex-1" onclick="generateReport()">
+                                    <i class="fas fa-file-download mr-2"></i>Generate & Download
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Report Preview -->
+                <div class="card bg-base-100 shadow-lg mt-8" id="reportPreview" style="display: none;">
+                    <div class="card-body">
+                        <h3 class="card-title mb-4">
+                            <i class="fas fa-eye mr-2 text-info"></i>
+                            Report Preview
+                        </h3>
+                        <div id="previewContent">
+                            <!-- Preview content will be populated by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="space-y-6">
+                <!-- Recent Reports -->
+                <div class="card bg-base-100 shadow-lg">
+                    <div class="card-body">
+                        <h3 class="card-title mb-4">
+                            <i class="fas fa-clock mr-2 text-warning"></i>
+                            Recent Reports
+                        </h3>
+                        <div class="space-y-3">
+                            <div class="flex items-start gap-3 p-3 border border-dashed rounded-lg hover:bg-base-200 cursor-pointer">
+                                <div class="text-success">
+                                    <i class="fas fa-file-pdf"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <div class="font-medium text-sm">Attendance Report Dec 2024</div>
+                                    <div class="text-xs text-base-content/60">Generated 2 hours ago</div>
+                                    <div class="flex gap-1 mt-1">
+                                        <span class="badge badge-xs">PDF</span>
+                                        <span class="badge badge-xs">2.3 MB</span>
+                                    </div>
+                                </div>
+                                <button class="btn btn-ghost btn-xs" onclick="downloadReport('report1')">
+                                    <i class="fas fa-download"></i>
+                                </button>
+                            </div>
+
+                            <div class="flex items-start gap-3 p-3 border border-dashed rounded-lg hover:bg-base-200 cursor-pointer">
+                                <div class="text-info">
+                                    <i class="fas fa-file-excel"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <div class="font-medium text-sm">Member Demographics</div>
+                                    <div class="text-xs text-base-content/60">Generated yesterday</div>
+                                    <div class="flex gap-1 mt-1">
+                                        <span class="badge badge-xs">Excel</span>
+                                        <span class="badge badge-xs">1.8 MB</span>
+                                    </div>
+                                </div>
+                                <button class="btn btn-ghost btn-xs" onclick="downloadReport('report2')">
+                                    <i class="fas fa-download"></i>
+                                </button>
+                            </div>
+
+                            <div class="flex items-start gap-3 p-3 border border-dashed rounded-lg hover:bg-base-200 cursor-pointer">
+                                <div class="text-warning">
+                                    <i class="fas fa-file-csv"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <div class="font-medium text-sm">Conference Performance</div>
+                                    <div class="text-xs text-base-content/60">Generated 3 days ago</div>
+                                    <div class="flex gap-1 mt-1">
+                                        <span class="badge badge-xs">CSV</span>
+                                        <span class="badge badge-xs">0.5 MB</span>
+                                    </div>
+                                </div>
+                                <button class="btn btn-ghost btn-xs" onclick="downloadReport('report3')">
+                                    <i class="fas fa-download"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="mt-4">
+                            <button class="btn btn-outline btn-sm w-full" onclick="viewAllReports()">
+                                View All Reports
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Report Templates -->
+                <div class="card bg-base-100 shadow-lg">
+                    <div class="card-body">
+                        <h3 class="card-title mb-4">
+                            <i class="fas fa-template mr-2 text-secondary"></i>
+                            Report Templates
+                        </h3>
+                        <div class="space-y-2">
+                            <button class="btn btn-outline btn-sm w-full justify-start" onclick="useTemplate('daily')">
+                                <i class="fas fa-calendar-day mr-2"></i>Daily Summary
+                            </button>
+                            <button class="btn btn-outline btn-sm w-full justify-start" onclick="useTemplate('weekly')">
+                                <i class="fas fa-calendar-week mr-2"></i>Weekly Report
+                            </button>
+                            <button class="btn btn-outline btn-sm w-full justify-start" onclick="useTemplate('monthly')">
+                                <i class="fas fa-calendar-alt mr-2"></i>Monthly Analytics
+                            </button>
+                            <button class="btn btn-outline btn-sm w-full justify-start" onclick="useTemplate('event')">
+                                <i class="fas fa-calendar-check mr-2"></i>Event Summary
+                            </button>
+                        </div>
+
+                        <div class="divider text-xs">Custom</div>
+
+                        <button class="btn btn-primary btn-sm w-full" onclick="createTemplate()">
+                            <i class="fas fa-plus mr-2"></i>Create Template
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Quick Stats -->
+                <div class="card bg-base-100 shadow-lg">
+                    <div class="card-body">
+                        <h3 class="card-title mb-4">
+                            <i class="fas fa-tachometer-alt mr-2 text-accent"></i>
+                            Quick Stats
+                        </h3>
+                        <div class="space-y-3">
+                            <div class="flex justify-between">
+                                <span class="text-sm">Total Reports Generated:</span>
+                                <span class="font-semibold">847</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-sm">This Month:</span>
+                                <span class="font-semibold">23</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-sm">Scheduled Reports:</span>
+                                <span class="font-semibold">5</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-sm">Storage Used:</span>
+                                <span class="font-semibold">2.4 GB</span>
+                            </div>
+                        </div>
+
+                        <div class="progress progress-primary w-full mt-4" value="48" max="100"></div>
+                        <div class="text-xs text-center mt-1 text-base-content/60">48% of storage quota used</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sample Report Charts -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-8">
+            <div class="card bg-base-100 shadow-lg">
+                <div class="card-body">
+                    <h3 class="card-title mb-4">
+                        <i class="fas fa-chart-bar mr-2 text-primary"></i>
+                        Attendance Trends
+                    </h3>
+                    <div class="h-64">
+                        <canvas id="attendanceTrendChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card bg-base-100 shadow-lg">
+                <div class="card-body">
+                    <h3 class="card-title mb-4">
+                        <i class="fas fa-chart-pie mr-2 text-secondary"></i>
+                        Member Demographics
+                    </h3>
+                    <div class="h-64">
+                        <canvas id="demographicsChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Report Generation Modal -->
+    <dialog id="reportModal" class="modal">
+        <div class="modal-box w-11/12 max-w-md">
+            <h3 class="font-bold text-lg mb-4">Generating Report</h3>
+            
+            <div class="space-y-4">
+                <div class="text-center">
+                    <div class="loading loading-spinner loading-lg text-primary mb-4"></div>
+                    <p class="font-medium" id="reportStatus">Preparing report data...</p>
+                </div>
+
+                <div class="space-y-2">
+                    <div class="flex justify-between text-sm">
+                        <span>Progress</span>
+                        <span id="reportProgress">0%</span>
+                    </div>
+                    <progress class="progress progress-primary w-full" value="0" max="100" id="progressBar"></progress>
+                </div>
+
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle"></i>
+                    <div>
+                        <div class="font-semibold">Large reports may take a few minutes</div>
+                        <div class="text-sm">You can continue using the system while the report generates</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-action">
+                <button class="btn btn-outline" onclick="cancelReportGeneration()">
+                    Cancel
+                </button>
+            </div>
+        </div>
+    </dialog>
+
+    <!-- Toast -->
+    <div class="toast toast-top toast-end" id="toast" style="display: none;">
+        <div class="alert alert-success">
+            <i class="fas fa-check-circle"></i>
+            <span>Action completed successfully!</span>
+        </div>
+    </div>
+
+    <script>
+        // Theme toggle functionality
+        const themeController = document.querySelector('.theme-controller');
+        const html = document.documentElement;
+        
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        html.setAttribute('data-theme', savedTheme);
+        if (savedTheme === 'dark') {
+            themeController.checked = true;
+        }
+        
+        themeController.addEventListener('change', function() {
+            const theme = this.checked ? 'dark' : 'light';
+            html.setAttribute('data-theme', theme);
+            localStorage.setItem('theme', theme);
+        });
+
+        // Quick report generation
+        function generateQuickReport(type) {
+            const reportTypes = {
+                'attendance': 'Attendance Report',
+                'members': 'Member Demographics Report',
+                'conferences': 'Conference Performance Report',
+                'custom': 'Custom Report Builder'
+            };
+
+            if (type === 'custom') {
+                document.getElementById('reportType').value = 'custom';
+                showToast('Custom report builder loaded', 'info');
+            } else {
+                showReportModal();
+                simulateReportGeneration(reportTypes[type]);
+            }
+        }
+
+        // Report builder functions
+        function previewReport() {
+            const reportType = document.getElementById('reportType').value;
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
+
+            if (!startDate || !endDate) {
+                showToast('Please select start and end dates', 'warning');
+                return;
+            }
+
+            const preview = document.getElementById('reportPreview');
+            const content = document.getElementById('previewContent');
+
+            content.innerHTML = `
+                <div class="space-y-4">
+                    <div class="alert alert-info">
+                        <i class="fas fa-eye"></i>
+                        <div>
+                            <div class="font-semibold">Report Preview</div>
+                            <div class="text-sm">This is a sample preview of your ${reportType} report</div>
+                        </div>
+                    </div>
+
+                    <div class="stats stats-vertical lg:stats-horizontal shadow">
+                        <div class="stat">
+                            <div class="stat-title">Total Check-ins</div>
+                            <div class="stat-value text-primary">2,847</div>
+                            <div class="stat-desc">Jan 1 - Dec 15, 2024</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-title">Average Duration</div>
+                            <div class="stat-value text-secondary">4h 23m</div>
+                            <div class="stat-desc">Per attendee</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-title">Peak Attendance</div>
+                            <div class="stat-value text-accent">312</div>
+                            <div class="stat-desc">Single day record</div>
+                        </div>
+                    </div>
+
+                    <div class="mockup-window border bg-base-300">
+                        <div class="flex justify-center px-4 py-16 bg-base-200">
+                            <div class="text-center">
+                                <i class="fas fa-chart-bar text-4xl text-base-content/20 mb-4"></i>
+                                <p class="text-base-content/60">Charts and detailed analysis will appear here</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            preview.style.display = 'block';
+            preview.scrollIntoView({ behavior: 'smooth' });
+            showToast('Report preview generated', 'success');
+        }
+
+        function generateReport() {
+            const reportType = document.getElementById('reportType').value;
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
+            const format = document.querySelector('input[name="format"]:checked').value;
+
+            if (!startDate || !endDate) {
+                showToast('Please select start and end dates', 'warning');
+                return;
+            }
+
+            showReportModal();
+            simulateReportGeneration(`${reportType.charAt(0).toUpperCase() + reportType.slice(1)} Report (${format.toUpperCase()})`);
+        }
+
+        // Report modal functions
+        function showReportModal() {
+            document.getElementById('reportModal').showModal();
+        }
+
+        function simulateReportGeneration(reportName) {
+            const steps = [
+                'Collecting data from database...',
+                'Processing attendance records...',
+                'Generating charts and graphs...',
+                'Formatting report layout...',
+                'Creating downloadable file...',
+                'Report ready for download!'
+            ];
+
+            let currentStep = 0;
+            const progressBar = document.getElementById('progressBar');
+            const progressText = document.getElementById('reportProgress');
+            const statusText = document.getElementById('reportStatus');
+
+            const interval = setInterval(() => {
+                if (currentStep < steps.length) {
+                    statusText.textContent = steps[currentStep];
+                    const progress = ((currentStep + 1) / steps.length) * 100;
+                    progressBar.value = progress;
+                    progressText.textContent = Math.round(progress) + '%';
+                    currentStep++;
+                } else {
+                    clearInterval(interval);
+                    document.getElementById('reportModal').close();
+                    showToast(`${reportName} generated successfully! Download started.`, 'success');
+                }
+            }, 1000);
+        }
+
+        function cancelReportGeneration() {
+            document.getElementById('reportModal').close();
+            showToast('Report generation cancelled', 'warning');
+        }
+
+        // Template functions
+        function useTemplate(templateType) {
+            const templates = {
+                'daily': {
+                    type: 'attendance',
+                    startDate: new Date().toISOString().split('T')[0],
+                    endDate: new Date().toISOString().split('T')[0]
+                },
+                'weekly': {
+                    type: 'attendance',
+                    startDate: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+                    endDate: new Date().toISOString().split('T')[0]
+                },
+                'monthly': {
+                    type: 'members',
+                    startDate: new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString().split('T')[0],
+                    endDate: new Date().toISOString().split('T')[0]
+                },
+                'event': {
+                    type: 'conferences',
+                    startDate: new Date().toISOString().split('T')[0],
+                    endDate: new Date().toISOString().split('T')[0]
+                }
+            };
+
+            const template = templates[templateType];
+            if (template) {
+                document.getElementById('reportType').value = template.type;
+                document.getElementById('startDate').value = template.startDate;
+                document.getElementById('endDate').value = template.endDate;
+                showToast(`${templateType.charAt(0).toUpperCase() + templateType.slice(1)} template applied`, 'success');
+            }
+        }
+
+        function createTemplate() {
+            showToast('Template creation wizard would open here', 'info');
+        }
+
+        // Report management functions
+        function scheduleReport() {
+            showToast('Report scheduler would open here', 'info');
+        }
+
+        function viewSavedReports() {
+            showToast('Saved reports archive would open here', 'info');
+        }
+
+        function downloadReport(reportId) {
+            showToast(`Downloading report ${reportId}...`, 'info');
+        }
+
+        function viewAllReports() {
+            showToast('All reports view would open here', 'info');
+        }
+
+        // Chart initialization
+        let attendanceTrendChart, demographicsChart;
+
+        function initializeCharts() {
+            // Attendance Trend Chart
+            const attendanceCtx = document.getElementById('attendanceTrendChart').getContext('2d');
+            attendanceTrendChart = new Chart(attendanceCtx, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                    datasets: [{
+                        label: 'Total Attendance',
+                        data: [120, 140, 180, 160, 200, 240, 220, 280, 260, 300, 280, 320],
+                        borderColor: 'rgb(59, 130, 246)',
+                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }, {
+                        label: 'Unique Members',
+                        data: [80, 95, 120, 110, 140, 165, 155, 190, 175, 210, 195, 230],
+                        borderColor: 'rgb(16, 185, 129)',
+                        backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+
+            // Demographics Chart
+            const demographicsCtx = document.getElementById('demographicsChart').getContext('2d');
+            demographicsChart = new Chart(demographicsCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Tech Industry', 'Healthcare', 'Finance', 'Education', 'Other'],
+                    datasets: [{
+                        data: [45, 20, 15, 12, 8],
+                        backgroundColor: [
+                            'rgb(59, 130, 246)',
+                            'rgb(16, 185, 129)',
+                            'rgb(245, 158, 11)',
+                            'rgb(239, 68, 68)',
+                            'rgb(107, 114, 128)'
+                        ]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'right',
+                        }
+                    }
+                }
+            });
+        }
+
+        // Utility functions
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            const alert = toast.querySelector('.alert');
+            
+            alert.className = `alert alert-${type}`;
+            alert.querySelector('span').textContent = message;
+            
+            const icon = alert.querySelector('i');
+            if (type === 'success') {
+                icon.className = 'fas fa-check-circle';
+            } else if (type === 'error') {
+                icon.className = 'fas fa-exclamation-circle';
+            } else if (type === 'warning') {
+                icon.className = 'fas fa-exclamation-triangle';
+            } else if (type === 'info') {
+                icon.className = 'fas fa-info-circle';
+            }
+            
+            toast.style.display = 'block';
+            
+            setTimeout(() => {
+                toast.style.display = 'none';
+            }, 3000);
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeCharts();
+            
+            // Set default dates
+            const today = new Date().toISOString().split('T')[0];
+            const lastMonth = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+            
+            document.getElementById('startDate').value = lastMonth;
+            document.getElementById('endDate').value = today;
+        });
+    </script>
+</body>
+</html>
