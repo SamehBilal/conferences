@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conference Attendance System</title>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.4.24/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="min-h-screen bg-base-200">
+    <!-- Navigation -->
+    <div class="navbar bg-base-100 shadow-lg">
+        <div class="navbar-start">
+            <div class="dropdown">
+                <div tabindex="0" role="button" class="btn btn-ghost lg:hidden">
+                    <i class="fas fa-bars w-5 h-5"></i>
+                </div>
+                <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
+                    <li><a href="#features">Features</a></li>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </div>
+            <a class="btn btn-ghost text-xl">
+                <i class="fas fa-calendar-check mr-2"></i>
+                ConfTrack
+            </a>
+        </div>
+        <div class="navbar-center hidden lg:flex">
+            <ul class="menu menu-horizontal px-1">
+                <li><a href="#features">Features</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </div>
+        <div class="navbar-end gap-2">
+            <!-- Theme Toggle -->
+            <label class="swap swap-rotate">
+                <input type="checkbox" class="theme-controller" value="dark" />
+                <i class="fas fa-sun swap-off fill-current w-6 h-6"></i>
+                <i class="fas fa-moon swap-on fill-current w-6 h-6"></i>
+            </label>
+            <a href="auth-login.html" class="btn btn-ghost">Login</a>
+            <a href="auth-register.html" class="btn btn-primary">Register</a>
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <div class="hero min-h-[calc(100vh-4rem)] bg-gradient-to-br from-primary/10 to-secondary/10">
+        <div class="hero-content text-center">
+            <div class="max-w-md">
+                <div class="mb-8">
+                    <i class="fas fa-qrcode text-6xl text-primary mb-4"></i>
+                </div>
+                <h1 class="text-5xl font-bold mb-6">Conference Attendance</h1>
+                <p class="text-lg mb-8">Streamline your conference attendance tracking with NFC and QR code technology. Easy check-in, real-time analytics, and comprehensive reporting.</p>
+                
+                <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                    <a href="user-profile.html" class="btn btn-primary btn-lg">
+                        <i class="fas fa-user mr-2"></i>
+                        User Portal
+                    </a>
+                    <a href="admin-dashboard.html" class="btn btn-secondary btn-lg">
+                        <i class="fas fa-cog mr-2"></i>
+                        Admin Dashboard
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Features Section -->
+    <section id="features" class="py-20 bg-base-100">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl font-bold mb-4">Powerful Features</h2>
+                <p class="text-base-content/70 max-w-2xl mx-auto">Everything you need to manage conference attendance efficiently</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Feature 1 -->
+                <div class="card bg-base-200 shadow-lg hover:shadow-xl transition-all duration-200">
+                    <div class="card-body text-center">
+                        <div class="text-4xl text-primary mb-4">
+                            <i class="fas fa-qrcode"></i>
+                        </div>
+                        <h3 class="card-title justify-center">QR & NFC Scanning</h3>
+                        <p class="text-base-content/70">Quick and contactless attendance tracking using QR codes or NFC technology</p>
+                    </div>
+                </div>
+
+                <!-- Feature 2 -->
+                <div class="card bg-base-200 shadow-lg hover:shadow-xl transition-all duration-200">
+                    <div class="card-body text-center">
+                        <div class="text-4xl text-secondary mb-4">
+                            <i class="fas fa-chart-bar"></i>
+                        </div>
+                        <h3 class="card-title justify-center">Real-time Analytics</h3>
+                        <p class="text-base-content/70">Live dashboard with attendance statistics and comprehensive reporting</p>
+                    </div>
+                </div>
+
+                <!-- Feature 3 -->
+                <div class="card bg-base-200 shadow-lg hover:shadow-xl transition-all duration-200">
+                    <div class="card-body text-center">
+                        <div class="text-4xl text-accent mb-4">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <h3 class="card-title justify-center">Member Management</h3>
+                        <p class="text-base-content/70">Complete user profile management with photos, contact details, and professional info</p>
+                    </div>
+                </div>
+
+                <!-- Feature 4 -->
+                <div class="card bg-base-200 shadow-lg hover:shadow-xl transition-all duration-200">
+                    <div class="card-body text-center">
+                        <div class="text-4xl text-info mb-4">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <h3 class="card-title justify-center">Timeline Tracking</h3>
+                        <p class="text-base-content/70">Complete audit trail of all check-ins, check-outs, and administrative actions</p>
+                    </div>
+                </div>
+
+                <!-- Feature 5 -->
+                <div class="card bg-base-200 shadow-lg hover:shadow-xl transition-all duration-200">
+                    <div class="card-body text-center">
+                        <div class="text-4xl text-success mb-4">
+                            <i class="fas fa-file-export"></i>
+                        </div>
+                        <h3 class="card-title justify-center">Export Reports</h3>
+                        <p class="text-base-content/70">Generate detailed reports in multiple formats for analysis and record-keeping</p>
+                    </div>
+                </div>
+
+                <!-- Feature 6 -->
+                <div class="card bg-base-200 shadow-lg hover:shadow-xl transition-all duration-200">
+                    <div class="card-body text-center">
+                        <div class="text-4xl text-warning mb-4">
+                            <i class="fas fa-mobile-alt"></i>
+                        </div>
+                        <h3 class="card-title justify-center">Mobile Friendly</h3>
+                        <p class="text-base-content/70">Responsive design works perfectly on all devices, from smartphones to tablets</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer footer-center p-10 bg-base-300 text-base-content">
+        <div>
+            <div class="text-3xl font-bold">
+                <i class="fas fa-calendar-check mr-2"></i>
+                ConfTrack
+            </div>
+            <p class="font-bold">
+                Conference Attendance Management System
+            </p> 
+            <p>Copyright © 2024 - All rights reserved</p>
+        </div>
+        <div>
+            <div class="grid grid-flow-col gap-4">
+                <a><i class="fab fa-twitter text-2xl"></i></a> 
+                <a><i class="fab fa-youtube text-2xl"></i></a> 
+                <a><i class="fab fa-facebook text-2xl"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Theme toggle functionality
+        const themeController = document.querySelector('.theme-controller');
+        const html = document.documentElement;
+        
+        // Check for saved theme or default to light
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        html.setAttribute('data-theme', savedTheme);
+        if (savedTheme === 'dark') {
+            themeController.checked = true;
+        }
+        
+        themeController.addEventListener('change', function() {
+            const theme = this.checked ? 'dark' : 'light';
+            html.setAttribute('data-theme', theme);
+            localStorage.setItem('theme', theme);
+        });
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>

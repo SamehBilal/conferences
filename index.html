@@ -1,37 +1,104 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="light">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Conference Attendance System</title>
+    <title>ConfTrack - Conference Attendance Management System</title>
     <link href="https://cdn.jsdelivr.net/npm/daisyui@4.4.24/dist/full.min.css" rel="stylesheet" type="text/css" />
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+
+        .float-animation {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in-up {
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, hsl(var(--p)) 0%, hsl(var(--s)) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-pattern {
+            background-image:
+                radial-gradient(circle at 25% 25%, hsl(var(--p) / 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 75% 75%, hsl(var(--s) / 0.1) 0%, transparent 50%);
+        }
+
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+
+        .card-hover:hover {
+            transform: translateY(-8px);
+        }
+    </style>
 </head>
+
 <body class="min-h-screen bg-base-200">
     <!-- Navigation -->
-    <div class="navbar bg-base-100 shadow-lg">
+    <div class="navbar bg-base-100/95 backdrop-blur-sm shadow-lg sticky top-0 z-50">
         <div class="navbar-start">
             <div class="dropdown">
                 <div tabindex="0" role="button" class="btn btn-ghost lg:hidden">
                     <i class="fas fa-bars w-5 h-5"></i>
                 </div>
-                <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
-                    <li><a href="#features">Features</a></li>
-                    <li><a href="#about">About</a></li>
-                    <li><a href="#contact">Contact</a></li>
+                <ul tabindex="0"
+                    class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow-lg bg-base-100 rounded-box w-52 border border-base-300">
+                    <li><a href="#features" class="hover:bg-primary/10">
+                            <i class="fas fa-star mr-2"></i>Features</a></li>
+                    <li><a href="#demo" class="hover:bg-primary/10">
+                            <i class="fas fa-play mr-2"></i>Demo</a></li>
+                    <li><a href="#pricing" class="hover:bg-primary/10">
+                            <i class="fas fa-tag mr-2"></i>Pricing</a></li>
+                    <li><a href="#contact" class="hover:bg-primary/10">
+                            <i class="fas fa-envelope mr-2"></i>Contact</a></li>
                 </ul>
             </div>
-            <a class="btn btn-ghost text-xl">
-                <i class="fas fa-calendar-check mr-2"></i>
-                ConfTrack
+            <a class="btn btn-ghost text-xl font-bold">
+                <i class="fas fa-calendar-check mr-2 text-primary"></i>
+                <span class="gradient-text">ConfTrack</span>
             </a>
         </div>
         <div class="navbar-center hidden lg:flex">
             <ul class="menu menu-horizontal px-1">
-                <li><a href="#features">Features</a></li>
-                <li><a href="#about">About</a></li>
-                <li><a href="#contact">Contact</a></li>
+                <li><a href="#features" class="hover:bg-primary/10">
+                        <i class="fas fa-star mr-2"></i>Features</a></li>
+                <li><a href="#demo" class="hover:bg-primary/10">
+                        <i class="fas fa-play mr-2"></i>Demo</a></li>
+                <li><a href="#pricing" class="hover:bg-primary/10">
+                        <i class="fas fa-tag mr-2"></i>Pricing</a></li>
+                <li><a href="#contact" class="hover:bg-primary/10">
+                        <i class="fas fa-envelope mr-2"></i>Contact</a></li>
             </ul>
         </div>
         <div class="navbar-end gap-2">
@@ -41,32 +108,105 @@
                 <i class="fas fa-sun swap-off fill-current w-6 h-6"></i>
                 <i class="fas fa-moon swap-on fill-current w-6 h-6"></i>
             </label>
-            <a href="auth-login.html" class="btn btn-ghost">Login</a>
-            <a href="auth-register.html" class="btn btn-primary">Register</a>
+            <a href="auth-login.html" class="btn btn-ghost">
+                <i class="fas fa-sign-in-alt mr-2"></i>Login</a>
+            <a href="auth-register.html" class="btn btn-primary">
+                <i class="fas fa-user-plus mr-2"></i>Get Started</a>
         </div>
     </div>
 
     <!-- Hero Section -->
-    <div class="hero min-h-[calc(100vh-4rem)] bg-gradient-to-br from-primary/10 to-secondary/10">
-        <div class="hero-content text-center">
-            <div class="max-w-md">
-                <div class="mb-8">
-                    <i class="fas fa-qrcode text-6xl text-primary mb-4"></i>
+    <div class="hero min-h-screen hero-pattern relative overflow-hidden">
+        <!-- Background Elements -->
+        <div class="absolute inset-0 overflow-hidden pointer-events-none">
+            <div class="absolute top-20 left-10 w-20 h-20 bg-primary/10 rounded-full blur-xl"></div>
+            <div class="absolute top-40 right-20 w-32 h-32 bg-secondary/10 rounded-full blur-xl"></div>
+            <div class="absolute bottom-20 left-1/4 w-24 h-24 bg-accent/10 rounded-full blur-xl"></div>
+        </div>
+
+        <div class="hero-content text-center relative z-10">
+            <div class="max-w-4xl">
+                <div class="mb-8 float-animation">
+                    <div class="relative">
+                        <i class="fas fa-qrcode text-8xl text-primary mb-4 drop-shadow-lg"></i>
+                        <div class="absolute -top-2 -right-2 w-6 h-6 bg-success rounded-full animate-pulse"></div>
+                    </div>
                 </div>
-                <h1 class="text-5xl font-bold mb-6">Conference Attendance</h1>
-                <p class="text-lg mb-8">Streamline your conference attendance tracking with NFC and QR code technology. Easy check-in, real-time analytics, and comprehensive reporting.</p>
-                
-                <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                    <a href="user-profile.html" class="btn btn-primary btn-lg">
+
+                <h1 class="text-6xl md:text-7xl font-bold mb-6 fade-in-up">
+                    <span class="gradient-text">Smart Conference</span><br>
+                    <span class="text-base-content">Attendance Tracking</span>
+                </h1>
+
+                <p class="text-xl md:text-2xl mb-8 text-base-content/80 max-w-3xl mx-auto leading-relaxed">
+                    Revolutionize your event management with cutting-edge NFC and QR code technology.
+                    Real-time analytics, seamless check-ins, and comprehensive reporting all in one platform.
+                </p>
+
+                <!-- Stats Bar -->
+                <div class="stats shadow-lg mb-8 bg-base-100/90 backdrop-blur-sm">
+                    <div class="stat">
+                        <div class="stat-figure text-primary">
+                            <i class="fas fa-users text-2xl"></i>
+                        </div>
+                        <div class="stat-title">Active Users</div>
+                        <div class="stat-value text-primary">2.8K+</div>
+                    </div>
+
+                    <div class="stat">
+                        <div class="stat-figure text-secondary">
+                            <i class="fas fa-calendar text-2xl"></i>
+                        </div>
+                        <div class="stat-title">Events Managed</div>
+                        <div class="stat-value text-secondary">150+</div>
+                    </div>
+
+                    <div class="stat">
+                        <div class="stat-figure text-accent">
+                            <i class="fas fa-clock text-2xl"></i>
+                        </div>
+                        <div class="stat-title">Time Saved</div>
+                        <div class="stat-value text-accent">90%</div>
+                    </div>
+                </div>
+
+                <div class="flex flex-col sm:flex-row gap-4 justify-center mb-8">
+                    <a href="user-profile.html"
+                        class="btn btn-primary btn-lg shadow-lg hover:shadow-xl transition-all duration-300">
                         <i class="fas fa-user mr-2"></i>
                         User Portal
+                        <i class="fas fa-arrow-right ml-2"></i>
                     </a>
-                    <a href="admin-dashboard.html" class="btn btn-secondary btn-lg">
+                    <a href="admin-dashboard.html"
+                        class="btn btn-secondary btn-lg shadow-lg hover:shadow-xl transition-all duration-300">
                         <i class="fas fa-cog mr-2"></i>
                         Admin Dashboard
+                        <i class="fas fa-external-link-alt ml-2"></i>
                     </a>
                 </div>
+
+                <div class="flex flex-wrap justify-center gap-6 text-base-content/60">
+                    <div class="flex items-center gap-2">
+                        <i class="fas fa-check-circle text-success"></i>
+                        <span>No Setup Fees</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <i class="fas fa-shield-alt text-primary"></i>
+                        <span>Enterprise Security</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <i class="fas fa-headset text-secondary"></i>
+                        <span>24/7 Support</span>
+                    </div>
+                </div>
             </div>
+        </div>
+
+        <!-- Scroll Indicator -->
+        <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
+            <a href="#features" class="text-base-content/60 hover:text-primary transition-colors">
+                <i class="fas fa-chevron-down text-2xl"></i>
+            </a>
         </div>
     </div>
 
@@ -74,74 +214,417 @@
     <section id="features" class="py-20 bg-base-100">
         <div class="container mx-auto px-4">
             <div class="text-center mb-16">
-                <h2 class="text-3xl font-bold mb-4">Powerful Features</h2>
-                <p class="text-base-content/70 max-w-2xl mx-auto">Everything you need to manage conference attendance efficiently</p>
+                <div class="badge badge-primary badge-lg mb-4">
+                    <i class="fas fa-star mr-2"></i>Features
+                </div>
+                <h2 class="text-4xl md:text-5xl font-bold mb-6">
+                    Everything You Need for
+                    <span class="gradient-text">Perfect Events</span>
+                </h2>
+                <p class="text-xl text-base-content/70 max-w-3xl mx-auto">
+                    Comprehensive tools designed to make conference management effortless and attendance tracking
+                    seamless
+                </p>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 <!-- Feature 1 -->
-                <div class="card bg-base-200 shadow-lg hover:shadow-xl transition-all duration-200">
+                <div
+                    class="card bg-gradient-to-br from-primary/5 to-primary/10 shadow-xl hover:shadow-2xl card-hover border border-primary/20">
                     <div class="card-body text-center">
-                        <div class="text-4xl text-primary mb-4">
+                        <div class="text-5xl text-primary mb-4">
                             <i class="fas fa-qrcode"></i>
                         </div>
-                        <h3 class="card-title justify-center">QR & NFC Scanning</h3>
-                        <p class="text-base-content/70">Quick and contactless attendance tracking using QR codes or NFC technology</p>
+                        <h3 class="card-title justify-center text-xl">QR & NFC Scanning</h3>
+                        <p class="text-base-content/70">Lightning-fast contactless check-ins with QR codes and NFC
+                            technology. No more long queues or manual registration.</p>
+                        <div class="badge badge-primary badge-outline">Instant Access</div>
                     </div>
                 </div>
 
                 <!-- Feature 2 -->
-                <div class="card bg-base-200 shadow-lg hover:shadow-xl transition-all duration-200">
+                <div
+                    class="card bg-gradient-to-br from-secondary/5 to-secondary/10 shadow-xl hover:shadow-2xl card-hover border border-secondary/20">
                     <div class="card-body text-center">
-                        <div class="text-4xl text-secondary mb-4">
-                            <i class="fas fa-chart-bar"></i>
+                        <div class="text-5xl text-secondary mb-4">
+                            <i class="fas fa-chart-line"></i>
                         </div>
-                        <h3 class="card-title justify-center">Real-time Analytics</h3>
-                        <p class="text-base-content/70">Live dashboard with attendance statistics and comprehensive reporting</p>
+                        <h3 class="card-title justify-center text-xl">Live Analytics Dashboard</h3>
+                        <p class="text-base-content/70">Real-time insights with beautiful visualizations, attendance
+                            tracking, and comprehensive reporting tools.</p>
+                        <div class="badge badge-secondary badge-outline">Real-Time Data</div>
                     </div>
                 </div>
 
                 <!-- Feature 3 -->
-                <div class="card bg-base-200 shadow-lg hover:shadow-xl transition-all duration-200">
+                <div
+                    class="card bg-gradient-to-br from-accent/5 to-accent/10 shadow-xl hover:shadow-2xl card-hover border border-accent/20">
                     <div class="card-body text-center">
-                        <div class="text-4xl text-accent mb-4">
-                            <i class="fas fa-users"></i>
+                        <div class="text-5xl text-accent mb-4">
+                            <i class="fas fa-users-cog"></i>
                         </div>
-                        <h3 class="card-title justify-center">Member Management</h3>
-                        <p class="text-base-content/70">Complete user profile management with photos, contact details, and professional info</p>
+                        <h3 class="card-title justify-center text-xl">Smart Member Management</h3>
+                        <p class="text-base-content/70">Complete profile management with photos, professional details,
+                            and automated communication systems.</p>
+                        <div class="badge badge-accent badge-outline">Advanced CRM</div>
                     </div>
                 </div>
 
                 <!-- Feature 4 -->
-                <div class="card bg-base-200 shadow-lg hover:shadow-xl transition-all duration-200">
+                <div
+                    class="card bg-gradient-to-br from-info/5 to-info/10 shadow-xl hover:shadow-2xl card-hover border border-info/20">
                     <div class="card-body text-center">
-                        <div class="text-4xl text-info mb-4">
-                            <i class="fas fa-clock"></i>
+                        <div class="text-5xl text-info mb-4">
+                            <i class="fas fa-history"></i>
                         </div>
-                        <h3 class="card-title justify-center">Timeline Tracking</h3>
-                        <p class="text-base-content/70">Complete audit trail of all check-ins, check-outs, and administrative actions</p>
+                        <h3 class="card-title justify-center text-xl">Complete Timeline Tracking</h3>
+                        <p class="text-base-content/70">Full audit trail of all activities with timestamps, user
+                            actions, and administrative logs for compliance.</p>
+                        <div class="badge badge-info badge-outline">Audit Ready</div>
                     </div>
                 </div>
 
                 <!-- Feature 5 -->
-                <div class="card bg-base-200 shadow-lg hover:shadow-xl transition-all duration-200">
+                <div
+                    class="card bg-gradient-to-br from-success/5 to-success/10 shadow-xl hover:shadow-2xl card-hover border border-success/20">
                     <div class="card-body text-center">
-                        <div class="text-4xl text-success mb-4">
+                        <div class="text-5xl text-success mb-4">
                             <i class="fas fa-file-export"></i>
                         </div>
-                        <h3 class="card-title justify-center">Export Reports</h3>
-                        <p class="text-base-content/70">Generate detailed reports in multiple formats for analysis and record-keeping</p>
+                        <h3 class="card-title justify-center text-xl">Advanced Reporting</h3>
+                        <p class="text-base-content/70">Generate detailed reports in multiple formats including PDF,
+                            Excel, and CSV for comprehensive analysis.</p>
+                        <div class="badge badge-success badge-outline">Multi-Format</div>
                     </div>
                 </div>
 
                 <!-- Feature 6 -->
-                <div class="card bg-base-200 shadow-lg hover:shadow-xl transition-all duration-200">
+                <div
+                    class="card bg-gradient-to-br from-warning/5 to-warning/10 shadow-xl hover:shadow-2xl card-hover border border-warning/20">
                     <div class="card-body text-center">
-                        <div class="text-4xl text-warning mb-4">
+                        <div class="text-5xl text-warning mb-4">
                             <i class="fas fa-mobile-alt"></i>
                         </div>
-                        <h3 class="card-title justify-center">Mobile Friendly</h3>
-                        <p class="text-base-content/70">Responsive design works perfectly on all devices, from smartphones to tablets</p>
+                        <h3 class="card-title justify-center text-xl">Mobile-First Design</h3>
+                        <p class="text-base-content/70">Fully responsive interface that works flawlessly on all devices,
+                            from smartphones to desktop computers.</p>
+                        <div class="badge badge-warning badge-outline">Cross-Platform</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Demo Section -->
+    <section id="demo" class="py-20 bg-base-200">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16">
+                <div class="badge badge-secondary badge-lg mb-4">
+                    <i class="fas fa-play mr-2"></i>Live Demo
+                </div>
+                <h2 class="text-4xl md:text-5xl font-bold mb-6">
+                    See ConfTrack in <span class="gradient-text">Action</span>
+                </h2>
+                <p class="text-xl text-base-content/70 max-w-3xl mx-auto">
+                    Experience the power of our platform with interactive demos of key features
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <div class="space-y-6">
+                    <div class="card bg-base-100 shadow-lg">
+                        <div class="card-body">
+                            <h3 class="card-title text-primary">
+                                <i class="fas fa-qrcode mr-2"></i>
+                                QR Code Scanner Demo
+                            </h3>
+                            <p class="text-base-content/70">Try our lightning-fast QR code scanning system</p>
+                            <div class="card-actions">
+                                <button class="btn btn-primary" onclick="openScanner()">
+                                    <i class="fas fa-camera mr-2"></i>Open Scanner
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card bg-base-100 shadow-lg">
+                        <div class="card-body">
+                            <h3 class="card-title text-secondary">
+                                <i class="fas fa-chart-bar mr-2"></i>
+                                Analytics Dashboard
+                            </h3>
+                            <p class="text-base-content/70">Explore our real-time analytics and reporting tools</p>
+                            <div class="card-actions">
+                                <a href="admin-dashboard.html" class="btn btn-secondary">
+                                    <i class="fas fa-external-link-alt mr-2"></i>View Dashboard
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card bg-base-100 shadow-lg">
+                        <div class="card-body">
+                            <h3 class="card-title text-accent">
+                                <i class="fas fa-users mr-2"></i>
+                                Member Portal
+                            </h3>
+                            <p class="text-base-content/70">Check out the user experience from an attendee's perspective
+                            </p>
+                            <div class="card-actions">
+                                <a href="user-profile.html" class="btn btn-accent">
+                                    <i class="fas fa-user mr-2"></i>User Portal
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mockup-browser bg-base-300 border shadow-2xl">
+                    <div class="mockup-browser-toolbar">
+                        <div class="input border border-base-300">https://conftrack.example.com</div>
+                    </div>
+                    <div class="bg-base-200 flex justify-center px-4 py-16">
+                        <div class="text-center">
+                            <i class="fas fa-chart-line text-6xl text-primary mb-4"></i>
+                            <h4 class="text-2xl font-bold mb-2">Live Dashboard Preview</h4>
+                            <p class="text-base-content/70">Real-time analytics and reporting</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section id="pricing" class="py-20 bg-base-100">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16">
+                <div class="badge badge-accent badge-lg mb-4">
+                    <i class="fas fa-tag mr-2"></i>Pricing
+                </div>
+                <h2 class="text-4xl md:text-5xl font-bold mb-6">
+                    Simple, <span class="gradient-text">Transparent</span> Pricing
+                </h2>
+                <p class="text-xl text-base-content/70 max-w-3xl mx-auto">
+                    Choose the plan that fits your event size and requirements
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Starter Plan -->
+                <div class="card bg-base-200 shadow-lg hover:shadow-xl card-hover">
+                    <div class="card-body">
+                        <h3 class="card-title text-2xl mb-4">Starter</h3>
+                        <div class="text-4xl font-bold text-primary mb-4">
+                            Free
+                        </div>
+                        <p class="text-base-content/70 mb-6">Perfect for small events and testing</p>
+                        <ul class="space-y-2 mb-8">
+                            <li class="flex items-center gap-2">
+                                <i class="fas fa-check text-success"></i>
+                                Up to 50 attendees
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <i class="fas fa-check text-success"></i>
+                                QR code scanning
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <i class="fas fa-check text-success"></i>
+                                Basic reporting
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <i class="fas fa-check text-success"></i>
+                                Email support
+                            </li>
+                        </ul>
+                        <button class="btn btn-outline btn-primary">Get Started</button>
+                    </div>
+                </div>
+
+                <!-- Professional Plan -->
+                <div class="card bg-primary shadow-lg hover:shadow-xl card-hover text-primary-content relative">
+                    <div class="badge badge-accent absolute -top-3 left-1/2 transform -translate-x-1/2">
+                        Most Popular
+                    </div>
+                    <div class="card-body">
+                        <h3 class="card-title text-2xl mb-4">Professional</h3>
+                        <div class="text-4xl font-bold mb-4">
+                            $49<span class="text-xl">/month</span>
+                        </div>
+                        <p class="opacity-90 mb-6">Ideal for medium-sized conferences</p>
+                        <ul class="space-y-2 mb-8">
+                            <li class="flex items-center gap-2">
+                                <i class="fas fa-check"></i>
+                                Up to 500 attendees
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <i class="fas fa-check"></i>
+                                QR & NFC scanning
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <i class="fas fa-check"></i>
+                                Advanced analytics
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <i class="fas fa-check"></i>
+                                Multiple events
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <i class="fas fa-check"></i>
+                                Priority support
+                            </li>
+                        </ul>
+                        <button class="btn btn-accent">Start Free Trial</button>
+                    </div>
+                </div>
+
+                <!-- Enterprise Plan -->
+                <div class="card bg-base-200 shadow-lg hover:shadow-xl card-hover">
+                    <div class="card-body">
+                        <h3 class="card-title text-2xl mb-4">Enterprise</h3>
+                        <div class="text-4xl font-bold text-primary mb-4">
+                            Custom
+                        </div>
+                        <p class="text-base-content/70 mb-6">For large-scale events and organizations</p>
+                        <ul class="space-y-2 mb-8">
+                            <li class="flex items-center gap-2">
+                                <i class="fas fa-check text-success"></i>
+                                Unlimited attendees
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <i class="fas fa-check text-success"></i>
+                                Full feature access
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <i class="fas fa-check text-success"></i>
+                                Custom integrations
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <i class="fas fa-check text-success"></i>
+                                Dedicated support
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <i class="fas fa-check text-success"></i>
+                                On-premise deployment
+                            </li>
+                        </ul>
+                        <button class="btn btn-outline btn-primary">Contact Sales</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="py-20 bg-gradient-to-r from-primary to-secondary text-primary-content">
+        <div class="container mx-auto px-4 text-center">
+            <h2 class="text-4xl md:text-5xl font-bold mb-6">
+                Ready to Transform Your Events?
+            </h2>
+            <p class="text-xl mb-8 max-w-2xl mx-auto opacity-90">
+                Join thousands of event organizers who trust ConfTrack for seamless attendance management
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a href="auth-register.html" class="btn btn-accent btn-lg shadow-lg">
+                    <i class="fas fa-rocket mr-2"></i>
+                    Start Free Trial
+                </a>
+                <a href="#contact"
+                    class="btn btn-outline btn-lg text-white border-white hover:bg-white hover:text-primary">
+                    <i class="fas fa-calendar mr-2"></i>
+                    Schedule Demo
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-20 bg-base-100">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16">
+                <div class="badge badge-primary badge-lg mb-4">
+                    <i class="fas fa-envelope mr-2"></i>Contact
+                </div>
+                <h2 class="text-4xl md:text-5xl font-bold mb-6">
+                    Get in <span class="gradient-text">Touch</span>
+                </h2>
+                <p class="text-xl text-base-content/70 max-w-3xl mx-auto">
+                    Have questions? We're here to help you make your next event a success
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                <div class="space-y-8">
+                    <div class="card bg-base-200 shadow-lg">
+                        <div class="card-body">
+                            <div class="flex items-center gap-4">
+                                <div class="text-3xl text-primary">
+                                    <i class="fas fa-envelope"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-bold">Email Us</h3>
+                                    <p class="text-base-content/70">hello@conftrack.com</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card bg-base-200 shadow-lg">
+                        <div class="card-body">
+                            <div class="flex items-center gap-4">
+                                <div class="text-3xl text-secondary">
+                                    <i class="fas fa-phone"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-bold">Call Us</h3>
+                                    <p class="text-base-content/70">+1 (555) 123-4567</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card bg-base-200 shadow-lg">
+                        <div class="card-body">
+                            <div class="flex items-center gap-4">
+                                <div class="text-3xl text-accent">
+                                    <i class="fas fa-clock"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-bold">Support Hours</h3>
+                                    <p class="text-base-content/70">24/7 Online Support</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card bg-base-200 shadow-lg">
+                    <div class="card-body">
+                        <h3 class="card-title text-2xl mb-6">Send us a Message</h3>
+                        <form class="space-y-4">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="form-control">
+                                    <input type="text" placeholder="First Name" class="input input-bordered" required />
+                                </div>
+                                <div class="form-control">
+                                    <input type="text" placeholder="Last Name" class="input input-bordered" required />
+                                </div>
+                            </div>
+                            <div class="form-control">
+                                <input type="email" placeholder="Email Address" class="input input-bordered" required />
+                            </div>
+                            <div class="form-control">
+                                <input type="text" placeholder="Company (Optional)" class="input input-bordered" />
+                            </div>
+                            <div class="form-control">
+                                <textarea class="textarea textarea-bordered h-32" placeholder="Your Message"
+                                    required></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary w-full">
+                                <i class="fas fa-paper-plane mr-2"></i>
+                                Send Message
+                            </button>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -150,38 +633,108 @@
 
     <!-- Footer -->
     <footer class="footer footer-center p-10 bg-base-300 text-base-content">
-        <div>
-            <div class="text-3xl font-bold">
-                <i class="fas fa-calendar-check mr-2"></i>
-                ConfTrack
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 w-full max-w-6xl">
+            <div>
+                <div class="text-3xl font-bold mb-4">
+                    <i class="fas fa-calendar-check mr-2 text-primary"></i>
+                    <span class="gradient-text">ConfTrack</span>
+                </div>
+                <p class="text-base-content/70 mb-4">
+                    The complete conference attendance management solution
+                </p>
+                <div class="flex justify-center gap-4">
+                    <a class="text-2xl hover:text-primary transition-colors" aria-label="Twitter">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                    <a class="text-2xl hover:text-primary transition-colors" aria-label="LinkedIn">
+                        <i class="fab fa-linkedin"></i>
+                    </a>
+                    <a class="text-2xl hover:text-primary transition-colors" aria-label="GitHub">
+                        <i class="fab fa-github"></i>
+                    </a>
+                </div>
             </div>
-            <p class="font-bold">
-                Conference Attendance Management System
-            </p> 
-            <p>Copyright © 2024 - All rights reserved</p>
+
+            <div>
+                <h4 class="font-bold text-lg mb-4">Quick Links</h4>
+                <div class="grid grid-cols-2 gap-2">
+                    <a href="#features" class="hover:text-primary transition-colors">Features</a>
+                    <a href="#demo" class="hover:text-primary transition-colors">Demo</a>
+                    <a href="#pricing" class="hover:text-primary transition-colors">Pricing</a>
+                    <a href="#contact" class="hover:text-primary transition-colors">Contact</a>
+                    <a href="auth-login.html" class="hover:text-primary transition-colors">Login</a>
+                    <a href="auth-register.html" class="hover:text-primary transition-colors">Register</a>
+                </div>
+            </div>
+
+            <div>
+                <h4 class="font-bold text-lg mb-4">Resources</h4>
+                <div class="grid grid-cols-2 gap-2">
+                    <a href="#" class="hover:text-primary transition-colors">Documentation</a>
+                    <a href="#" class="hover:text-primary transition-colors">API Guide</a>
+                    <a href="#" class="hover:text-primary transition-colors">Support</a>
+                    <a href="#" class="hover:text-primary transition-colors">Blog</a>
+                    <a href="#" class="hover:text-primary transition-colors">Privacy</a>
+                    <a href="#" class="hover:text-primary transition-colors">Terms</a>
+                </div>
+            </div>
         </div>
+
+        <div class="divider"></div>
+
         <div>
-            <div class="grid grid-flow-col gap-4">
-                <a><i class="fab fa-twitter text-2xl"></i></a> 
-                <a><i class="fab fa-youtube text-2xl"></i></a> 
-                <a><i class="fab fa-facebook text-2xl"></i></a>
-            </div>
+            <p class="text-base-content/70">
+                Copyright © 2024 ConfTrack. All rights reserved.
+            </p>
         </div>
     </footer>
+
+    <!-- Scanner Modal -->
+    <dialog id="scannerModal" class="modal">
+        <div class="modal-box">
+            <form method="dialog">
+                <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+            </form>
+            <h3 class="font-bold text-lg mb-4">QR Code Scanner Demo</h3>
+
+            <div class="mockup-phone">
+                <div class="camera"></div>
+                <div class="display">
+                    <div class="artboard artboard-demo phone-1 bg-base-200 flex items-center justify-center">
+                        <div class="text-center">
+                            <i class="fas fa-qrcode text-6xl text-primary mb-4"></i>
+                            <p class="text-base-content/70">Point camera at QR code</p>
+                            <div class="loading loading-ring loading-lg text-primary mt-4"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-action">
+                <form method="dialog">
+                    <button class="btn">Close</button>
+                    <button class="btn btn-primary ml-2">
+                        <i class="fas fa-camera mr-2"></i>
+                        Enable Camera
+                    </button>
+                </form>
+            </div>
+        </div>
+    </dialog>
 
     <script>
         // Theme toggle functionality
         const themeController = document.querySelector('.theme-controller');
         const html = document.documentElement;
-        
+
         // Check for saved theme or default to light
         const savedTheme = localStorage.getItem('theme') || 'light';
         html.setAttribute('data-theme', savedTheme);
         if (savedTheme === 'dark') {
             themeController.checked = true;
         }
-        
-        themeController.addEventListener('change', function() {
+
+        themeController.addEventListener('change', function () {
             const theme = this.checked ? 'dark' : 'light';
             html.setAttribute('data-theme', theme);
             localStorage.setItem('theme', theme);
@@ -191,11 +744,109 @@
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 e.preventDefault();
-                document.querySelector(this.getAttribute('href')).scrollIntoView({
-                    behavior: 'smooth'
-                });
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
             });
+        });
+
+        // Scanner modal function
+        function openScanner() {
+            document.getElementById('scannerModal').showModal();
+        }
+
+        // Intersection Observer for animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observe elements for scroll animations
+        document.addEventListener('DOMContentLoaded', () => {
+            const animatedElements = document.querySelectorAll('.card, .stat');
+            animatedElements.forEach(el => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(20px)';
+                el.style.transition = 'all 0.6s ease-out';
+                observer.observe(el);
+            });
+        });
+
+        // Form submission handler
+        document.querySelector('form').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            // Show success message
+            const button = this.querySelector('button[type="submit"]');
+            const originalText = button.innerHTML;
+
+            button.innerHTML = '<span class="loading loading-spinner loading-sm"></span> Sending...';
+            button.disabled = true;
+
+            setTimeout(() => {
+                button.innerHTML = '<i class="fas fa-check mr-2"></i> Message Sent!';
+                button.className = 'btn btn-success w-full';
+
+                setTimeout(() => {
+                    button.innerHTML = originalText;
+                    button.className = 'btn btn-primary w-full';
+                    button.disabled = false;
+                    this.reset();
+                }, 2000);
+            }, 1500);
+        });
+
+        // Statistics counter animation
+        function animateStats() {
+            const stats = document.querySelectorAll('.stat-value');
+            stats.forEach(stat => {
+                const target = parseInt(stat.textContent.replace(/[^\d]/g, ''));
+                const suffix = stat.textContent.replace(/[\d]/g, '');
+                let current = 0;
+                const increment = target / 50;
+                const timer = setInterval(() => {
+                    current += increment;
+                    if (current >= target) {
+                        current = target;
+                        clearInterval(timer);
+                    }
+                    stat.textContent = Math.floor(current) + suffix;
+                }, 30);
+            });
+        }
+
+        // Trigger stats animation when hero section is visible
+        const heroObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    setTimeout(() => animateStats(), 1000);
+                    heroObserver.unobserve(entry.target);
+                }
+            });
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const heroSection = document.querySelector('.hero');
+            if (heroSection) {
+                heroObserver.observe(heroSection);
+            }
         });
     </script>
 </body>
+
 </html>
+
+
