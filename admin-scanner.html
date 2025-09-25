@@ -578,7 +578,7 @@
 
         // Main scan processing
         function processScan(data, method) {
-            console.log('Processing scan:', data, method);
+            //console.log('Processing scan:', data, method);
             
             // Look up member in database
             const member = memberDatabase[data];
@@ -828,15 +828,25 @@
         });
 
         // Auto-focus NFC input when typing
-        document.addEventListener('keypress', function(e) {
+        document.addEventListener('keypress', function(e) {            
             if (!document.activeElement.matches('input') && e.key.match(/[a-zA-Z0-9]/)) {
                 const nfcInput = document.getElementById('nfcInput');
                 nfcInput.focus();
                 nfcInput.value = e.key;
+            }
 
-                if (nfcInput.value.length >= 8) { 
-                    processNFC();
-                }
+            if (input.value.length >= 8) { 
+                processNFC();
+            }
+        });
+
+        const input = document.getElementById('nfcInput');
+
+        input.addEventListener('input', () => {
+            // If the card ID has the expected length or format, trigger processing
+            // You can change the condition based on actual expected input
+            if (input.value.length >= 8) { 
+                processNFC();
             }
         });
 
