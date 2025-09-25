@@ -1,0 +1,1179 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conferences - Conference Attendance System</title>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.4.24/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Pure CSS Tab System */
+        .tabs {
+            @apply flex border border-dashed border-base-content/10 rounded-box bg-base-200;
+        }
+        .tab {
+            @apply flex-1 relative;
+        }
+        .tab input[type="radio"] {
+            @apply sr-only;
+        }
+        .tab label {
+            @apply flex items-center justify-center gap-2 px-4 py-3 cursor-pointer transition-all duration-200 text-center;
+        }
+        .tab input[type="radio"]:checked + label {
+            @apply bg-base-100 text-primary font-semibold border-b-2 border-primary;
+        }
+        .tab-content {
+            @apply hidden;
+        }
+        .tab input[type="radio"]:checked ~ .tab-content {
+            @apply block;
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-base-200">
+    <!-- Navigation -->
+    <div class="navbar bg-base-100 shadow-lg">
+        <div class="navbar-start">
+            <div class="dropdown">
+                <div tabindex="0" role="button" class="btn btn-ghost lg:hidden">
+                    <i class="fas fa-bars w-5 h-5"></i>
+                </div>
+                <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
+                    <li><a href="admin-dashboard.html">Dashboard</a></li>
+                    <li><a href="admin-members.html">Members</a></li>
+                    <li><a href="admin-scanner.html">Scanner</a></li>
+                    <li><a href="admin-conferences.html" class="active">Conferences</a></li>
+                    <li><a href="admin-reports.html">Reports</a></li>
+                    <li><a href="admin-timeline.html">Timeline</a></li>
+                </ul>
+            </div>
+            <a href="admin-dashboard.html" class="btn btn-ghost text-xl">
+                <i class="fas fa-calendar-check mr-2"></i>
+                ConfTrack Admin
+            </a>
+        </div>
+        <div class="navbar-center hidden lg:flex">
+            <ul class="menu menu-horizontal px-1">
+                <li><a href="admin-dashboard.html">Dashboard</a></li>
+                <li><a href="admin-members.html">Members</a></li>
+                <li><a href="admin-scanner.html">Scanner</a></li>
+                <li><a href="admin-conferences.html" class="active">Conferences</a></li>
+                <li><a href="admin-reports.html">Reports</a></li>
+                <li><a href="admin-timeline.html">Timeline</a></li>
+            </ul>
+        </div>
+        <div class="navbar-end gap-2">
+            <!-- Theme Toggle -->
+            <label class="swap swap-rotate">
+                <input type="checkbox" class="theme-controller" value="dark" />
+                <i class="fas fa-sun swap-off fill-current w-6 h-6"></i>
+                <i class="fas fa-moon swap-on fill-current w-6 h-6"></i>
+            </label>
+            <!-- Admin Menu -->
+            <div class="dropdown dropdown-end">
+                <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar">
+                    <div class="w-10 rounded-full">
+                        <img alt="Admin" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face" />
+                    </div>
+                </div>
+                <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
+                    <li><a href="#"><i class="fas fa-user mr-2"></i>Profile</a></li>
+                    <li><a href="#"><i class="fas fa-cog mr-2"></i>Settings</a></li>
+                    <li><a href="auth-login.html"><i class="fas fa-sign-out-alt mr-2"></i>Logout</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hero Header -->
+    <div class="bg-gradient-to-r from-primary to-secondary text-primary-content py-8">
+        <div class="container mx-auto px-4">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h1 class="text-3xl font-bold mb-2">Conference Management</h1>
+                    <p class="opacity-90">Create, manage, and monitor your conferences</p>
+                </div>
+                <div class="flex gap-3">
+                    <button class="btn btn-neutral" onclick="importConferences()">
+                        <i class="fas fa-upload mr-2"></i>Import
+                    </button>
+                    <button class="btn btn-neutral" onclick="exportConferences()">
+                        <i class="fas fa-download mr-2"></i>Export
+                    </button>
+                    <button class="btn btn-neutral" onclick="createConference()">
+                        <i class="fas fa-plus mr-2"></i>New Conference
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container mx-auto px-4 py-8">
+        <!-- Statistics Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div class="stat bg-base-100 rounded-lg shadow hover:shadow-lg transition-all duration-200">
+                <div class="stat-figure text-primary">
+                    <i class="fas fa-calendar-alt text-3xl"></i>
+                </div>
+                <div class="stat-title">Total Conferences</div>
+                <div class="stat-value text-primary">24</div>
+                <div class="stat-desc">↗︎ 3 new this month</div>
+            </div>
+
+            <div class="stat bg-base-100 rounded-lg shadow hover:shadow-lg transition-all duration-200">
+                <div class="stat-figure text-success">
+                    <i class="fas fa-play-circle text-3xl"></i>
+                </div>
+                <div class="stat-title">Active Now</div>
+                <div class="stat-value text-success">3</div>
+                <div class="stat-desc">Currently running</div>
+            </div>
+
+            <div class="stat bg-base-100 rounded-lg shadow hover:shadow-lg transition-all duration-200">
+                <div class="stat-figure text-warning">
+                    <i class="fas fa-clock text-3xl"></i>
+                </div>
+                <div class="stat-title">Upcoming</div>
+                <div class="stat-value text-warning">8</div>
+                <div class="stat-desc">Next 30 days</div>
+            </div>
+
+            <div class="stat bg-base-100 rounded-lg shadow hover:shadow-lg transition-all duration-200">
+                <div class="stat-figure text-info">
+                    <i class="fas fa-users text-3xl"></i>
+                </div>
+                <div class="stat-title">Total Attendees</div>
+                <div class="stat-value text-info">2,847</div>
+                <div class="stat-desc">Across all events</div>
+            </div>
+        </div>
+
+        <!-- Search and Filters -->
+        <div class="card bg-base-100 shadow-lg mb-8 border border-dashed border-base-content/10">
+            <div class="card-body">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-4">
+                    <!-- Search -->
+                    <div class="form-control">
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <i class="fas fa-search text-base-content/40"></i>
+                            </div>
+                            <input type="text" placeholder="Search conferences..." class="input input-bordered w-full pl-10" id="searchInput" />
+                        </div>
+                    </div>
+
+                    <!-- Status Filter -->
+                    <div class="form-control">
+                        <select class="select select-bordered w-full" id="statusFilter">
+                            <option value="all">All Status</option>
+                            <option value="active">Active</option>
+                            <option value="upcoming">Upcoming</option>
+                            <option value="completed">Completed</option>
+                            <option value="cancelled">Cancelled</option>
+                        </select>
+                    </div>
+
+                    <!-- Date Range -->
+                    <div class="form-control">
+                        <select class="select select-bordered w-full" id="dateFilter">
+                            <option value="all">All Time</option>
+                            <option value="today">Today</option>
+                            <option value="week">This Week</option>
+                            <option value="month">This Month</option>
+                            <option value="year">This Year</option>
+                        </select>
+                    </div>
+
+                    <!-- Category -->
+                    <div class="form-control">
+                        <select class="select select-bordered w-full" id="categoryFilter">
+                            <option value="all">All Categories</option>
+                            <option value="technology">Technology</option>
+                            <option value="business">Business</option>
+                            <option value="education">Education</option>
+                            <option value="healthcare">Healthcare</option>
+                        </select>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="form-control">
+                        <div class="flex gap-2">
+                            <button class="btn btn-outline btn-sm flex-1" onclick="clearFilters()">
+                                <i class="fas fa-times mr-2"></i>Clear
+                            </button>
+                            <button class="btn btn-primary btn-sm flex-1" onclick="applyFilters()">
+                                <i class="fas fa-filter mr-2"></i>Filter
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Results Info -->
+                <div class="flex items-center justify-between">
+                    <div class="text-sm text-base-content/70">
+                        Showing <span class="font-semibold" id="resultCount">24</span> conferences
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <div class="flex items-center gap-2">
+                            <span class="text-sm">Sort by:</span>
+                            <select class="select select-bordered select-sm w-32" id="sortBy">
+                                <option value="date">Date</option>
+                                <option value="name">Name</option>
+                                <option value="attendees">Attendees</option>
+                                <option value="status">Status</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Conference Status Tabs -->
+        <div class="tabs mb-8">
+            <div class="tab">
+                <input type="radio" name="status_tabs" id="tab1" checked />
+                <label for="tab1">
+                    <i class="fas fa-play-circle w-4 h-4"></i>
+                    Active (3)
+                </label>
+                <div class="tab-content">
+                    <div class="border border-dashed border-base-content/10 rounded-box p-6">
+                        <div id="activeConferences" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            <!-- Active conferences will be populated by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab">
+                <input type="radio" name="status_tabs" id="tab2" />
+                <label for="tab2">
+                    <i class="fas fa-clock w-4 h-4"></i>
+                    Upcoming (8)
+                </label>
+                <div class="tab-content">
+                    <div class="border border-dashed border-base-content/10 rounded-box p-6">
+                        <div id="upcomingConferences" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            <!-- Upcoming conferences will be populated by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab">
+                <input type="radio" name="status_tabs" id="tab3" />
+                <label for="tab3">
+                    <i class="fas fa-check-circle w-4 h-4"></i>
+                    Completed (13)
+                </label>
+                <div class="tab-content">
+                    <div class="border border-dashed border-base-content/10 rounded-box p-6">
+                        <div id="completedConferences" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            <!-- Completed conferences will be populated by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab">
+                <input type="radio" name="status_tabs" id="tab4" />
+                <label for="tab4">
+                    <i class="fas fa-list w-4 h-4"></i>
+                    All Conferences
+                </label>
+                <div class="tab-content">
+                    <div class="border border-dashed border-base-content/10 rounded-box p-6">
+                        <!-- All Conferences Table View -->
+                        <div class="overflow-x-auto">
+                            <table class="table table-zebra">
+                                <thead>
+                                    <tr>
+                                        <th>Conference</th>
+                                        <th>Date & Time</th>
+                                        <th>Attendees</th>
+                                        <th>Status</th>
+                                        <th>Category</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="allConferencesTable">
+                                    <!-- Table rows will be populated by JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pagination -->
+        <div class="flex justify-center">
+            <div class="join">
+                <button class="join-item btn btn-outline">«</button>
+                <button class="join-item btn btn-outline btn-active">1</button>
+                <button class="join-item btn btn-outline">2</button>
+                <button class="join-item btn btn-outline">3</button>
+                <button class="join-item btn btn-outline">»</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create/Edit Conference Modal -->
+    <dialog id="conferenceModal" class="modal">
+        <div class="modal-box w-11/12 max-w-4xl">
+            <form method="dialog">
+                <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+            </form>
+            <h3 class="font-bold text-lg mb-6" id="modalTitle">Create New Conference</h3>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Basic Information -->
+                <div class="space-y-4">
+                    <h4 class="font-semibold text-base-content/80 border-b pb-2">Basic Information</h4>
+                    
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text">Conference Name</span>
+                        </label>
+                        <input type="text" placeholder="e.g. TechConf 2025" class="input input-bordered" required />
+                    </div>
+
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text">Description</span>
+                        </label>
+                        <textarea class="textarea textarea-bordered h-24" placeholder="Brief description of the conference..."></textarea>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="form-control">
+                            <label class="label">
+                                <span class="label-text">Category</span>
+                            </label>
+                            <select class="select select-bordered">
+                                <option disabled selected>Choose category</option>
+                                <option value="technology">Technology</option>
+                                <option value="business">Business</option>
+                                <option value="education">Education</option>
+                                <option value="healthcare">Healthcare</option>
+                            </select>
+                        </div>
+                        <div class="form-control">
+                            <label class="label">
+                                <span class="label-text">Max Attendees</span>
+                            </label>
+                            <input type="number" placeholder="200" class="input input-bordered" min="1" />
+                        </div>
+                    </div>
+
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text">Location</span>
+                        </label>
+                        <input type="text" placeholder="Conference Center, City" class="input input-bordered" />
+                    </div>
+                </div>
+
+                <!-- Date & Time -->
+                <div class="space-y-4">
+                    <h4 class="font-semibold text-base-content/80 border-b pb-2">Date & Time</h4>
+                    
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="form-control">
+                            <label class="label">
+                                <span class="label-text">Start Date</span>
+                            </label>
+                            <input type="date" class="input input-bordered" required />
+                        </div>
+                        <div class="form-control">
+                            <label class="label">
+                                <span class="label-text">End Date</span>
+                            </label>
+                            <input type="date" class="input input-bordered" required />
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="form-control">
+                            <label class="label">
+                                <span class="label-text">Start Time</span>
+                            </label>
+                            <input type="time" class="input input-bordered" required />
+                        </div>
+                        <div class="form-control">
+                            <label class="label">
+                                <span class="label-text">End Time</span>
+                            </label>
+                            <input type="time" class="input input-bordered" required />
+                        </div>
+                    </div>
+
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text">Timezone</span>
+                        </label>
+                        <select class="select select-bordered">
+                            <option selected>UTC-05:00 (Eastern Time)</option>
+                            <option>UTC-08:00 (Pacific Time)</option>
+                            <option>UTC+00:00 (GMT)</option>
+                            <option>UTC+01:00 (Central European)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text">Registration Deadline</span>
+                        </label>
+                        <input type="datetime-local" class="input input-bordered" />
+                    </div>
+                </div>
+
+                <!-- Settings -->
+                <div class="space-y-4 md:col-span-2">
+                    <h4 class="font-semibold text-base-content/80 border-b pb-2">Conference Settings</h4>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <label class="cursor-pointer flex items-center gap-3">
+                            <input type="checkbox" class="checkbox checkbox-primary" checked />
+                            <span class="label-text">Allow late registration</span>
+                        </label>
+                        <label class="cursor-pointer flex items-center gap-3">
+                            <input type="checkbox" class="checkbox checkbox-primary" checked />
+                            <span class="label-text">Send welcome emails</span>
+                        </label>
+                        <label class="cursor-pointer flex items-center gap-3">
+                            <input type="checkbox" class="checkbox checkbox-primary" />
+                            <span class="label-text">Require approval</span>
+                        </label>
+                        <label class="cursor-pointer flex items-center gap-3">
+                            <input type="checkbox" class="checkbox checkbox-primary" checked />
+                            <span class="label-text">Enable QR check-in</span>
+                        </label>
+                        <label class="cursor-pointer flex items-center gap-3">
+                            <input type="checkbox" class="checkbox checkbox-primary" checked />
+                            <span class="label-text">Track attendance</span>
+                        </label>
+                        <label class="cursor-pointer flex items-center gap-3">
+                            <input type="checkbox" class="checkbox checkbox-primary" />
+                            <span class="label-text">Generate certificates</span>
+                        </label>
+                    </div>
+
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text">Additional Notes</span>
+                        </label>
+                        <textarea class="textarea textarea-bordered h-20" placeholder="Any special instructions or notes for this conference..."></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-action">
+                <form method="dialog" class="flex gap-3">
+                    <button class="btn btn-outline">Cancel</button>
+                    <button type="button" class="btn btn-secondary" onclick="saveDraft()">
+                        <i class="fas fa-save mr-2"></i>Save as Draft
+                    </button>
+                    <button type="button" class="btn btn-primary" onclick="saveConference()">
+                        <i class="fas fa-check mr-2"></i>Create Conference
+                    </button>
+                </form>
+            </div>
+        </div>
+    </dialog>
+
+    <!-- Conference Detail Modal -->
+    <dialog id="detailModal" class="modal">
+        <div class="modal-box w-11/12 max-w-3xl">
+            <form method="dialog">
+                <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+            </form>
+            <div id="conferenceDetailContent">
+                <!-- Conference details will be populated by JavaScript -->
+            </div>
+        </div>
+    </dialog>
+
+    <!-- Bulk Actions Modal -->
+    <dialog id="bulkModal" class="modal">
+        <div class="modal-box">
+            <form method="dialog">
+                <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+            </form>
+            <h3 class="font-bold text-lg mb-4">Bulk Actions</h3>
+            
+            <div class="space-y-4">
+                <div class="alert alert-warning">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <div>
+                        <div class="font-semibold">Bulk operation selected</div>
+                        <div class="text-sm">This action will affect <span id="selectedCount">0</span> conferences</div>
+                    </div>
+                </div>
+
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text font-semibold">Select Action</span>
+                    </label>
+                    <select class="select select-bordered" id="bulkAction">
+                        <option disabled selected>Choose action</option>
+                        <option value="activate">Activate Conferences</option>
+                        <option value="deactivate">Deactivate Conferences</option>
+                        <option value="cancel">Cancel Conferences</option>
+                        <option value="duplicate">Duplicate Conferences</option>
+                        <option value="export">Export Conference Data</option>
+                        <option value="delete">Delete Conferences</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="modal-action">
+                <form method="dialog" class="flex gap-3">
+                    <button class="btn btn-outline">Cancel</button>
+                    <button type="button" class="btn btn-error" onclick="executeBulkAction()">
+                        Execute Action
+                    </button>
+                </form>
+            </div>
+        </div>
+    </dialog>
+
+    <!-- Toast -->
+    <div class="toast toast-top toast-end" id="toast" style="display: none;">
+        <div class="alert alert-success">
+            <i class="fas fa-check-circle"></i>
+            <span>Action completed successfully!</span>
+        </div>
+    </div>
+
+    <script>
+        // Sample conference data
+        const conferenceData = {
+            active: [
+                {
+                    id: 1,
+                    name: 'TechConf 2024',
+                    description: 'Technology & Innovation Conference',
+                    category: 'Technology',
+                    startDate: '2024-12-15',
+                    endDate: '2024-12-15',
+                    startTime: '09:00',
+                    endTime: '17:00',
+                    location: 'Tech Center, San Francisco',
+                    maxAttendees: 120,
+                    currentAttendees: 89,
+                    registrations: 105,
+                    status: 'active',
+                    attendanceRate: 74.2
+                },
+                {
+                    id: 2,
+                    name: 'AI Workshop',
+                    description: 'Machine Learning Workshop',
+                    category: 'Technology',
+                    startDate: '2024-12-15',
+                    endDate: '2024-12-15',
+                    startTime: '14:00',
+                    endTime: '16:30',
+                    location: 'Innovation Hub, Austin',
+                    maxAttendees: 50,
+                    currentAttendees: 45,
+                    registrations: 48,
+                    status: 'active',
+                    attendanceRate: 90
+                },
+                {
+                    id: 3,
+                    name: 'Healthcare Summit',
+                    description: 'Digital Health Innovation',
+                    category: 'Healthcare',
+                    startDate: '2024-12-15',
+                    endDate: '2024-12-16',
+                    startTime: '08:30',
+                    endTime: '18:00',
+                    location: 'Medical Center, Boston',
+                    maxAttendees: 200,
+                    currentAttendees: 156,
+                    registrations: 180,
+                    status: 'active',
+                    attendanceRate: 78
+                }
+            ],
+            upcoming: [
+                {
+                    id: 4,
+                    name: 'DevSummit 2025',
+                    description: 'Developer Summit & Networking',
+                    category: 'Technology',
+                    startDate: '2025-01-20',
+                    endDate: '2025-01-21',
+                    startTime: '09:00',
+                    endTime: '17:00',
+                    location: 'Convention Center, Seattle',
+                    maxAttendees: 300,
+                    currentAttendees: 0,
+                    registrations: 234,
+                    status: 'upcoming',
+                    attendanceRate: 0
+                },
+                {
+                    id: 5,
+                    name: 'Business Analytics Conference',
+                    description: 'Data-Driven Business Decisions',
+                    category: 'Business',
+                    startDate: '2025-02-15',
+                    endDate: '2025-02-15',
+                    startTime: '10:00',
+                    endTime: '16:00',
+                    location: 'Financial District, New York',
+                    maxAttendees: 150,
+                    currentAttendees: 0,
+                    registrations: 89,
+                    status: 'upcoming',
+                    attendanceRate: 0
+                }
+            ],
+            completed: [
+                {
+                    id: 6,
+                    name: 'EdTech Innovation 2024',
+                    description: 'Educational Technology Conference',
+                    category: 'Education',
+                    startDate: '2024-11-10',
+                    endDate: '2024-11-11',
+                    startTime: '09:00',
+                    endTime: '17:00',
+                    location: 'University Campus, Chicago',
+                    maxAttendees: 250,
+                    currentAttendees: 0,
+                    registrations: 198,
+                    status: 'completed',
+                    attendanceRate: 85.6
+                }
+            ]
+        };
+
+        let selectedConferences = [];
+
+        // Theme toggle functionality
+        const themeController = document.querySelector('.theme-controller');
+        const html = document.documentElement;
+        
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        html.setAttribute('data-theme', savedTheme);
+        if (savedTheme === 'dark') {
+            themeController.checked = true;
+        }
+        
+        themeController.addEventListener('change', function() {
+            const theme = this.checked ? 'dark' : 'light';
+            html.setAttribute('data-theme', theme);
+            localStorage.setItem('theme', theme);
+        });
+
+        // Render conference cards
+        function renderConferences() {
+            renderActiveConferences();
+            renderUpcomingConferences();
+            renderCompletedConferences();
+            renderAllConferencesTable();
+        }
+
+        function renderActiveConferences() {
+            const container = document.getElementById('activeConferences');
+            container.innerHTML = '';
+
+            conferenceData.active.forEach(conference => {
+                const card = createConferenceCard(conference);
+                container.appendChild(card);
+            });
+        }
+
+        function renderUpcomingConferences() {
+            const container = document.getElementById('upcomingConferences');
+            container.innerHTML = '';
+
+            conferenceData.upcoming.forEach(conference => {
+                const card = createConferenceCard(conference);
+                container.appendChild(card);
+            });
+        }
+
+        function renderCompletedConferences() {
+            const container = document.getElementById('completedConferences');
+            container.innerHTML = '';
+
+            conferenceData.completed.forEach(conference => {
+                const card = createConferenceCard(conference);
+                container.appendChild(card);
+            });
+        }
+
+        function createConferenceCard(conference) {
+            const card = document.createElement('div');
+            card.className = `card bg-base-100 shadow hover:shadow-lg transition-all duration-200 border ${getStatusBorderClass(conference.status)}`;
+            
+            const progressWidth = conference.status === 'active' || conference.status === 'completed' 
+                ? conference.attendanceRate 
+                : (conference.registrations / conference.maxAttendees) * 100;
+
+            card.innerHTML = `
+                <div class="card-body">
+                    <div class="flex items-start justify-between mb-3">
+                        <h3 class="card-title text-lg">${conference.name}</h3>
+                        <div class="flex items-center gap-2">
+                            <div class="badge ${getStatusBadgeClass(conference.status)} badge-sm">
+                                ${conference.status.toUpperCase()}
+                            </div>
+                            <div class="dropdown dropdown-end">
+                                <div tabindex="0" role="button" class="btn btn-ghost btn-xs">
+                                    <i class="fas fa-ellipsis-v"></i>
+                                </div>
+                                <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-48">
+                                    <li><a onclick="viewConference(${conference.id})"><i class="fas fa-eye mr-2"></i>View Details</a></li>
+                                    <li><a onclick="editConference(${conference.id})"><i class="fas fa-edit mr-2"></i>Edit</a></li>
+                                    <li><a onclick="duplicateConference(${conference.id})"><i class="fas fa-copy mr-2"></i>Duplicate</a></li>
+                                    <li><a onclick="exportConference(${conference.id})"><i class="fas fa-download mr-2"></i>Export</a></li>
+                                    <li class="divider"></li>
+                                    <li><a onclick="deleteConference(${conference.id})" class="text-error"><i class="fas fa-trash mr-2"></i>Delete</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <p class="text-base-content/70 mb-3">${conference.description}</p>
+                    
+                    <div class="space-y-2 mb-4">
+                        <div class="flex justify-between text-sm">
+                            <span>Date:</span>
+                            <span class="font-semibold">${formatDate(conference.startDate, conference.endDate)}</span>
+                        </div>
+                        <div class="flex justify-between text-sm">
+                            <span>Time:</span>
+                            <span class="font-semibold">${conference.startTime} - ${conference.endTime}</span>
+                        </div>
+                        <div class="flex justify-between text-sm">
+                            <span>Location:</span>
+                            <span class="font-semibold">${conference.location}</span>
+                        </div>
+                        <div class="flex justify-between text-sm">
+                            <span>${conference.status === 'active' ? 'Present:' : conference.status === 'completed' ? 'Attended:' : 'Registered:'}</span>
+                            <span class="font-semibold ${getAttendanceColor(conference)}">${conference.status === 'active' ? conference.currentAttendees : conference.registrations}/${conference.maxAttendees}</span>
+                        </div>
+                        ${conference.status === 'active' || conference.status === 'completed' ? `
+                        <div class="flex justify-between text-sm">
+                            <span>Attendance Rate:</span>
+                            <span class="font-semibold">${conference.attendanceRate}%</span>
+                        </div>
+                        ` : ''}
+                    </div>
+
+                    <div class="mb-4">
+                        <div class="flex justify-between text-xs mb-1">
+                            <span>${conference.status === 'active' ? 'Attendance' : conference.status === 'completed' ? 'Final Attendance' : 'Registration'} Progress</span>
+                            <span>${Math.round(progressWidth)}%</span>
+                        </div>
+                        <div class="progress ${getProgressClass(conference.status)} w-full h-2">
+                            <div class="progress-value" style="width: ${progressWidth}%"></div>
+                        </div>
+                    </div>
+
+                    <div class="flex gap-2">
+                        <button class="btn ${getActionButtonClass(conference.status)} btn-sm flex-1" onclick="primaryAction(${conference.id}, '${conference.status}')">
+                            <i class="fas ${getActionIcon(conference.status)} mr-1"></i>
+                            ${getActionText(conference.status)}
+                        </button>
+                        <button class="btn btn-outline btn-sm flex-1" onclick="viewConference(${conference.id})">
+                            <i class="fas fa-eye mr-1"></i>Details
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            return card;
+        }
+
+        function renderAllConferencesTable() {
+            const tbody = document.getElementById('allConferencesTable');
+            tbody.innerHTML = '';
+
+            const allConferences = [...conferenceData.active, ...conferenceData.upcoming, ...conferenceData.completed];
+
+            allConferences.forEach(conference => {
+                const row = document.createElement('tr');
+                row.className = 'hover';
+                row.innerHTML = `
+                    <td>
+                        <div class="flex items-center gap-3">
+                            <label>
+                                <input type="checkbox" class="checkbox checkbox-sm" 
+                                       onchange="toggleConferenceSelection(${conference.id}, this.checked)" />
+                            </label>
+                            <div>
+                                <div class="font-bold">${conference.name}</div>
+                                <div class="text-sm opacity-50">${conference.description}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="text-sm">
+                            <div class="font-medium">${formatDate(conference.startDate, conference.endDate)}</div>
+                            <div class="opacity-60">${conference.startTime} - ${conference.endTime}</div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="text-sm">
+                            <div class="font-medium">${conference.status === 'active' ? conference.currentAttendees : conference.registrations}/${conference.maxAttendees}</div>
+                            ${conference.status === 'active' || conference.status === 'completed' ? `
+                            <div class="opacity-60">${conference.attendanceRate}% rate</div>
+                            ` : ''}
+                        </div>
+                    </td>
+                    <td>
+                        <span class="badge ${getStatusBadgeClass(conference.status)} badge-sm">
+                            ${conference.status.toUpperCase()}
+                        </span>
+                    </td>
+                    <td>
+                        <span class="badge badge-outline badge-sm">${conference.category}</span>
+                    </td>
+                    <td>
+                        <div class="flex items-center gap-2">
+                            <button class="btn btn-ghost btn-xs" onclick="viewConference(${conference.id})">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            <button class="btn btn-ghost btn-xs" onclick="editConference(${conference.id})">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <div class="dropdown dropdown-end">
+                                <div tabindex="0" role="button" class="btn btn-ghost btn-xs">
+                                    <i class="fas fa-ellipsis-v"></i>
+                                </div>
+                                <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-40">
+                                    <li><a onclick="duplicateConference(${conference.id})" class="text-xs"><i class="fas fa-copy mr-2"></i>Duplicate</a></li>
+                                    <li><a onclick="exportConference(${conference.id})" class="text-xs"><i class="fas fa-download mr-2"></i>Export</a></li>
+                                    <li><a onclick="deleteConference(${conference.id})" class="text-xs text-error"><i class="fas fa-trash mr-2"></i>Delete</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        // Helper functions for styling
+        function getStatusBorderClass(status) {
+            const classes = {
+                'active': 'border-success/30',
+                'upcoming': 'border-warning/30',
+                'completed': 'border-info/30',
+                'cancelled': 'border-error/30'
+            };
+            return classes[status] || '';
+        }
+
+        function getStatusBadgeClass(status) {
+            const classes = {
+                'active': 'badge-success',
+                'upcoming': 'badge-warning',
+                'completed': 'badge-info',
+                'cancelled': 'badge-error'
+            };
+            return classes[status] || 'badge-ghost';
+        }
+
+        function getProgressClass(status) {
+            const classes = {
+                'active': 'progress-success',
+                'upcoming': 'progress-warning',
+                'completed': 'progress-info',
+                'cancelled': 'progress-error'
+            };
+            return classes[status] || 'progress-primary';
+        }
+
+        function getActionButtonClass(status) {
+            const classes = {
+                'active': 'btn-warning',
+                'upcoming': 'btn-success',
+                'completed': 'btn-info',
+                'cancelled': 'btn-ghost'
+            };
+            return classes[status] || 'btn-primary';
+        }
+
+        function getActionIcon(status) {
+            const icons = {
+                'active': 'fa-pause',
+                'upcoming': 'fa-play',
+                'completed': 'fa-redo',
+                'cancelled': 'fa-trash'
+            };
+            return icons[status] || 'fa-cog';
+        }
+
+        function getActionText(status) {
+            const texts = {
+                'active': 'Pause',
+                'upcoming': 'Start',
+                'completed': 'Rerun',
+                'cancelled': 'Archive'
+            };
+            return texts[status] || 'Manage';
+        }
+
+        function getAttendanceColor(conference) {
+            const rate = conference.status === 'upcoming' 
+                ? (conference.registrations / conference.maxAttendees) * 100
+                : conference.attendanceRate;
+            
+            if (rate >= 80) return 'text-success';
+            if (rate >= 60) return 'text-warning';
+            return 'text-error';
+        }
+
+        function formatDate(startDate, endDate) {
+            const start = new Date(startDate);
+            const end = new Date(endDate);
+            
+            if (startDate === endDate) {
+                return start.toLocaleDateString('en-US', { 
+                    month: 'short', 
+                    day: 'numeric', 
+                    year: 'numeric' 
+                });
+            } else {
+                return `${start.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} - ${end.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}`;
+            }
+        }
+
+        // Action functions
+        function createConference() {
+            document.getElementById('modalTitle').textContent = 'Create New Conference';
+            document.getElementById('conferenceModal').showModal();
+        }
+
+        function editConference(id) {
+            // Find conference and populate form
+            document.getElementById('modalTitle').textContent = 'Edit Conference';
+            document.getElementById('conferenceModal').showModal();
+            showToast(`Editing conference ${id}`, 'info');
+        }
+
+        function viewConference(id) {
+            // Find conference data
+            const allConferences = [...conferenceData.active, ...conferenceData.upcoming, ...conferenceData.completed];
+            const conference = allConferences.find(c => c.id === id);
+            
+            if (conference) {
+                const modal = document.getElementById('detailModal');
+                const content = document.getElementById('conferenceDetailContent');
+                
+                content.innerHTML = `
+                    <div class="space-y-6">
+                        <div class="flex items-center justify-between">
+                            <h3 class="font-bold text-2xl">${conference.name}</h3>
+                            <span class="badge ${getStatusBadgeClass(conference.status)} badge-lg">
+                                ${conference.status.toUpperCase()}
+                            </span>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="text-sm font-semibold text-base-content/70">Description</label>
+                                    <p class="mt-1">${conference.description}</p>
+                                </div>
+                                
+                                <div>
+                                    <label class="text-sm font-semibold text-base-content/70">Category</label>
+                                    <p class="mt-1">${conference.category}</p>
+                                </div>
+                                
+                                <div>
+                                    <label class="text-sm font-semibold text-base-content/70">Location</label>
+                                    <p class="mt-1">${conference.location}</p>
+                                </div>
+                            </div>
+
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="text-sm font-semibold text-base-content/70">Date & Time</label>
+                                    <p class="mt-1">${formatDate(conference.startDate, conference.endDate)}</p>
+                                    <p class="text-sm text-base-content/60">${conference.startTime} - ${conference.endTime}</p>
+                                </div>
+                                
+                                <div>
+                                    <label class="text-sm font-semibold text-base-content/70">Capacity</label>
+                                    <p class="mt-1">${conference.maxAttendees} maximum attendees</p>
+                                </div>
+                                
+                                <div>
+                                    <label class="text-sm font-semibold text-base-content/70">Current Status</label>
+                                    <p class="mt-1">${conference.registrations} registered, ${conference.currentAttendees} present</p>
+                                    ${conference.attendanceRate ? `<p class="text-sm text-base-content/60">${conference.attendanceRate}% attendance rate</p>` : ''}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex gap-3">
+                            <button class="btn btn-primary" onclick="editConference(${conference.id})">
+                                <i class="fas fa-edit mr-2"></i>Edit Conference
+                            </button>
+                            <button class="btn btn-secondary" onclick="duplicateConference(${conference.id})">
+                                <i class="fas fa-copy mr-2"></i>Duplicate
+                            </button>
+                            <button class="btn btn-outline" onclick="exportConference(${conference.id})">
+                                <i class="fas fa-download mr-2"></i>Export Data
+                            </button>
+                        </div>
+                    </div>
+                `;
+                
+                modal.showModal();
+            }
+        }
+
+        function duplicateConference(id) {
+            showToast(`Conference ${id} duplicated successfully`, 'success');
+        }
+
+        function exportConference(id) {
+            showToast(`Exporting conference ${id} data...`, 'info');
+        }
+
+        function deleteConference(id) {
+            if (confirm('Delete this conference? This action cannot be undone.')) {
+                showToast(`Conference ${id} deleted`, 'success');
+            }
+        }
+
+        function primaryAction(id, status) {
+            const actions = {
+                'active': 'paused',
+                'upcoming': 'started',
+                'completed': 'reactivated',
+                'cancelled': 'archived'
+            };
+            
+            showToast(`Conference ${id} ${actions[status]}`, 'success');
+        }
+
+        // Conference modal functions
+        function saveConference() {
+            const button = event.target;
+            const originalText = button.innerHTML;
+            button.innerHTML = '<span class="loading loading-spinner loading-sm"></span> Creating...';
+            button.disabled = true;
+
+            setTimeout(() => {
+                button.innerHTML = originalText;
+                button.disabled = false;
+                document.getElementById('conferenceModal').close();
+                showToast('Conference created successfully!', 'success');
+                renderConferences();
+            }, 2000);
+        }
+
+        function saveDraft() {
+            showToast('Conference saved as draft', 'info');
+            document.getElementById('conferenceModal').close();
+        }
+
+        // Selection and bulk actions
+        function toggleConferenceSelection(id, checked) {
+            if (checked) {
+                if (!selectedConferences.includes(id)) {
+                    selectedConferences.push(id);
+                }
+            } else {
+                selectedConferences = selectedConferences.filter(cId => cId !== id);
+            }
+
+            updateBulkActions();
+        }
+
+        function updateBulkActions() {
+            if (selectedConferences.length > 0) {
+                document.getElementById('selectedCount').textContent = selectedConferences.length;
+                // Show bulk actions UI if implemented
+            }
+        }
+
+        function executeBulkAction() {
+            const action = document.getElementById('bulkAction').value;
+            if (action && selectedConferences.length > 0) {
+                showToast(`Bulk ${action} executed on ${selectedConferences.length} conferences`, 'success');
+                selectedConferences = [];
+                document.getElementById('bulkModal').close();
+            }
+        }
+
+        // Import/Export functions
+        function importConferences() {
+            showToast('Conference import wizard would open here', 'info');
+        }
+
+        function exportConferences() {
+            showToast('Exporting all conference data...', 'info');
+        }
+
+        // Filter functions
+        function applyFilters() {
+            showToast('Filters applied', 'success');
+            renderConferences();
+        }
+
+        function clearFilters() {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('statusFilter').value = 'all';
+            document.getElementById('dateFilter').value = 'all';
+            document.getElementById('categoryFilter').value = 'all';
+            showToast('Filters cleared', 'info');
+            renderConferences();
+        }
+
+        // Utility functions
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            const alert = toast.querySelector('.alert');
+            
+            alert.className = `alert alert-${type}`;
+            alert.querySelector('span').textContent = message;
+            
+            const icon = alert.querySelector('i');
+            if (type === 'success') {
+                icon.className = 'fas fa-check-circle';
+            } else if (type === 'error') {
+                icon.className = 'fas fa-exclamation-circle';
+            } else if (type === 'warning') {
+                icon.className = 'fas fa-exclamation-triangle';
+            } else if (type === 'info') {
+                icon.className = 'fas fa-info-circle';
+            }
+            
+            toast.style.display = 'block';
+            
+            setTimeout(() => {
+                toast.style.display = 'none';
+            }, 3000);
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            renderConferences();
+        });
+
+        // Real-time search
+        document.getElementById('searchInput').addEventListener('input', function() {
+            clearTimeout(this.searchTimeout);
+            this.searchTimeout = setTimeout(() => {
+                applyFilters();
+            }, 300);
+        });
+    </script>
+</body>
+</html>
