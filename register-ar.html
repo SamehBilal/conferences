@@ -1,13 +1,20 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light">
+<html lang="ar" data-theme="light" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create Account - ConfTrack Conference Attendance System</title>
+    <title>إنشاء حساب - كونف تراك نظام إدارة حضور المؤتمرات</title>
     <link href="https://cdn.jsdelivr.net/npm/daisyui@4.4.24/dist/full.min.css" rel="stylesheet" type="text/css" />
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200..1000&display=swap" rel="stylesheet">
     <style>
+        * {
+            font-family: 'Cairo', sans-serif;
+        }
+        
         .gradient-bg {
             background: linear-gradient(135deg, hsl(var(--p) / 0.1) 0%, hsl(var(--s) / 0.1) 100%);
         }
@@ -43,12 +50,31 @@
 
         .step-content.hidden {
             opacity: 0;
-            transform: translateX(20px);
+            transform: translateX(-20px);
         }
 
         .step-content:not(.hidden) {
             opacity: 1;
             transform: translateX(0);
+        }
+
+        /* RTL specific adjustments */
+        .navbar-start {
+            flex: none;
+        }
+        
+        .navbar-end {
+            flex: 1;
+            justify-content: flex-start;
+        }
+
+        /* Flip arrows for RTL */
+        .fa-arrow-right:before {
+            content: "\f060";
+        }
+
+        .fa-arrow-left:before {
+            content: "\f061";
         }
     </style>
 </head>
@@ -56,9 +82,9 @@
     <!-- Navigation -->
     <div class="navbar bg-base-100/90 backdrop-blur-sm shadow-sm sticky top-0 z-50">
         <div class="navbar-start">
-            <a href="index.html" class="btn btn-ghost text-xl font-bold">
-                <i class="fas fa-calendar-check mr-2 text-primary"></i>
-                <span class="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">ConfTrack</span>
+            <a href="index-ar.html" class="btn btn-ghost text-xl font-bold">
+                <i class="fas fa-calendar-check ml-2 text-primary"></i>
+                <span class="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">كونف تراك</span>
             </a>
         </div>
         <div class="navbar-end gap-2">
@@ -68,30 +94,30 @@
                 <i class="fas fa-sun swap-off fill-current w-6 h-6"></i>
                 <i class="fas fa-moon swap-on fill-current w-6 h-6"></i>
             </label>
-            <a href="index.html" class="btn btn-ghost btn-sm">
-                <i class="fas fa-home mr-2"></i>Home
+            <a href="index-ar.html" class="btn btn-ghost btn-sm">
+                <i class="fas fa-home ml-2"></i>الرئيسية
             </a>
         </div>
     </div>
 
     <div class="hero min-h-[calc(100vh-4rem)] py-8">
-        <div class="hero-content flex-col lg:flex-row max-w-7xl w-full gap-12">
+        <div class="hero-content flex-col lg:flex-row-reverse max-w-7xl w-full gap-12">
             <!-- Info Section -->
-            <div class="text-center lg:text-left lg:w-1/2 space-y-8">
+            <div class="text-center lg:text-right lg:w-1/2 space-y-8">
                 <div class="float-animation">
                     <div class="relative inline-block">
                         <i class="fas fa-user-plus text-8xl text-primary drop-shadow-lg"></i>
-                        <div class="absolute -top-2 -right-2 w-6 h-6 bg-success rounded-full animate-pulse"></div>
+                        <div class="absolute -top-2 -left-2 w-6 h-6 bg-success rounded-full animate-pulse"></div>
                     </div>
                 </div>
                 
                 <div class="space-y-6">
                     <h1 class="text-5xl lg:text-6xl font-bold">
-                        <span class="text-base-content">Join</span><br>
-                        <span class="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">ConfTrack!</span>
+                        <span class="text-base-content">انضم إلى</span><br>
+                        <span class="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">كونف تراك!</span>
                     </h1>
                     <p class="text-xl text-base-content/80 leading-relaxed max-w-lg">
-                        Create your account to unlock powerful conference management tools and seamless attendance tracking.
+                        أنشئ حسابك لاكتشاف أدوات إدارة المؤتمرات القوية وتتبع الحضور السلس.
                     </p>
                 </div>
 
@@ -107,8 +133,8 @@
                                 </div>
                             </div>
                             <div>
-                                <div class="font-bold text-sm">QR Integration</div>
-                                <div class="text-xs text-base-content/70">Instant scanning</div>
+                                <div class="font-bold text-sm">تكامل QR</div>
+                                <div class="text-xs text-base-content/70">مسح فوري</div>
                             </div>
                         </div>
                     </div>
@@ -123,8 +149,8 @@
                                 </div>
                             </div>
                             <div>
-                                <div class="font-bold text-sm">Live Analytics</div>
-                                <div class="text-xs text-base-content/70">Real-time data</div>
+                                <div class="font-bold text-sm">تحليلات مباشرة</div>
+                                <div class="text-xs text-base-content/70">بيانات فورية</div>
                             </div>
                         </div>
                     </div>
@@ -139,8 +165,8 @@
                                 </div>
                             </div>
                             <div>
-                                <div class="font-bold text-sm">Mobile Ready</div>
-                                <div class="text-xs text-base-content/70">Any device</div>
+                                <div class="font-bold text-sm">جاهز للجوال</div>
+                                <div class="text-xs text-base-content/70">أي جهاز</div>
                             </div>
                         </div>
                     </div>
@@ -155,8 +181,8 @@
                                 </div>
                             </div>
                             <div>
-                                <div class="font-bold text-sm">Cloud Sync</div>
-                                <div class="text-xs text-base-content/70">Always updated</div>
+                                <div class="font-bold text-sm">مزامنة سحابية</div>
+                                <div class="text-xs text-base-content/70">محدث دائماً</div>
                             </div>
                         </div>
                     </div>
@@ -165,11 +191,11 @@
                 <!-- Progress Indicator -->
                 <div class="bg-base-100/80 backdrop-blur-sm rounded-lg p-4 border border-base-content/10">
                     <div class="flex justify-between items-center mb-2">
-                        <span class="text-sm font-medium">Setup Progress</span>
-                        <span class="text-sm text-base-content/70" id="progressText">Step 1 of 3</span>
+                        <span class="text-sm font-medium">تقدم الإعداد</span>
+                        <span class="text-sm text-base-content/70" id="progressText">الخطوة 1 من 3</span>
                     </div>
                     <div class="w-full bg-base-200 rounded-full h-2">
-                        <div class="bg-gradient-to-r from-primary to-secondary h-2 rounded-full transition-all duration-500" style="width: 33%" id="progressBar"></div>
+                        <div class="bg-gradient-to-l from-primary to-secondary h-2 rounded-full transition-all duration-500" style="width: 33%" id="progressBar"></div>
                     </div>
                 </div>
             </div>
@@ -178,8 +204,8 @@
             <div class="card w-full max-w-lg shadow-2xl bg-base-100/95 backdrop-blur-sm border border-base-content/10 lg:w-1/2">
                 <div class="card-body p-8">
                     <div class="text-center mb-8">
-                        <h2 class="text-3xl font-bold mb-2">Create Account</h2>
-                        <p class="text-base-content/70">Join thousands of event organizers</p>
+                        <h2 class="text-3xl font-bold mb-2">إنشاء حساب</h2>
+                        <p class="text-base-content/70">انضم إلى آلاف منظمي الفعاليات</p>
                     </div>
 
                     <!-- Enhanced Step Indicator -->
@@ -188,19 +214,19 @@
                             <li class="step step-primary text-xs" data-step="1">
                                 <div class="step-content-mini">
                                     <i class="fas fa-user"></i>
-                                    <span class="hidden sm:inline ml-1">Personal</span>
+                                    <span class="hidden sm:inline mr-1">شخصي</span>
                                 </div>
                             </li>
                             <li class="step text-xs" data-step="2">
                                 <div class="step-content-mini">
                                     <i class="fas fa-briefcase"></i>
-                                    <span class="hidden sm:inline ml-1">Professional</span>
+                                    <span class="hidden sm:inline mr-1">مهني</span>
                                 </div>
                             </li>
                             <li class="step text-xs" data-step="3">
                                 <div class="step-content-mini">
                                     <i class="fas fa-shield-alt"></i>
-                                    <span class="hidden sm:inline ml-1">Security</span>
+                                    <span class="hidden sm:inline mr-1">الأمان</span>
                                 </div>
                             </li>
                         </ul>
@@ -213,60 +239,61 @@
                                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                     <div class="form-control">
                                         <label class="label">
-                                            <span class="label-text font-medium">First Name</span>
+                                            <span class="label-text font-medium">الاسم الأول</span>
                                         </label>
-                                        <input type="text" placeholder="Doe" class="input input-bordered input-focus transition-all duration-200" required />
+                                        <input type="text" placeholder="أحمد" class="input input-bordered input-focus transition-all duration-200" required />
                                     </div>
                                     <div class="form-control">
                                         <label class="label">
-                                            <span class="label-text font-medium">Last Name</span>
+                                            <span class="label-text font-medium">الاسم الأخير</span>
                                         </label>
-                                        <input type="text" placeholder="John" class="input input-bordered input-focus transition-all duration-200" required />
+                                        <input type="text" placeholder="محمد" class="input input-bordered input-focus transition-all duration-200" required />
                                     </div>
                                 </div>
 
                                 <div class="form-control">
                                     <label class="label">
-                                        <span class="label-text font-medium">Email Address</span>
+                                        <span class="label-text font-medium">البريد الإلكتروني</span>
                                     </label>
                                     <div class="relative">
-                                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                        <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none">
                                             <i class="fas fa-envelope text-base-content/40"></i>
                                         </div>
-                                        <input type="email" placeholder="john.doe@example.com" class="input input-bordered w-full pl-12 input-focus transition-all duration-200" required />
+                                        <input type="email" placeholder="ahmed.mohamed@example.com" class="input input-bordered w-full pr-12 input-focus transition-all duration-200" required dir="ltr" />
                                     </div>
                                 </div>
 
                                 <div class="form-control">
                                     <label class="label">
-                                        <span class="label-text font-medium">Phone Number</span>
+                                        <span class="label-text font-medium">رقم الهاتف</span>
                                     </label>
                                     <div class="relative">
-                                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                        <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none">
                                             <i class="fas fa-phone text-base-content/40"></i>
                                         </div>
-                                        <input type="tel" placeholder="+1 (555) 123-4567" class="input input-bordered w-full pl-12 input-focus transition-all duration-200" required />
+                                        <input type="tel" placeholder="+20 (123) 456-7890" class="input input-bordered w-full pr-12 input-focus transition-all duration-200" required dir="ltr" />
                                     </div>
                                 </div>
 
                                 <div class="form-control">
                                     <label class="label">
-                                        <span class="label-text font-medium">Nationality</span>
+                                        <span class="label-text font-medium">الجنسية</span>
                                     </label>
                                     <div class="relative">
-                                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none z-10">
+                                        <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none z-10">
                                             <i class="fas fa-globe text-base-content/40"></i>
                                         </div>
-                                        <select class="select select-bordered w-full pl-12 input-focus transition-all duration-200">
-                                            <option disabled selected>Choose your nationality</option>
-                                            <option>United States</option>
-                                            <option>Canada</option>
-                                            <option>United Kingdom</option>
-                                            <option>Germany</option>
-                                            <option>France</option>
-                                            <option>Australia</option>
-                                            <option>Japan</option>
-                                            <option>Other</option>
+                                        <select class="select select-bordered w-full pr-12 input-focus transition-all duration-200">
+                                            <option disabled selected>اختر جنسيتك</option>
+                                            <option>مصر</option>
+                                            <option>السعودية</option>
+                                            <option>الإمارات</option>
+                                            <option>الأردن</option>
+                                            <option>لبنان</option>
+                                            <option>المغرب</option>
+                                            <option>الكويت</option>
+                                            <option>قطر</option>
+                                            <option>أخرى</option>
                                         </select>
                                     </div>
                                 </div>
@@ -278,53 +305,53 @@
                             <div class="space-y-4">
                                 <div class="form-control">
                                     <label class="label">
-                                        <span class="label-text font-medium">Profession</span>
+                                        <span class="label-text font-medium">المهنة</span>
                                     </label>
                                     <div class="relative">
-                                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                        <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none">
                                             <i class="fas fa-user-tie text-base-content/40"></i>
                                         </div>
-                                        <input type="text" placeholder="Software Developer" class="input input-bordered w-full pl-12 input-focus transition-all duration-200" required />
+                                        <input type="text" placeholder="مطور برمجيات" class="input input-bordered w-full pr-12 input-focus transition-all duration-200" required />
                                     </div>
                                 </div>
 
                                 <div class="form-control">
                                     <label class="label">
-                                        <span class="label-text font-medium">Company</span>
+                                        <span class="label-text font-medium">الشركة</span>
                                     </label>
                                     <div class="relative">
-                                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                        <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none">
                                             <i class="fas fa-building text-base-content/40"></i>
                                         </div>
-                                        <input type="text" placeholder="Tech Corp Inc." class="input input-bordered w-full pl-12 input-focus transition-all duration-200" required />
+                                        <input type="text" placeholder="شركة التقنية المحدودة" class="input input-bordered w-full pr-12 input-focus transition-all duration-200" required />
                                     </div>
                                 </div>
 
                                 <div class="form-control">
                                     <label class="label">
-                                        <span class="label-text font-medium">Job Title</span>
+                                        <span class="label-text font-medium">المسمى الوظيفي</span>
                                     </label>
                                     <div class="relative">
-                                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                        <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none">
                                             <i class="fas fa-id-badge text-base-content/40"></i>
                                         </div>
-                                        <input type="text" placeholder="Senior Developer" class="input input-bordered w-full pl-12 input-focus transition-all duration-200" required />
+                                        <input type="text" placeholder="مطور أول" class="input input-bordered w-full pr-12 input-focus transition-all duration-200" required />
                                     </div>
                                 </div>
 
                                 <div class="form-control">
                                     <label class="label">
-                                        <span class="label-text font-medium">Professional Bio</span>
-                                        <span class="label-text-alt">Optional</span>
+                                        <span class="label-text font-medium">السيرة المهنية</span>
+                                        <span class="label-text-alt">اختياري</span>
                                     </label>
-                                    <textarea class="textarea textarea-bordered h-24 input-focus transition-all duration-200 resize-none" placeholder="Tell us about your professional background..."></textarea>
+                                    <textarea class="textarea textarea-bordered h-24 input-focus transition-all duration-200 resize-none" placeholder="أخبرنا عن خلفيتك المهنية..."></textarea>
                                 </div>
 
                                 <!-- Enhanced Avatar Upload -->
                                 <div class="form-control">
                                     <label class="label">
-                                        <span class="label-text font-medium">Profile Picture</span>
-                                        <span class="label-text-alt">Optional</span>
+                                        <span class="label-text font-medium">صورة الملف الشخصي</span>
+                                        <span class="label-text-alt">اختياري</span>
                                     </label>
                                     <div class="flex items-center gap-4">
                                         <div class="avatar placeholder">
@@ -334,7 +361,7 @@
                                         </div>
                                         <div class="flex-1">
                                             <input type="file" class="file-input file-input-bordered file-input-sm w-full" accept="image/*" />
-                                            <div class="text-xs text-base-content/60 mt-1">Max size: 2MB. JPG, PNG, GIF</div>
+                                            <div class="text-xs text-base-content/60 mt-1">حد أقصى: 2 ميجابايت. JPG, PNG, GIF</div>
                                         </div>
                                     </div>
                                 </div>
@@ -346,14 +373,14 @@
                             <div class="space-y-4">
                                 <div class="form-control">
                                     <label class="label">
-                                        <span class="label-text font-medium">Password</span>
+                                        <span class="label-text font-medium">كلمة المرور</span>
                                     </label>
                                     <div class="relative">
-                                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                        <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none">
                                             <i class="fas fa-lock text-base-content/40"></i>
                                         </div>
-                                        <input type="password" placeholder="Enter a strong password" class="input input-bordered w-full pl-12 pr-12 input-focus transition-all duration-200" required id="passwordInput" />
-                                        <div class="absolute inset-y-0 right-0 pr-4 flex items-center">
+                                        <input type="password" placeholder="أدخل كلمة مرور قوية" class="input input-bordered w-full pr-12 pl-12 input-focus transition-all duration-200" required id="passwordInput" />
+                                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center">
                                             <button type="button" class="toggle-password text-base-content/40 hover:text-primary transition-colors">
                                                 <i class="fas fa-eye"></i>
                                             </button>
@@ -362,8 +389,8 @@
                                     <!-- Enhanced Password strength indicator -->
                                     <div class="mt-3 space-y-2">
                                         <div class="flex justify-between items-center">
-                                            <span class="text-xs text-base-content/70">Password strength</span>
-                                            <span class="text-xs font-medium" id="strengthText">Weak</span>
+                                            <span class="text-xs text-base-content/70">قوة كلمة المرور</span>
+                                            <span class="text-xs font-medium" id="strengthText">ضعيفة</span>
                                         </div>
                                         <div class="w-full bg-base-200 rounded-full h-2">
                                             <div class="bg-error h-2 rounded-full transition-all duration-300" style="width: 0%" id="strengthBar"></div>
@@ -371,16 +398,16 @@
                                         <div class="text-xs text-base-content/50" id="passwordRequirements">
                                             <div class="grid grid-cols-2 gap-1">
                                                 <span id="req-length" class="flex items-center gap-1">
-                                                    <i class="fas fa-times text-error text-xs"></i>8+ characters
+                                                    <i class="fas fa-times text-error text-xs"></i>8+ أحرف
                                                 </span>
                                                 <span id="req-upper" class="flex items-center gap-1">
-                                                    <i class="fas fa-times text-error text-xs"></i>Uppercase
+                                                    <i class="fas fa-times text-error text-xs"></i>حرف كبير
                                                 </span>
                                                 <span id="req-lower" class="flex items-center gap-1">
-                                                    <i class="fas fa-times text-error text-xs"></i>Lowercase
+                                                    <i class="fas fa-times text-error text-xs"></i>حرف صغير
                                                 </span>
                                                 <span id="req-number" class="flex items-center gap-1">
-                                                    <i class="fas fa-times text-error text-xs"></i>Number
+                                                    <i class="fas fa-times text-error text-xs"></i>رقم
                                                 </span>
                                             </div>
                                         </div>
@@ -389,14 +416,14 @@
 
                                 <div class="form-control">
                                     <label class="label">
-                                        <span class="label-text font-medium">Confirm Password</span>
+                                        <span class="label-text font-medium">تأكيد كلمة المرور</span>
                                     </label>
                                     <div class="relative">
-                                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                        <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none">
                                             <i class="fas fa-lock text-base-content/40"></i>
                                         </div>
-                                        <input type="password" placeholder="Confirm your password" class="input input-bordered w-full pl-12 input-focus transition-all duration-200" required id="confirmPasswordInput" />
-                                        <div class="absolute inset-y-0 right-0 pr-4 flex items-center" id="passwordMatchIcon" style="display: none;">
+                                        <input type="password" placeholder="أكد كلمة المرور" class="input input-bordered w-full pr-12 input-focus transition-all duration-200" required id="confirmPasswordInput" />
+                                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center" id="passwordMatchIcon" style="display: none;">
                                             <i class="fas fa-check text-success"></i>
                                         </div>
                                     </div>
@@ -406,17 +433,17 @@
                                 <!-- Enhanced NFC Card ID -->
                                 <div class="form-control">
                                     <label class="label">
-                                        <span class="label-text font-medium">NFC Card ID</span>
-                                        <span class="label-text-alt">Optional - Auto-generated if empty</span>
+                                        <span class="label-text font-medium">معرف بطاقة NFC</span>
+                                        <span class="label-text-alt">اختياري - يتم إنشاؤه تلقائياً إذا تُرك فارغاً</span>
                                     </label>
                                     <div class="relative">
-                                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                        <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none">
                                             <i class="fas fa-credit-card text-base-content/40"></i>
                                         </div>
-                                        <input type="text" placeholder="Leave blank for auto-generation" class="input input-bordered w-full pl-12 pr-24 input-focus transition-all duration-200" id="nfcCardInput" />
-                                        <div class="absolute inset-y-0 right-0 pr-2 flex items-center">
+                                        <input type="text" placeholder="اتركه فارغاً للإنشاء التلقائي" class="input input-bordered w-full pr-12 pl-24 input-focus transition-all duration-200" id="nfcCardInput" />
+                                        <div class="absolute inset-y-0 left-0 pl-2 flex items-center">
                                             <button type="button" class="btn btn-ghost btn-sm" onclick="generateCardId()">
-                                                <i class="fas fa-random mr-1"></i>Generate
+                                                <i class="fas fa-random ml-1"></i>إنشاء
                                             </button>
                                         </div>
                                     </div>
@@ -428,11 +455,11 @@
                                         <label class="cursor-pointer flex items-start gap-3 p-3 rounded-lg border border-base-content/20 hover:bg-base-200/50 transition-colors">
                                             <input type="checkbox" class="checkbox checkbox-primary checkbox-sm mt-0.5" required />
                                             <div class="text-sm leading-relaxed">
-                                                I agree to the 
-                                                <a href="#" class="link link-primary font-medium">Terms of Service</a> 
-                                                and 
-                                                <a href="#" class="link link-primary font-medium">Privacy Policy</a>
-                                                <div class="text-xs text-base-content/60 mt-1">Required to create an account</div>
+                                                أوافق على 
+                                                <a href="#" class="link link-primary font-medium">شروط الخدمة</a> 
+                                                و 
+                                                <a href="#" class="link link-primary font-medium">سياسة الخصوصية</a>
+                                                <div class="text-xs text-base-content/60 mt-1">مطلوب لإنشاء حساب</div>
                                             </div>
                                         </label>
                                     </div>
@@ -441,8 +468,8 @@
                                         <label class="cursor-pointer flex items-start gap-3 p-3 rounded-lg border border-base-content/10 hover:bg-base-200/30 transition-colors">
                                             <input type="checkbox" class="checkbox checkbox-primary checkbox-sm mt-0.5" />
                                             <div class="text-sm leading-relaxed">
-                                                Send me updates about new features, conferences, and product announcements
-                                                <div class="text-xs text-base-content/60 mt-1">You can unsubscribe anytime</div>
+                                                أرسل لي تحديثات حول الميزات الجديدة والمؤتمرات وإعلانات المنتج
+                                                <div class="text-xs text-base-content/60 mt-1">يمكنك إلغاء الاشتراك في أي وقت</div>
                                             </div>
                                         </label>
                                     </div>
@@ -453,25 +480,25 @@
                         <!-- Enhanced Navigation Buttons -->
                         <div class="flex justify-between items-center pt-6 border-t border-base-content/10">
                             <button type="button" class="btn btn-outline" id="prevBtn" onclick="changeStep(-1)" style="display: none;">
-                                <i class="fas fa-arrow-left mr-2"></i>Previous
+                                <i class="fas fa-arrow-left ml-2"></i>السابق
                             </button>
                             <div class="flex-1 text-center" id="stepInfo">
-                                <span class="text-sm text-base-content/60">Step 1 of 3</span>
+                                <span class="text-sm text-base-content/60">الخطوة 1 من 3</span>
                             </div>
                             <button type="button" class="btn btn-primary shadow-lg" id="nextBtn" onclick="changeStep(1)">
-                                Next<i class="fas fa-arrow-right ml-2"></i>
+                                التالي<i class="fas fa-arrow-right mr-2"></i>
                             </button>
                             <button type="button" class="btn btn-success shadow-lg pulse-glow" id="submitBtn" onclick="handleRegister()" style="display: none;">
-                                <i class="fas fa-user-plus mr-2"></i>Create Account
+                                <i class="fas fa-user-plus ml-2"></i>إنشاء حساب
                             </button>
                         </div>
 
                         <!-- Enhanced Login Link -->
                         <div class="text-center pt-4 border-t border-base-content/10">
                             <p class="text-base-content/70">
-                                Already have an account? 
-                                <a href="auth-login.html" class="link link-primary font-semibold hover:link-hover">
-                                    Sign in here
+                                لديك حساب بالفعل؟ 
+                                <a href="auth-login-ar.html" class="link link-primary font-semibold hover:link-hover">
+                                    سجل دخولك هنا
                                 </a>
                             </p>
                         </div>
@@ -482,12 +509,12 @@
     </div>
 
     <!-- Enhanced Toast -->
-    <div class="toast toast-top toast-end z-50" id="toast" style="display: none;">
+    <div class="toast toast-top toast-start z-50" id="toast" style="display: none;">
         <div class="alert shadow-lg border border-base-content/20">
             <i class="fas fa-check-circle"></i>
             <div>
-                <h3 class="font-bold">Success!</h3>
-                <div class="text-xs">Registration successful! Check your email.</div>
+                <h3 class="font-bold">نجح!</h3>
+                <div class="text-xs">تم التسجيل بنجاح! تحقق من بريدك الإلكتروني.</div>
             </div>
         </div>
     </div>
@@ -560,7 +587,7 @@
             });
             
             if (!isValid) {
-                showToast('Please fill in all required fields', 'error', 'Validation Error');
+                showToast('يرجى ملء جميع الحقول المطلوبة', 'error', 'خطأ في التحقق');
             }
             
             return isValid;
@@ -575,12 +602,12 @@
             const progressText = document.getElementById('progressText');
             
             // Update step info
-            stepInfo.innerHTML = `<span class="text-sm text-base-content/60">Step ${currentStep} of ${totalSteps}</span>`;
+            stepInfo.innerHTML = `<span class="text-sm text-base-content/60">الخطوة ${currentStep} من ${totalSteps}</span>`;
             
             // Update progress bar
             const progress = (currentStep / totalSteps) * 100;
             progressBar.style.width = `${progress}%`;
-            progressText.textContent = `Step ${currentStep} of ${totalSteps}`;
+            progressText.textContent = `الخطوة ${currentStep} من ${totalSteps}`;
             
             // Update buttons
             if (currentStep === 1) {
@@ -643,19 +670,19 @@
             
             if (strength < 50) {
                 strengthBar.className = 'bg-error h-2 rounded-full transition-all duration-300';
-                strengthText.textContent = 'Weak';
+                strengthText.textContent = 'ضعيفة';
                 strengthText.className = 'text-xs font-medium text-error';
             } else if (strength < 75) {
                 strengthBar.className = 'bg-warning h-2 rounded-full transition-all duration-300';
-                strengthText.textContent = 'Fair';
+                strengthText.textContent = 'مقبولة';
                 strengthText.className = 'text-xs font-medium text-warning';
             } else if (strength < 100) {
                 strengthBar.className = 'bg-info h-2 rounded-full transition-all duration-300';
-                strengthText.textContent = 'Good';
+                strengthText.textContent = 'جيدة';
                 strengthText.className = 'text-xs font-medium text-info';
             } else {
                 strengthBar.className = 'bg-success h-2 rounded-full transition-all duration-300';
-                strengthText.textContent = 'Excellent';
+                strengthText.textContent = 'ممتازة';
                 strengthText.className = 'text-xs font-medium text-success';
             }
         });
@@ -671,12 +698,12 @@
                 if (password === confirmPassword) {
                     matchIcon.style.display = 'flex';
                     matchIcon.innerHTML = '<i class="fas fa-check text-success"></i>';
-                    matchText.textContent = 'Passwords match';
+                    matchText.textContent = 'كلمات المرور متطابقة';
                     matchText.className = 'text-xs mt-1 text-success';
                 } else {
                     matchIcon.style.display = 'flex';
                     matchIcon.innerHTML = '<i class="fas fa-times text-error"></i>';
-                    matchText.textContent = 'Passwords do not match';
+                    matchText.textContent = 'كلمات المرور غير متطابقة';
                     matchText.className = 'text-xs mt-1 text-error';
                 }
             } else {
@@ -709,7 +736,7 @@
             
             const termsCheckbox = document.querySelector('input[type="checkbox"][required]');
             if (!termsCheckbox.checked) {
-                showToast('Please accept the terms and conditions', 'error', 'Terms Required');
+                showToast('يرجى الموافقة على الشروط والأحكام', 'error', 'الشروط مطلوبة');
                 return;
             }
             
@@ -717,27 +744,27 @@
             const confirmPassword = document.getElementById('confirmPasswordInput').value;
             
             if (password !== confirmPassword) {
-                showToast('Passwords do not match', 'error', 'Password Mismatch');
+                showToast('كلمات المرور غير متطابقة', 'error', 'عدم تطابق كلمة المرور');
                 return;
             }
             
             const button = document.getElementById('submitBtn');
             const originalContent = button.innerHTML;
-            button.innerHTML = '<span class="loading loading-spinner loading-sm"></span> Creating Account...';
+            button.innerHTML = '<span class="loading loading-spinner loading-sm"></span> جاري إنشاء الحساب...';
             button.disabled = true;
             button.classList.remove('pulse-glow');
 
             // Simulate registration process
             setTimeout(() => {
-                showToast('Account created successfully! Please check your email for verification.', 'success', 'Welcome to ConfTrack!');
+                showToast('تم إنشاء الحساب بنجاح! يرجى التحقق من بريدك الإلكتروني للتأكيد.', 'success', 'مرحباً بك في كونف تراك!');
                 
                 setTimeout(() => {
-                    window.location.href = 'auth-login.html';
+                    window.location.href = 'user-profile-ar.html';
                 }, 3000);
             }, 3000);
         }
 
-        function showToast(message, type = 'success', title = 'Notification') {
+        function showToast(message, type = 'success', title = 'إشعار') {
             const toast = document.getElementById('toast');
             const alert = toast.querySelector('.alert');
             const titleElement = alert.querySelector('h3');
@@ -778,7 +805,7 @@
             if (file) {
                 // Validate file size (2MB limit)
                 if (file.size > 2 * 1024 * 1024) {
-                    showToast('File size too large. Please choose a file under 2MB.', 'error', 'File Too Large');
+                    showToast('حجم الملف كبير جداً. يرجى اختيار ملف أقل من 2 ميجابايت.', 'error', 'الملف كبير جداً');
                     this.value = '';
                     return;
                 }

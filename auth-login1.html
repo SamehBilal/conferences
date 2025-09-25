@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Conference Attendance System</title>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.4.24/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="min-h-screen bg-gradient-to-br from-primary/10 to-secondary/10">
+    <!-- Navigation -->
+    <div class="navbar bg-base-100/80 backdrop-blur-sm">
+        <div class="navbar-start">
+            <a href="index.html" class="btn btn-ghost text-xl">
+                <i class="fas fa-calendar-check mr-2"></i>
+                ConfTrack
+            </a>
+        </div>
+        <div class="navbar-end">
+            <!-- Theme Toggle -->
+            <label class="swap swap-rotate mr-4">
+                <input type="checkbox" class="theme-controller" value="dark" />
+                <i class="fas fa-sun swap-off fill-current w-6 h-6"></i>
+                <i class="fas fa-moon swap-on fill-current w-6 h-6"></i>
+            </label>
+        </div>
+    </div>
+
+    <div class="hero min-h-[calc(100vh-4rem)]">
+        <div class="hero-content flex-col lg:flex-row-reverse gap-8 max-w-6xl">
+            <!-- Info Section -->
+            <div class="text-center lg:text-left lg:w-1/2">
+                <div class="mb-8">
+                    <i class="fas fa-sign-in-alt text-6xl text-primary mb-4"></i>
+                </div>
+                <h1 class="text-4xl font-bold mb-4">Welcome Back!</h1>
+                <p class="text-lg text-base-content/70 mb-6">Sign in to access your conference attendance dashboard and manage your profile.</p>
+                <div class="stats stats-vertical lg:stats-horizontal shadow">
+                    <div class="stat">
+                        <div class="stat-figure text-primary">
+                            <i class="fas fa-users text-2xl"></i>
+                        </div>
+                        <div class="stat-title">Active Users</div>
+                        <div class="stat-value text-primary">2.6K</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-figure text-secondary">
+                            <i class="fas fa-calendar text-2xl"></i>
+                        </div>
+                        <div class="stat-title">Conferences</div>
+                        <div class="stat-value text-secondary">156</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Login Form -->
+            <div class="card shrink-0 w-full max-w-md shadow-2xl bg-base-100 lg:w-1/2">
+                <form class="card-body">
+                    <div class="text-center mb-6">
+                        <h2 class="text-2xl font-bold">Sign In</h2>
+                        <p class="text-base-content/70">Enter your credentials to continue</p>
+                    </div>
+
+                    <!-- Email Field -->
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text">Email</span>
+                        </label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <i class="fas fa-envelope text-base-content/40"></i>
+                            </div>
+                            <input type="email" placeholder="your@email.com" class="input input-bordered w-full pl-10" required />
+                        </div>
+                    </div>
+
+                    <!-- Password Field -->
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text">Password</span>
+                        </label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <i class="fas fa-lock text-base-content/40"></i>
+                            </div>
+                            <input type="password" placeholder="Enter your password" class="input input-bordered w-full pl-10 pr-10" required />
+                            <div class="absolute inset-y-0 right-0 pr-3 flex items-center">
+                                <button type="button" class="toggle-password text-base-content/40 hover:text-base-content">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <label class="label">
+                            <a href="#" class="label-text-alt link link-hover">Forgot password?</a>
+                        </label>
+                    </div>
+
+                    <!-- Remember Me -->
+                    <div class="form-control">
+                        <label class="cursor-pointer flex items-center gap-3">
+                            <input type="checkbox" class="checkbox checkbox-primary checkbox-sm" />
+                            <span class="label-text">Remember me</span>
+                        </label>
+                    </div>
+
+                    <!-- Login Button -->
+                    <div class="form-control mt-6">
+                        <button type="button" class="btn btn-primary" onclick="handleLogin()">
+                            <i class="fas fa-sign-in-alt mr-2"></i>
+                            Sign In
+                        </button>
+                    </div>
+
+                    <!-- Divider -->
+                    <div class="divider">OR</div>
+
+                    <!-- Social Login -->
+                    <div class="grid grid-cols-2 gap-4">
+                        <button type="button" class="btn btn-outline">
+                            <i class="fab fa-google mr-2"></i>
+                            Google
+                        </button>
+                        <button type="button" class="btn btn-outline">
+                            <i class="fab fa-microsoft mr-2"></i>
+                            Microsoft
+                        </button>
+                    </div>
+
+                    <!-- Register Link -->
+                    <div class="text-center mt-4">
+                        <p class="text-base-content/70">
+                            Don't have an account? 
+                            <a href="auth-register.html" class="link link-primary font-medium">Sign up here</a>
+                        </p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast for feedback -->
+    <div class="toast toast-top toast-end" id="toast" style="display: none;">
+        <div class="alert alert-success">
+            <i class="fas fa-check-circle"></i>
+            <span>Login successful! Redirecting...</span>
+        </div>
+    </div>
+
+    <script>
+        // Theme toggle functionality
+        const themeController = document.querySelector('.theme-controller');
+        const html = document.documentElement;
+        
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        html.setAttribute('data-theme', savedTheme);
+        if (savedTheme === 'dark') {
+            themeController.checked = true;
+        }
+        
+        themeController.addEventListener('change', function() {
+            const theme = this.checked ? 'dark' : 'light';
+            html.setAttribute('data-theme', theme);
+            localStorage.setItem('theme', theme);
+        });
+
+        // Password toggle
+        document.querySelector('.toggle-password').addEventListener('click', function() {
+            const passwordInput = this.closest('.relative').querySelector('input');
+            const icon = this.querySelector('i');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                icon.className = 'fas fa-eye-slash';
+            } else {
+                passwordInput.type = 'password';
+                icon.className = 'fas fa-eye';
+            }
+        });
+
+        // Handle login
+        function handleLogin() {
+            const email = document.querySelector('input[type="email"]').value;
+            const password = document.querySelector('input[type="password"]').value;
+            
+            if (!email || !password) {
+                showToast('Please fill in all fields', 'error');
+                return;
+            }
+
+            // Simulate login process
+            const button = document.querySelector('.btn-primary');
+            const originalContent = button.innerHTML;
+            button.innerHTML = '<span class="loading loading-spinner loading-sm"></span> Signing in...';
+            button.disabled = true;
+
+            setTimeout(() => {
+                // Simulate successful login
+                showToast('Login successful! Redirecting...', 'success');
+                
+                setTimeout(() => {
+                    // Redirect based on email (demo purposes)
+                    if (email.includes('admin') || email === 'admin@example.com') {
+                        window.location.href = 'admin-dashboard.html';
+                    } else {
+                        window.location.href = 'user-profile.html';
+                    }
+                }, 1500);
+            }, 2000);
+        }
+
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            const alert = toast.querySelector('.alert');
+            
+            alert.className = `alert alert-${type}`;
+            alert.querySelector('span').textContent = message;
+            
+            const icon = alert.querySelector('i');
+            if (type === 'success') {
+                icon.className = 'fas fa-check-circle';
+            } else if (type === 'error') {
+                icon.className = 'fas fa-exclamation-circle';
+            }
+            
+            toast.style.display = 'block';
+            
+            setTimeout(() => {
+                toast.style.display = 'none';
+            }, 4000);
+        }
+
+        // Enter key support
+        document.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                handleLogin();
+            }
+        });
+    </script>
+</body>
+</html>

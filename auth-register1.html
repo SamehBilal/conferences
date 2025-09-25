@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - Conference Attendance System</title>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.4.24/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="min-h-screen bg-gradient-to-br from-primary/10 to-secondary/10">
+    <!-- Navigation -->
+    <div class="navbar bg-base-100/80 backdrop-blur-sm">
+        <div class="navbar-start">
+            <a href="index.html" class="btn btn-ghost text-xl">
+                <i class="fas fa-calendar-check mr-2"></i>
+                ConfTrack
+            </a>
+        </div>
+        <div class="navbar-end">
+            <!-- Theme Toggle -->
+            <label class="swap swap-rotate mr-4">
+                <input type="checkbox" class="theme-controller" value="dark" />
+                <i class="fas fa-sun swap-off fill-current w-6 h-6"></i>
+                <i class="fas fa-moon swap-on fill-current w-6 h-6"></i>
+            </label>
+        </div>
+    </div>
+
+    <div class="hero min-h-[calc(100vh-4rem)] py-8">
+        <div class="hero-content flex-col lg:flex-row max-w-6xl">
+            <!-- Info Section -->
+            <div class="text-center lg:text-left lg:w-1/2 mb-8 lg:mb-0">
+                <div class="mb-8">
+                    <i class="fas fa-user-plus text-6xl text-primary mb-4"></i>
+                </div>
+                <h1 class="text-4xl font-bold mb-4">Join ConfTrack!</h1>
+                <p class="text-lg text-base-content/70 mb-6">Create your account to start managing conference attendance efficiently.</p>
+                
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div class="flex items-center gap-3">
+                        <div class="badge badge-primary badge-lg">
+                            <i class="fas fa-qrcode"></i>
+                        </div>
+                        <span>QR Code Integration</span>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <div class="badge badge-secondary badge-lg">
+                            <i class="fas fa-chart-bar"></i>
+                        </div>
+                        <span>Real-time Analytics</span>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <div class="badge badge-accent badge-lg">
+                            <i class="fas fa-mobile-alt"></i>
+                        </div>
+                        <span>Mobile Friendly</span>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <div class="badge badge-info badge-lg">
+                            <i class="fas fa-cloud"></i>
+                        </div>
+                        <span>Cloud Based</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Registration Form -->
+            <div class="card shrink-0 w-full max-w-md shadow-2xl bg-base-100 lg:w-1/2">
+                <form class="card-body">
+                    <div class="text-center mb-6">
+                        <h2 class="text-2xl font-bold">Create Account</h2>
+                        <p class="text-base-content/70">Fill in the details to get started</p>
+                    </div>
+
+                    <!-- Step Indicator -->
+                    <ul class="steps steps-horizontal w-full mb-6">
+                        <li class="step step-primary" data-step="1">Basic Info</li>
+                        <li class="step" data-step="2">Professional</li>
+                        <li class="step" data-step="3">Security</li>
+                    </ul>
+
+                    <!-- Step 1: Basic Information -->
+                    <div class="step-content" id="step1">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div class="form-control">
+                                <label class="label">
+                                    <span class="label-text">First Name</span>
+                                </label>
+                                <input type="text" placeholder="John" class="input input-bordered" required />
+                            </div>
+                            <div class="form-control">
+                                <label class="label">
+                                    <span class="label-text">Last Name</span>
+                                </label>
+                                <input type="text" placeholder="Doe" class="input input-bordered" required />
+                            </div>
+                        </div>
+
+                        <div class="form-control">
+                            <label class="label">
+                                <span class="label-text">Email</span>
+                            </label>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <i class="fas fa-envelope text-base-content/40"></i>
+                                </div>
+                                <input type="email" placeholder="your@email.com" class="input input-bordered w-full pl-10" required />
+                            </div>
+                        </div>
+
+                        <div class="form-control">
+                            <label class="label">
+                                <span class="label-text">Phone</span>
+                            </label>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <i class="fas fa-phone text-base-content/40"></i>
+                                </div>
+                                <input type="tel" placeholder="+1 (555) 123-4567" class="input input-bordered w-full pl-10" required />
+                            </div>
+                        </div>
+
+                        <div class="form-control">
+                            <label class="label">
+                                <span class="label-text">Nationality</span>
+                            </label>
+                            <select class="select select-bordered w-full">
+                                <option disabled selected>Choose nationality</option>
+                                <option>United States</option>
+                                <option>Canada</option>
+                                <option>United Kingdom</option>
+                                <option>Germany</option>
+                                <option>France</option>
+                                <option>Australia</option>
+                                <option>Other</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Step 2: Professional Information -->
+                    <div class="step-content hidden" id="step2">
+                        <div class="form-control">
+                            <label class="label">
+                                <span class="label-text">Profession</span>
+                            </label>
+                            <input type="text" placeholder="Software Developer" class="input input-bordered" required />
+                        </div>
+
+                        <div class="form-control">
+                            <label class="label">
+                                <span class="label-text">Company</span>
+                            </label>
+                            <input type="text" placeholder="Tech Corp Inc." class="input input-bordered" required />
+                        </div>
+
+                        <div class="form-control">
+                            <label class="label">
+                                <span class="label-text">Position</span>
+                            </label>
+                            <input type="text" placeholder="Senior Developer" class="input input-bordered" required />
+                        </div>
+
+                        <div class="form-control">
+                            <label class="label">
+                                <span class="label-text">Bio</span>
+                            </label>
+                            <textarea class="textarea textarea-bordered h-24" placeholder="Tell us a bit about yourself..."></textarea>
+                        </div>
+
+                        <!-- Avatar Upload -->
+                        <div class="form-control">
+                            <label class="label">
+                                <span class="label-text">Profile Picture</span>
+                            </label>
+                            <div class="flex items-center gap-4">
+                                <div class="avatar placeholder">
+                                    <div class="bg-neutral-focus text-neutral-content rounded-full w-16">
+                                        <i class="fas fa-user text-2xl"></i>
+                                    </div>
+                                </div>
+                                <input type="file" class="file-input file-input-bordered file-input-sm w-full max-w-xs" accept="image/*" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 3: Security -->
+                    <div class="step-content hidden" id="step3">
+                        <div class="form-control">
+                            <label class="label">
+                                <span class="label-text">Password</span>
+                            </label>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <i class="fas fa-lock text-base-content/40"></i>
+                                </div>
+                                <input type="password" placeholder="Enter password" class="input input-bordered w-full pl-10 pr-10" required />
+                                <div class="absolute inset-y-0 right-0 pr-3 flex items-center">
+                                    <button type="button" class="toggle-password text-base-content/40 hover:text-base-content">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <!-- Password strength indicator -->
+                            <div class="mt-2">
+                                <div class="text-xs text-base-content/70 mb-1">Password strength</div>
+                                <progress class="progress progress-error w-full h-2" value="0" max="100" id="passwordStrength"></progress>
+                                <div class="text-xs text-base-content/50 mt-1" id="passwordFeedback">Enter a password</div>
+                            </div>
+                        </div>
+
+                        <div class="form-control">
+                            <label class="label">
+                                <span class="label-text">Confirm Password</span>
+                            </label>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <i class="fas fa-lock text-base-content/40"></i>
+                                </div>
+                                <input type="password" placeholder="Confirm password" class="input input-bordered w-full pl-10" required />
+                            </div>
+                        </div>
+
+                        <!-- NFC Card ID -->
+                        <div class="form-control">
+                            <label class="label">
+                                <span class="label-text">NFC Card ID (Optional)</span>
+                                <span class="label-text-alt">Leave blank to generate automatically</span>
+                            </label>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <i class="fas fa-credit-card text-base-content/40"></i>
+                                </div>
+                                <input type="text" placeholder="Enter NFC card ID" class="input input-bordered w-full pl-10 pr-10" />
+                                <div class="absolute inset-y-0 right-0 pr-3 flex items-center">
+                                    <button type="button" class="btn btn-ghost btn-xs" onclick="generateCardId()">
+                                        <i class="fas fa-random mr-1"></i>Generate
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Terms and Conditions -->
+                        <div class="form-control">
+                            <label class="cursor-pointer flex items-start gap-3">
+                                <input type="checkbox" class="checkbox checkbox-primary checkbox-sm mt-1" required />
+                                <span class="label-text">
+                                    I agree to the <a href="#" class="link link-primary">Terms of Service</a> and 
+                                    <a href="#" class="link link-primary">Privacy Policy</a>
+                                </span>
+                            </label>
+                        </div>
+
+                        <div class="form-control">
+                            <label class="cursor-pointer flex items-start gap-3">
+                                <input type="checkbox" class="checkbox checkbox-primary checkbox-sm mt-1" />
+                                <span class="label-text">Send me updates about new features and conferences</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Navigation Buttons -->
+                    <div class="flex justify-between mt-6">
+                        <button type="button" class="btn btn-outline" id="prevBtn" onclick="changeStep(-1)" style="display: none;">
+                            <i class="fas fa-arrow-left mr-2"></i>Previous
+                        </button>
+                        <div class="flex-1"></div>
+                        <button type="button" class="btn btn-primary" id="nextBtn" onclick="changeStep(1)">
+                            Next<i class="fas fa-arrow-right ml-2"></i>
+                        </button>
+                        <button type="button" class="btn btn-success" id="submitBtn" onclick="handleRegister()" style="display: none;">
+                            <i class="fas fa-user-plus mr-2"></i>Create Account
+                        </button>
+                    </div>
+
+                    <!-- Login Link -->
+                    <div class="text-center mt-4">
+                        <p class="text-base-content/70">
+                            Already have an account? 
+                            <a href="auth-login.html" class="link link-primary font-medium">Sign in here</a>
+                        </p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast for feedback -->
+    <div class="toast toast-top toast-end" id="toast" style="display: none;">
+        <div class="alert alert-success">
+            <i class="fas fa-check-circle"></i>
+            <span>Registration successful! Redirecting...</span>
+        </div>
+    </div>
+
+    <script>
+        let currentStep = 1;
+        const totalSteps = 3;
+
+        // Theme toggle functionality
+        const themeController = document.querySelector('.theme-controller');
+        const html = document.documentElement;
+        
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        html.setAttribute('data-theme', savedTheme);
+        if (savedTheme === 'dark') {
+            themeController.checked = true;
+        }
+        
+        themeController.addEventListener('change', function() {
+            const theme = this.checked ? 'dark' : 'light';
+            html.setAttribute('data-theme', theme);
+            localStorage.setItem('theme', theme);
+        });
+
+        // Step navigation
+        function changeStep(direction) {
+            const newStep = currentStep + direction;
+            
+            if (newStep < 1 || newStep > totalSteps) return;
+            
+            // Hide current step
+            document.getElementById(`step${currentStep}`).classList.add('hidden');
+            
+            // Show new step
+            document.getElementById(`step${newStep}`).classList.remove('hidden');
+            
+            // Update step indicator
+            document.querySelectorAll('.step').forEach((step, index) => {
+                if (index + 1 <= newStep) {
+                    step.classList.add('step-primary');
+                } else {
+                    step.classList.remove('step-primary');
+                }
+            });
+            
+            currentStep = newStep;
+            updateButtons();
+        }
+
+        function updateButtons() {
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const submitBtn = document.getElementById('submitBtn');
+            
+            if (currentStep === 1) {
+                prevBtn.style.display = 'none';
+                nextBtn.style.display = 'block';
+                submitBtn.style.display = 'none';
+            } else if (currentStep === totalSteps) {
+                prevBtn.style.display = 'block';
+                nextBtn.style.display = 'none';
+                submitBtn.style.display = 'block';
+            } else {
+                prevBtn.style.display = 'block';
+                nextBtn.style.display = 'block';
+                submitBtn.style.display = 'none';
+            }
+        }
+
+        // Password toggle
+        document.querySelector('.toggle-password').addEventListener('click', function() {
+            const passwordInput = this.closest('.relative').querySelector('input');
+            const icon = this.querySelector('i');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                icon.className = 'fas fa-eye-slash';
+            } else {
+                passwordInput.type = 'password';
+                icon.className = 'fas fa-eye';
+            }
+        });
+
+        // Password strength checker
+        document.querySelector('input[type="password"]').addEventListener('input', function() {
+            const password = this.value;
+            const strengthBar = document.getElementById('passwordStrength');
+            const feedback = document.getElementById('passwordFeedback');
+            
+            let strength = 0;
+            let messages = [];
+            
+            if (password.length >= 8) strength += 25;
+            else messages.push('At least 8 characters');
+            
+            if (/[A-Z]/.test(password)) strength += 25;
+            else messages.push('One uppercase letter');
+            
+            if (/[a-z]/.test(password)) strength += 25;
+            else messages.push('One lowercase letter');
+            
+            if (/[0-9]/.test(password)) strength += 25;
+            else messages.push('One number');
+            
+            strengthBar.value = strength;
+            
+            if (strength < 50) {
+                strengthBar.className = 'progress progress-error w-full h-2';
+                feedback.textContent = 'Weak - ' + messages.join(', ');
+                feedback.className = 'text-xs text-error mt-1';
+            } else if (strength < 75) {
+                strengthBar.className = 'progress progress-warning w-full h-2';
+                feedback.textContent = 'Fair - ' + messages.join(', ');
+                feedback.className = 'text-xs text-warning mt-1';
+            } else if (strength < 100) {
+                strengthBar.className = 'progress progress-info w-full h-2';
+                feedback.textContent = 'Good - ' + (messages.length ? messages.join(', ') : 'Almost there!');
+                feedback.className = 'text-xs text-info mt-1';
+            } else {
+                strengthBar.className = 'progress progress-success w-full h-2';
+                feedback.textContent = 'Excellent password!';
+                feedback.className = 'text-xs text-success mt-1';
+            }
+        });
+
+        // Generate random card ID
+        function generateCardId() {
+            const cardIdInput = document.querySelector('input[placeholder="Enter NFC card ID"]');
+            const randomId = 'NFC-' + Math.random().toString(36).substr(2, 9).toUpperCase();
+            cardIdInput.value = randomId;
+        }
+
+        // Handle registration
+        function handleRegister() {
+            // Basic validation
+            const requiredFields = document.querySelectorAll('#step3 input[required]');
+            let isValid = true;
+            
+            requiredFields.forEach(field => {
+                if (!field.value.trim()) {
+                    field.classList.add('input-error');
+                    isValid = false;
+                } else {
+                    field.classList.remove('input-error');
+                }
+            });
+            
+            // Check if terms are accepted
+            const termsCheckbox = document.querySelector('input[type="checkbox"][required]');
+            if (!termsCheckbox.checked) {
+                isValid = false;
+                showToast('Please accept the terms and conditions', 'error');
+                return;
+            }
+            
+            if (!isValid) {
+                showToast('Please fill in all required fields', 'error');
+                return;
+            }
+
+            // Check password match
+            const passwords = document.querySelectorAll('#step3 input[type="password"]');
+            if (passwords[0].value !== passwords[1].value) {
+                showToast('Passwords do not match', 'error');
+                return;
+            }
+
+            // Simulate registration process
+            const button = document.getElementById('submitBtn');
+            const originalContent = button.innerHTML;
+            button.innerHTML = '<span class="loading loading-spinner loading-sm"></span> Creating Account...';
+            button.disabled = true;
+
+            setTimeout(() => {
+                showToast('Registration successful! Please check your email for verification.', 'success');
+                
+                setTimeout(() => {
+                    window.location.href = 'auth-login.html';
+                }, 2000);
+            }, 3000);
+        }
+
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            const alert = toast.querySelector('.alert');
+            
+            alert.className = `alert alert-${type}`;
+            alert.querySelector('span').textContent = message;
+            
+            const icon = alert.querySelector('i');
+            if (type === 'success') {
+                icon.className = 'fas fa-check-circle';
+            } else if (type === 'error') {
+                icon.className = 'fas fa-exclamation-circle';
+            }
+            
+            toast.style.display = 'block';
+            
+            setTimeout(() => {
+                toast.style.display = 'none';
+            }, 4000);
+        }
+
+        // File upload preview
+        document.querySelector('input[type="file"]').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const avatar = document.querySelector('.avatar .rounded-full');
+                    avatar.innerHTML = `<img src="${e.target.result}" alt="Avatar" class="rounded-full w-16 h-16 object-cover">`;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Initialize
+        updateButtons();
+    </script>
+</body>
+</html>

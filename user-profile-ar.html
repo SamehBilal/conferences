@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" data-theme="light">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ملفي الشخصي - نظام حضور المؤتمرات</title>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.4.24/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/gh/davidshimjs/qrcodejs/qrcode.min.js"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200..1000&display=swap" rel="stylesheet">
+    <style>
+        * {
+            font-family: 'Cairo', sans-serif;
+        }
+        /* RTL Adjustments */
+        .dropdown-end {
+            left: 0;
+            right: auto;
+        }
+
+        .dropdown-start {
+            right: 0;
+            left: auto;
+        }
+    </style>
+</head>
+
+<body class="min-h-screen bg-base-200" style="font-family: 'Cairo', 'Arial', sans-serif;">
+    <!-- Navigation -->
+    <div class="navbar bg-base-100 shadow-lg">
+        <div class="navbar-start">
+            <div class="dropdown">
+                <div tabindex="0" role="button" class="btn btn-ghost lg:hidden">
+                    <i class="fas fa-bars w-5 h-5"></i>
+                </div>
+                <ul tabindex="0"
+                    class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
+                    <li><a href="#profile">ملفي الشخصي</a></li>
+                    <li><a href="#attendance">حضوري</a></li>
+                    <li><a href="#qr-code">رمز QR</a></li>
+                </ul>
+            </div>
+            <a href="index-ar.html" class="btn btn-ghost text-xl">
+                <i class="fas fa-calendar-check ml-2 text-primary"></i>
+                <span class="gradient-text">كونف تراك</span>
+            </a>
+        </div>
+        <div class="navbar-center hidden lg:flex">
+            <ul class="menu menu-horizontal px-1">
+                <li><a href="#profile">ملفي الشخصي</a></li>
+                <li><a href="#attendance">حضوري</a></li>
+                <li><a href="#qr-code">رمز QR</a></li>
+            </ul>
+        </div>
+        <div class="navbar-end gap-2">
+            <!-- Theme Toggle -->
+            <label class="swap swap-rotate">
+                <input type="checkbox" class="theme-controller" value="dark" />
+                <i class="fas fa-sun swap-off fill-current w-6 h-6"></i>
+                <i class="fas fa-moon swap-on fill-current w-6 h-6"></i>
+            </label>
+            <!-- Language Toggle -->
+            <a href="user-profile.html" class="btn btn-ghost btn-sm">
+                <i class="fas fa-globe mr-1"></i>English
+            </a>
+            <!-- User Menu -->
+            <div class="dropdown dropdown-start">
+                <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar">
+                    <div class="w-10 rounded-full">
+                        <img alt="الملف الشخصي"
+                            src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face" />
+                    </div>
+                </div>
+                <ul tabindex="0"
+                    class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
+                    <li><a href="#profile"><i class="fas fa-user ml-2"></i>الملف الشخصي</a></li>
+                    <li><a href="#settings"><i class="fas fa-cog ml-2"></i>الإعدادات</a></li>
+                    <li><a href="auth-login-ar.html"><i class="fas fa-sign-out-alt ml-2"></i>تسجيل الخروج</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hero Header -->
+    <div class="bg-gradient-to-r from-primary to-secondary text-primary-content py-12">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col lg:flex-row items-center gap-8">
+                <div class="avatar">
+                    <div class="w-32 h-32 rounded-full ring ring-primary-content ring-offset-base-100 ring-offset-2">
+                        <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=200&h=200&fit=crop&crop=face"
+                            alt="الملف الشخصي" />
+                    </div>
+                </div>
+                <div class="text-center lg:text-right flex-1">
+                    <h1 class="text-4xl font-bold mb-2">أحمد محمد</h1>
+                    <p class="text-xl opacity-90 mb-2">مطور برمجيات أول</p>
+                    <p class="opacity-75 mb-4">شركة الحلول التقنية • الرياض، السعودية</p>
+                    <div class="flex flex-wrap gap-2 justify-center lg:justify-start">
+                        <div class="badge badge-neutral badge-lg">
+                            <i class="fas fa-id-card ml-2"></i>
+                            الرقم التعريفي: NFC-A1B2C3D4E
+                        </div>
+                        <div class="badge badge-success badge-lg">
+                            <i class="fas fa-check-circle ml-2"></i>
+                            تم التحقق
+                        </div>
+                    </div>
+                </div>
+                <div class="flex flex-col sm:flex-row gap-3">
+                    <button class="btn btn-neutral" onclick="editProfile()">
+                        <i class="fas fa-edit ml-2"></i>
+                        تعديل الملف الشخصي
+                    </button>
+                    <button class="btn btn-neutral" onclick="showQRCode()">
+                        <i class="fas fa-qrcode ml-2"></i>
+                        عرض رمز QR
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container mx-auto px-4 py-8">
+        <!-- Stats Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div class="stat bg-base-100 rounded-lg shadow">
+                <div class="stat-figure text-primary">
+                    <i class="fas fa-calendar-check text-3xl"></i>
+                </div>
+                <div class="stat-title">المؤتمرات المحضورة</div>
+                <div class="stat-value text-primary">12</div>
+                <div class="stat-desc">هذا العام</div>
+            </div>
+            <div class="stat bg-base-100 rounded-lg shadow">
+                <div class="stat-figure text-secondary">
+                    <i class="fas fa-clock text-3xl"></i>
+                </div>
+                <div class="stat-title">إجمالي الساعات</div>
+                <div class="stat-value text-secondary">146</div>
+                <div class="stat-desc">وقت المؤتمرات</div>
+            </div>
+            <div class="stat bg-base-100 rounded-lg shadow">
+                <div class="stat-figure text-accent">
+                    <i class="fas fa-trophy text-3xl"></i>
+                </div>
+                <div class="stat-title">نقاط الإنجاز</div>
+                <div class="stat-value text-accent">2,840</div>
+                <div class="stat-desc">+180 هذا الشهر</div>
+            </div>
+            <div class="stat bg-base-100 rounded-lg shadow">
+                <div class="stat-figure text-info">
+                    <i class="fas fa-users text-3xl"></i>
+                </div>
+                <div class="stat-title">التواصل</div>
+                <div class="stat-value text-info">67</div>
+                <div class="stat-desc">الاتصالات المحققة</div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Profile Information -->
+            <div class="lg:col-span-2 row-span-2" id="profile">
+                <div class="card bg-base-100 shadow-lg">
+                    <div class="card-body">
+                        <div class="flex items-center justify-between mb-6">
+                            <h2 class="card-title text-2xl">
+                                <i class="fas fa-user ml-2 text-primary"></i>
+                                معلومات الملف الشخصي
+                            </h2>
+                            <button class="btn btn-ghost btn-sm" onclick="toggleEdit()">
+                                <i class="fas fa-edit ml-2"></i>
+                                تعديل
+                            </button>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="profileInfo">
+                            <div class="form-control">
+                                <label class="label">
+                                    <span class="label-text font-semibold">الاسم الكامل</span>
+                                </label>
+                                <div class="profile-field">
+                                    <span class="text-base-content">أحمد محمد</span>
+                                </div>
+                            </div>
+
+                            <div class="form-control">
+                                <label class="label">
+                                    <span class="label-text font-semibold">البريد الإلكتروني</span>
+                                </label>
+                                <div class="profile-field">
+                                    <span class="text-base-content">ahmed.mohamed@example.com</span>
+                                </div>
+                            </div>
+
+                            <div class="form-control">
+                                <label class="label">
+                                    <span class="label-text font-semibold">رقم الهاتف</span>
+                                </label>
+                                <div class="profile-field">
+                                    <span class="text-base-content">+966 50 123 4567</span>
+                                </div>
+                            </div>
+
+                            <div class="form-control">
+                                <label class="label">
+                                    <span class="label-text font-semibold">الجنسية</span>
+                                </label>
+                                <div class="profile-field">
+                                    <span class="text-base-content">السعودية</span>
+                                </div>
+                            </div>
+
+                            <div class="form-control">
+                                <label class="label">
+                                    <span class="label-text font-semibold">المهنة</span>
+                                </label>
+                                <div class="profile-field">
+                                    <span class="text-base-content">مطور برمجيات أول</span>
+                                </div>
+                            </div>
+
+                            <div class="form-control">
+                                <label class="label">
+                                    <span class="label-text font-semibold">الشركة</span>
+                                </label>
+                                <div class="profile-field">
+                                    <span class="text-base-content">شركة الحلول التقنية</span>
+                                </div>
+                            </div>
+
+                            <div class="form-control md:col-span-2">
+                                <label class="label">
+                                    <span class="label-text font-semibold">المنصب</span>
+                                </label>
+                                <div class="profile-field">
+                                    <span class="text-base-content">مطور برمجيات أول - تطوير شامل</span>
+                                </div>
+                            </div>
+
+                            <div class="form-control md:col-span-2">
+                                <label class="label">
+                                    <span class="label-text font-semibold">النبذة التعريفية</span>
+                                </label>
+                                <div class="profile-field">
+                                    <span class="text-base-content">مطور برمجيات متمرس بخبرة 8+ سنوات في التطوير الشامل.
+                                        شغوف بالتقنيات الناشئة وإلقاء المحاضرات في المؤتمرات. نشط في مجتمع
+                                        التقنية.</span>
+                                </div>
+                            </div>
+
+                            <div class="form-control md:col-span-2">
+                                <label class="label">
+                                    <span class="label-text font-semibold">رقم بطاقة NFC</span>
+                                </label>
+                                <div class="profile-field flex items-center gap-3">
+                                    <span class="text-base-content font-mono">NFC-A1B2C3D4E</span>
+                                    <button class="btn btn-outline btn-xs" onclick="copyToClipboard('NFC-A1B2C3D4E')">
+                                        <i class="fas fa-copy ml-1"></i>نسخ
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="hidden" id="profileEdit">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div class="form-control">
+                                    <label class="label">
+                                        <span class="label-text">الاسم الكامل</span>
+                                    </label>
+                                    <input type="text" value="أحمد محمد" class="input input-bordered" />
+                                </div>
+
+                                <div class="form-control">
+                                    <label class="label">
+                                        <span class="label-text">البريد الإلكتروني</span>
+                                    </label>
+                                    <input type="email" value="ahmed.mohamed@example.com"
+                                        class="input input-bordered" />
+                                </div>
+
+                                <div class="form-control">
+                                    <label class="label">
+                                        <span class="label-text">رقم الهاتف</span>
+                                    </label>
+                                    <input type="tel" value="+966 50 123 4567" class="input input-bordered" />
+                                </div>
+
+                                <div class="form-control">
+                                    <label class="label">
+                                        <span class="label-text">الجنسية</span>
+                                    </label>
+                                    <select class="select select-bordered">
+                                        <option selected>السعودية</option>
+                                        <option>الإمارات العربية المتحدة</option>
+                                        <option>الكويت</option>
+                                        <option>قطر</option>
+                                        <option>البحرين</option>
+                                        <option>عمان</option>
+                                        <option>الأردن</option>
+                                        <option>لبنان</option>
+                                        <option>مصر</option>
+                                        <option>أخرى</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-control">
+                                    <label class="label">
+                                        <span class="label-text">المهنة</span>
+                                    </label>
+                                    <input type="text" value="مطور برمجيات أول" class="input input-bordered" />
+                                </div>
+
+                                <div class="form-control">
+                                    <label class="label">
+                                        <span class="label-text">الشركة</span>
+                                    </label>
+                                    <input type="text" value="شركة الحلول التقنية" class="input input-bordered" />
+                                </div>
+
+                                <div class="form-control md:col-span-2">
+                                    <label class="label">
+                                        <span class="label-text">المنصب</span>
+                                    </label>
+                                    <input type="text" value="مطور برمجيات أول - تطوير شامل"
+                                        class="input input-bordered" />
+                                </div>
+
+                                <div class="form-control md:col-span-2">
+                                    <label class="label">
+                                        <span class="label-text">النبذة التعريفية</span>
+                                    </label>
+                                    <textarea
+                                        class="textarea textarea-bordered h-24">مطور برمجيات متمرس بخبرة 8+ سنوات في التطوير الشامل. شغوف بالتقنيات الناشئة وإلقاء المحاضرات في المؤتمرات. نشط في مجتمع التقنية.</textarea>
+                                </div>
+
+                                <div class="form-control md:col-span-2">
+                                    <label class="label">
+                                        <span class="label-text">الصورة الشخصية</span>
+                                    </label>
+                                    <div class="flex items-center gap-4">
+                                        <div class="avatar">
+                                            <div class="w-16 rounded-full">
+                                                <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face"
+                                                    alt="الحالية" />
+                                            </div>
+                                        </div>
+                                        <input type="file"
+                                            class="file-input file-input-bordered file-input-sm w-full max-w-xs"
+                                            accept="image/*" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="flex justify-start gap-3 mt-6">
+                                <button class="btn btn-outline" onclick="cancelEdit()">إلغاء</button>
+                                <button class="btn btn-primary" onclick="saveProfile()">
+                                    <i class="fas fa-save ml-2"></i>حفظ التغييرات
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="space-y-6 row-span-3">
+                <!-- QR Code Card -->
+                <div class="card bg-base-100 shadow-lg" id="qr-code">
+                    <div class="card-body text-center">
+                        <h3 class="card-title justify-center mb-4">
+                            <i class="fas fa-qrcode ml-2 text-primary"></i>
+                            رمز QR الخاص بي
+                        </h3>
+                        <div class="text-center">
+                            <div class="bg-white p-4 rounded-lg inline-block text-center">
+                                <div id="qrcode" class="flex justify-center w-32 h-32"></div>
+                            </div>
+                        </div>
+                        <p class="text-sm text-base-content/70 mt-2">امسح هذا الرمز لتسجيل الحضور السريع</p>
+                        <div class="flex gap-2 mt-4">
+                            <button class="btn btn-primary btn-sm flex-1" onclick="downloadQR()">
+                                <i class="fas fa-download ml-1"></i>تحميل
+                            </button>
+                            <button class="btn btn-outline btn-sm flex-1" onclick="printQR()">
+                                <i class="fas fa-print ml-1"></i>طباعة
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Stats -->
+                <div class="card bg-base-100 shadow-lg">
+                    <div class="card-body">
+                        <h3 class="card-title mb-4">
+                            <i class="fas fa-chart-pie ml-2 text-secondary"></i>
+                            إحصائيات سريعة
+                        </h3>
+                        <div class="space-y-4">
+                            <div class="flex justify-between items-center">
+                                <span class="text-sm">هذا الشهر</span>
+                                <span class="badge badge-primary">3 فعاليات</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-sm">إجمالي الساعات</span>
+                                <span class="badge badge-secondary">24 ساعة</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-sm">متوسط التقييم</span>
+                                <div class="rating rating-sm">
+                                    <input type="radio" class="mask mask-star-2 bg-warning" checked disabled />
+                                    <input type="radio" class="mask mask-star-2 bg-warning" checked disabled />
+                                    <input type="radio" class="mask mask-star-2 bg-warning" checked disabled />
+                                    <input type="radio" class="mask mask-star-2 bg-warning" checked disabled />
+                                    <input type="radio" class="mask mask-star-2 bg-warning" disabled />
+                                </div>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-sm">الشهادات</span>
+                                <span class="badge badge-accent">8</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Activity -->
+                <div class="card bg-base-100 shadow-lg">
+                    <div class="card-body">
+                        <h3 class="card-title mb-4">
+                            <i class="fas fa-history ml-2 text-info"></i>
+                            النشاط الأخير
+                        </h3>
+                        <div class="space-y-3">
+                            <div class="flex items-start gap-3">
+                                <div class="badge badge-success badge-sm mt-1">
+                                    <i class="fas fa-check w-3 h-3"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <p class="text-sm font-medium">حضر مؤتمر التقنية 2024</p>
+                                    <p class="text-xs text-base-content/60">منذ ساعتين</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start gap-3">
+                                <div class="badge badge-info badge-sm mt-1">
+                                    <i class="fas fa-edit w-3 h-3"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <p class="text-sm font-medium">حدث الملف الشخصي</p>
+                                    <p class="text-xs text-base-content/60">منذ يوم واحد</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start gap-3">
+                                <div class="badge badge-warning badge-sm mt-1">
+                                    <i class="fas fa-star w-3 h-3"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <p class="text-sm font-medium">حصل على شهادة</p>
+                                    <p class="text-xs text-base-content/60">منذ 3 أيام</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-4">
+                            <button class="btn btn-outline btn-sm w-full" onclick="viewFullHistory()">
+                                عرض السجل الكامل
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Attendance History -->
+            <div class="card bg-base-100 shadow-lg mt-8 lg:col-span-2" id="attendance">
+                <div class="card-body">
+                    <div class="flex items-center justify-between mb-6">
+                        <h2 class="card-title text-2xl">
+                            <i class="fas fa-calendar-alt ml-2 text-primary"></i>
+                            سجل الحضور
+                        </h2>
+                        <div class="flex gap-2">
+                            <select class="select select-bordered select-sm">
+                                <option selected>جميع الفعاليات</option>
+                                <option>هذا العام</option>
+                                <option>آخر 6 أشهر</option>
+                                <option>الشهر الماضي</option>
+                            </select>
+                            <button class="btn btn-outline btn-sm">
+                                <i class="fas fa-download ml-2"></i>تصدير
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="overflow-x-auto">
+                        <table class="table table-zebra">
+                            <thead>
+                                <tr>
+                                    <th>الفعالية</th>
+                                    <th>التاريخ</th>
+                                    <th>تسجيل الحضور</th>
+                                    <th>تسجيل الخروج</th>
+                                    <th>المدة</th>
+                                    <th>الحالة</th>
+                                    <th>الشهادة</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <div class="font-bold">مؤتمر التقنية 2024</div>
+                                        <div class="text-sm opacity-50">مؤتمر التكنولوجيا</div>
+                                    </td>
+                                    <td>15 ديسمبر 2024</td>
+                                    <td>09:00 صباحاً</td>
+                                    <td>05:30 مساءً</td>
+                                    <td>8 س 30 د</td>
+                                    <td><span class="badge badge-success">مكتمل</span></td>
+                                    <td>
+                                        <button class="btn btn-ghost btn-xs" onclick="viewCertificate()">
+                                            <i class="fas fa-certificate ml-1"></i>عرض
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="font-bold">قمة المطورين 2024</div>
+                                        <div class="text-sm opacity-50">قمة المطورين</div>
+                                    </td>
+                                    <td>28 نوفمبر 2024</td>
+                                    <td>08:45 صباحاً</td>
+                                    <td>04:15 مساءً</td>
+                                    <td>7 س 30 د</td>
+                                    <td><span class="badge badge-success">مكتمل</span></td>
+                                    <td>
+                                        <button class="btn btn-ghost btn-xs" onclick="viewCertificate()">
+                                            <i class="fas fa-certificate ml-1"></i>عرض
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="font-bold">منتدى ابتكار الذكاء الاصطناعي</div>
+                                        <div class="text-sm opacity-50">الذكاء الاصطناعي</div>
+                                    </td>
+                                    <td>10 نوفمبر 2024</td>
+                                    <td>09:15 صباحاً</td>
+                                    <td>03:45 مساءً</td>
+                                    <td>6 س 30 د</td>
+                                    <td><span class="badge badge-success">مكتمل</span></td>
+                                    <td>
+                                        <button class="btn btn-ghost btn-xs" onclick="viewCertificate()">
+                                            <i class="fas fa-certificate ml-1"></i>عرض
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="font-bold">معرض التقنيات السحابية</div>
+                                        <div class="text-sm opacity-50">الحوسبة السحابية</div>
+                                    </td>
+                                    <td>22 أكتوبر 2024</td>
+                                    <td>09:00 صباحاً</td>
+                                    <td>12:00 ظهراً</td>
+                                    <td>3 س 00 د</td>
+                                    <td><span class="badge badge-warning">جزئي</span></td>
+                                    <td>
+                                        <span class="text-sm opacity-50">غير متوفر</span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="flex justify-center mt-6">
+                        <div class="join">
+                            <button class="join-item btn btn-outline">«</button>
+                            <button class="join-item btn btn-outline">صفحة 1</button>
+                            <button class="join-item btn btn-outline">»</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+    <!-- QR Code Modal -->
+    <dialog id="qr_modal" class="modal">
+        <div class="modal-box">
+            <form method="dialog">
+                <button class="btn btn-sm btn-circle btn-ghost absolute left-2 top-2">✕</button>
+            </form>
+            <h3 class="font-bold text-lg mb-4">رمز QR الخاص بي</h3>
+            <div class="text-center">
+                 <div class="bg-white p-6 rounded-lg inline-block mb-4">
+                    <div id="qrcode-large" class="flex justify-center w-64 h-64"></div>
+                </div>
+                <p class="text-base-content/70 mb-4">
+                    <strong>الرقم التعريفي:</strong> NFC-A1B2C3D4E
+                </p>
+                <div class="flex gap-3 justify-center">
+                    <button class="btn btn-primary" onclick="downloadQRLarge()">
+                        <i class="fas fa-download ml-2"></i>تحميل PNG
+                    </button>
+                    <button class="btn btn-outline" onclick="printQRLarge()">
+                        <i class="fas fa-print ml-2"></i>طباعة
+                    </button>
+                    <button class="btn btn-outline" onclick="copyToClipboard('NFC-A1B2C3D4E')">
+                        <i class="fas fa-copy ml-2"></i>نسخ الرقم التعريفي
+                    </button>
+                </div>
+            </div>
+        </div>
+    </dialog>
+
+    <!-- Toast -->
+    <div class="toast toast-top toast-start" id="toast" style="display: none;">
+        <div class="alert alert-success">
+            <i class="fas fa-check-circle"></i>
+            <span>تم تحديث الملف الشخصي بنجاح!</span>
+        </div>
+    </div>
+
+    <script>
+        // Theme toggle functionality
+        const themeController = document.querySelector('.theme-controller');
+        const html = document.documentElement;
+
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        html.setAttribute('data-theme', savedTheme);
+        if (savedTheme === 'dark') {
+            themeController.checked = true;
+        }
+
+        themeController.addEventListener('change', function () {
+            const theme = this.checked ? 'dark' : 'light';
+            html.setAttribute('data-theme', theme);
+            localStorage.setItem('theme', theme);
+        });
+
+        // Generate QR Code using QRCode.js
+        function generateQR(elementId, text, size = 128) {
+            const element = document.getElementById(elementId);
+            
+            // Clear existing QR code if it exists
+            element.innerHTML = '';
+            
+            // Create new QR code
+            return new QRCode(element, {
+                text: text,
+                width: size,
+                height: size,
+                colorDark: "#000000",
+                colorLight: "#ffffff",
+                correctLevel: QRCode.CorrectLevel.H
+            });
+        }
+
+        // Initialize QR codes
+        document.addEventListener('DOMContentLoaded', function () {
+            generateQR('qrcode', 'NFC-A1B2C3D4E', 128);
+            generateQR('qrcode-large', 'NFC-A1B2C3D4E', 256);
+        });
+
+        // Profile editing functions
+        function toggleEdit() {
+            const info = document.getElementById('profileInfo');
+            const edit = document.getElementById('profileEdit');
+
+            if (info.classList.contains('hidden')) {
+                info.classList.remove('hidden');
+                edit.classList.add('hidden');
+            } else {
+                info.classList.add('hidden');
+                edit.classList.remove('hidden');
+            }
+        }
+
+        function cancelEdit() {
+            toggleEdit();
+        }
+
+        function saveProfile() {
+            const button = event.target;
+            const originalText = button.innerHTML;
+            button.innerHTML = '<span class="loading loading-spinner loading-sm"></span> جاري الحفظ...';
+            button.disabled = true;
+
+            setTimeout(() => {
+                button.innerHTML = originalText;
+                button.disabled = false;
+                toggleEdit();
+                showToast('تم تحديث الملف الشخصي بنجاح!', 'success');
+            }, 2000);
+        }
+
+        function editProfile() {
+            document.getElementById('profile').scrollIntoView({ behavior: 'smooth' });
+            setTimeout(() => {
+                toggleEdit();
+            }, 500);
+        }
+
+        // QR Code functions
+        function showQRCode() {
+            document.getElementById('qr_modal').showModal();
+        }
+
+        function downloadQR() {
+            const canvas = document.querySelector('#qrcode canvas');
+            if (canvas) {
+                const link = document.createElement('a');
+                link.download = 'qrcode.png';
+                link.href = canvas.toDataURL();
+                link.click();
+            } else {
+                // If canvas not found, try to find img element (QRCode.js sometimes uses img)
+                const img = document.querySelector('#qrcode img');
+                if (img) {
+                    const link = document.createElement('a');
+                    link.download = 'qrcode.png';
+                    link.href = img.src;
+                    link.click();
+                } else {
+                    alert('QR code not found');
+                }
+            }
+        }
+
+        function downloadQRLarge() {
+            const canvas = document.querySelector('#qrcode-large canvas');
+            if (canvas) {
+                const link = document.createElement('a');
+                link.download = 'qrcode.png';
+                link.href = canvas.toDataURL();
+                link.click();
+            } else {
+                // If canvas not found, try to find img element (QRCode.js sometimes uses img)
+                const img = document.querySelector('#qrcode-large img');
+                if (img) {
+                    const link = document.createElement('a');
+                    link.download = 'qrcode.png';
+                    link.href = img.src;
+                    link.click();
+                } else {
+                    alert('QR code not found');
+                }
+            }
+        }
+
+        // Print QR code
+        function printQR() {
+            const qrElement = document.getElementById('qrcode').innerHTML;
+            const printWindow = window.open('', '', 'height=400,width=400');
+            printWindow.document.write('<html><head><title>QR Code</title>');
+            printWindow.document.write('<style>body{display:flex;justify-content:center;align-items:center;height:100vh;margin:0;}</style>');
+            printWindow.document.write('</head><body>');
+            printWindow.document.write(qrElement);
+            printWindow.document.write('</body></html>');
+            printWindow.document.close();
+            printWindow.print();
+        }
+
+        function printQRLarge() {
+            const qrElement = document.getElementById('qrcode-large').innerHTML;
+            const printWindow = window.open('', '', 'height=600,width=600');
+            printWindow.document.write('<html><head><title>QR Code</title>');
+            printWindow.document.write('<style>body{display:flex;justify-content:center;align-items:center;height:100vh;margin:0;}</style>');
+            printWindow.document.write('</head><body>');
+            printWindow.document.write(qrElement);
+            printWindow.document.write('</body></html>');
+            printWindow.document.close();
+            printWindow.print();
+        }
+
+        // Utility functions
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                showToast('تم النسخ إلى الحافظة!', 'success');
+            }).catch(() => {
+                showToast('فشل في النسخ إلى الحافظة', 'error');
+            });
+        }
+
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            const alert = toast.querySelector('.alert');
+
+            alert.className = `alert alert-${type}`;
+            alert.querySelector('span').textContent = message;
+
+            const icon = alert.querySelector('i');
+            if (type === 'success') {
+                icon.className = 'fas fa-check-circle';
+            } else if (type === 'error') {
+                icon.className = 'fas fa-exclamation-circle';
+            }
+
+            toast.style.display = 'block';
+
+            setTimeout(() => {
+                toast.style.display = 'none';
+            }, 3000);
+        }
+
+        function viewCertificate() {
+            showToast('سيتم فتح عارض الشهادات هنا', 'info');
+        }
+
+        function viewFullHistory() {
+            showToast('سيتم فتح صفحة السجل الكامل هنا', 'info');
+        }
+
+        // Smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

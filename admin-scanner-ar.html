@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الماسح الضوئي - نظام حضور المؤتمرات</title>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.4.24/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200..1000&display=swap" rel="stylesheet">
+    <style>
+        * {
+            font-family: 'Cairo', sans-serif;
+        }
+        /* RTL Adjustments */
+        .dropdown-end {
+            left: 0;
+            right: auto;
+        }
+        .dropdown-start {
+            right: 0;
+            left: auto;
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-base-200" style="font-family: 'Cairo', 'Arial', sans-serif;">
+    <!-- Navigation -->
+    <div class="navbar bg-base-100 shadow-lg">
+        <div class="navbar-start">
+            <div class="dropdown">
+                <div tabindex="0" role="button" class="btn btn-ghost lg:hidden">
+                    <i class="fas fa-bars w-5 h-5"></i>
+                </div>
+                <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
+                    <li><a href="admin-dashboard-ar.html">لوحة التحكم</a></li>
+                    <li><a href="admin-members-ar.html">الأعضاء</a></li>
+                    <li><a href="admin-scanner-ar.html" class="active">الماسح الضوئي</a></li>
+                    <li><a href="admin-conferences-ar.html">المؤتمرات</a></li>
+                    <li><a href="admin-reports-ar.html">التقارير</a></li>
+                    <li><a href="admin-timeline-ar.html">الجدول الزمني</a></li>
+                </ul>
+            </div>
+            <a href="admin-dashboard-ar.html" class="btn btn-ghost text-xl">
+                <i class="fas fa-calendar-check ml-2 text-primary"></i>
+                <span class="gradient-text">كونف تراك</span>
+            </a>
+        </div>
+        <div class="navbar-center hidden lg:flex">
+            <ul class="menu menu-horizontal px-1">
+                <li><a href="admin-dashboard-ar.html">لوحة التحكم</a></li>
+                <li><a href="admin-members-ar.html">الأعضاء</a></li>
+                <li><a href="admin-scanner-ar.html" class="active">الماسح الضوئي</a></li>
+                <li><a href="admin-conferences-ar.html">المؤتمرات</a></li>
+                <li><a href="admin-reports-ar.html">التقارير</a></li>
+                <li><a href="admin-timeline-ar.html">الجدول الزمني</a></li>
+            </ul>
+        </div>
+        <div class="navbar-end gap-2">
+            <!-- Theme Toggle -->
+            <label class="swap swap-rotate">
+                <input type="checkbox" class="theme-controller" value="dark" />
+                <i class="fas fa-sun swap-off fill-current w-6 h-6"></i>
+                <i class="fas fa-moon swap-on fill-current w-6 h-6"></i>
+            </label>
+            <!-- Language Toggle -->
+            <a href="admin-scanner.html" class="btn btn-ghost btn-sm">
+                <i class="fas fa-globe mr-1"></i>English
+            </a>
+            <!-- Admin Menu -->
+            <div class="dropdown dropdown-start">
+                <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar">
+                    <div class="w-10 rounded-full">
+                        <img alt="المدير" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face" />
+                    </div>
+                </div>
+                <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
+                    <li><a href="#"><i class="fas fa-user ml-2"></i>الملف الشخصي</a></li>
+                    <li><a href="#"><i class="fas fa-cog ml-2"></i>الإعدادات</a></li>
+                    <li><a href="auth-login-ar.html"><i class="fas fa-sign-out-alt ml-2"></i>تسجيل الخروج</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hero Header -->
+    <div class="bg-gradient-to-r from-primary to-secondary text-primary-content py-8">
+        <div class="container mx-auto px-4">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h1 class="text-3xl font-bold mb-2">ماسح رمز QR وبطاقة NFC</h1>
+                    <p class="opacity-90">مسح رموز QR الخاصة بالأعضاء أو إدخال معرفات بطاقات NFC لتسجيل الحضور/الخروج</p>
+                </div>
+                <div class="flex items-center gap-4">
+                    <div class="text-center">
+                        <div class="text-sm opacity-75">حالة الماسح</div>
+                        <div class="flex items-center gap-2">
+                            <div class="w-3 h-3 bg-success rounded-full animate-pulse"></div>
+                            <span class="font-semibold">نشط</span>
+                        </div>
+                    </div>
+                    <button class="btn btn-neutral" onclick="toggleScanner()">
+                        <i class="fas fa-power-off ml-2"></i>
+                        <span id="scannerToggleText">إيقاف الماسح</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container mx-auto px-4 py-8">
+        <!-- Today's Stats -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div class="stat bg-base-100 rounded-lg shadow hover:shadow-lg transition-all duration-200">
+                <div class="stat-figure text-success">
+                    <i class="fas fa-sign-in-alt text-3xl"></i>
+                </div>
+                <div class="stat-title">تسجيل الحضور اليوم</div>
+                <div class="stat-value text-success">234</div>
+                <div class="stat-desc">↗︎ 12 في الساعة الأخيرة</div>
+            </div>
+
+            <div class="stat bg-base-100 rounded-lg shadow hover:shadow-lg transition-all duration-200">
+                <div class="stat-figure text-warning">
+                    <i class="fas fa-sign-out-alt text-3xl"></i>
+                </div>
+                <div class="stat-title">تسجيل الخروج اليوم</div>
+                <div class="stat-value text-warning">78</div>
+                <div class="stat-desc">↗︎ 5 في الساعة الأخيرة</div>
+            </div>
+
+            <div class="stat bg-base-100 rounded-lg shadow hover:shadow-lg transition-all duration-200">
+                <div class="stat-figure text-info">
+                    <i class="fas fa-users text-3xl"></i>
+                </div>
+                <div class="stat-title">الحضور الحالي</div>
+                <div class="stat-value text-info">156</div>
+                <div class="stat-desc">الحاضرون النشطون</div>
+            </div>
+
+            <div class="stat bg-base-100 rounded-lg shadow hover:shadow-lg transition-all duration-200">
+                <div class="stat-figure text-primary">
+                    <i class="fas fa-qrcode text-3xl"></i>
+                </div>
+                <div class="stat-title">المسح اليوم</div>
+                <div class="stat-value text-primary">312</div>
+                <div class="stat-desc">QR + NFC مجتمعة</div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- Scanner Interface -->
+            <div class="card bg-base-100 shadow-lg">
+                <div class="card-body">
+                    <h2 class="card-title mb-6">
+                        <i class="fas fa-camera ml-2 text-primary"></i>
+                        ماسح رمز QR
+                    </h2>
+
+                    <!-- Camera View -->
+                    <div class="relative bg-black rounded-lg mb-4 aspect-video overflow-hidden">
+                        <video id="video" class="w-full h-full object-cover" autoplay muted playsinline></video>
+                        <canvas id="canvas" class="hidden"></canvas>
+                        
+                        <!-- Scanner Overlay -->
+                        <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+                            <div class="w-64 h-64 border-4 border-primary rounded-lg relative">
+                                <div class="absolute top-0 right-0 w-8 h-8 border-t-4 border-r-4 border-primary"></div>
+                                <div class="absolute top-0 left-0 w-8 h-8 border-t-4 border-l-4 border-primary"></div>
+                                <div class="absolute bottom-0 right-0 w-8 h-8 border-b-4 border-r-4 border-primary"></div>
+                                <div class="absolute bottom-0 left-0 w-8 h-8 border-b-4 border-l-4 border-primary"></div>
+                            </div>
+                        </div>
+
+                        <!-- Status Overlay -->
+                        <div class="absolute top-4 right-4 left-4">
+                            <div class="bg-base-100/90 backdrop-blur-sm rounded-lg p-3">
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center gap-2">
+                                        <div class="w-3 h-3 bg-success rounded-full animate-pulse"></div>
+                                        <span class="text-sm font-medium">جاري المسح...</span>
+                                    </div>
+                                    <span class="text-xs text-base-content/70">ضع رمز QR في الإطار</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Camera Controls -->
+                    <div class="flex gap-3 mb-6">
+                        <button class="btn btn-primary flex-1" id="startCamera" onclick="startCamera()">
+                            <i class="fas fa-video ml-2"></i>تشغيل الكاميرا
+                        </button>
+                        <button class="btn btn-outline flex-1" id="stopCamera" onclick="stopCamera()" disabled>
+                            <i class="fas fa-video-slash ml-2"></i>إيقاف الكاميرا
+                        </button>
+                        <div class="dropdown">
+                            <div tabindex="0" role="button" class="btn btn-outline">
+                                <i class="fas fa-cog"></i>
+                            </div>
+                            <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
+                                <li><a onclick="switchCamera()"><i class="fas fa-sync-alt ml-2"></i>تبديل الكاميرا</a></li>
+                                <li><a onclick="toggleFlashlight()"><i class="fas fa-flashlight ml-2"></i>تشغيل الفلاش</a></li>
+                                <li><a onclick="adjustSettings()"><i class="fas fa-sliders-h ml-2"></i>الإعدادات</a></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Manual NFC Input -->
+                    <div class="divider">أو</div>
+                    <h3 class="font-bold mb-4">إدخال بطاقة NFC يدوياً</h3>
+                    <div class="flex gap-3">
+                        <div class="form-control flex-1">
+                            <div class="relative">
+                                <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                                    <i class="fas fa-credit-card text-base-content/40"></i>
+                                </div>
+                                <input type="text" placeholder="أدخل معرف بطاقة NFC (مثال: NFC-A1B2C3D4E)" 
+                                       class="input input-bordered w-full pr-10" id="nfcInput" autofocus />
+                            </div>
+                        </div>
+                        <button class="btn btn-secondary" onclick="processNFC()">
+                            <i class="fas fa-search ml-2"></i>بحث
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Member Profile Display -->
+            <div class="card bg-base-100 shadow-lg">
+                <div class="card-body">
+                    <h2 class="card-title mb-6">
+                        <i class="fas fa-user-circle ml-2 text-secondary"></i>
+                        ملف العضو الشخصي
+                    </h2>
+
+                    <!-- Default State -->
+                    <div id="defaultState" class="text-center py-12">
+                        <div class="text-6xl text-base-content/20 mb-4">
+                            <i class="fas fa-qrcode"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-2">امسح رمز QR أو أدخل معرف NFC</h3>
+                        <p class="text-base-content/70">سيظهر ملف العضو الشخصي هنا بعد المسح</p>
+                    </div>
+
+                    <!-- Member Profile Display -->
+                    <div id="memberProfile" class="hidden">
+                        <div class="flex items-start gap-4 mb-6">
+                            <div class="avatar">
+                                <div class="w-20 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
+                                    <img id="memberAvatar" src="" alt="العضو" />
+                                </div>
+                            </div>
+                            <div class="flex-1">
+                                <h3 class="text-2xl font-bold" id="memberName"></h3>
+                                <p class="text-lg text-base-content/80" id="memberPosition"></p>
+                                <p class="text-base-content/60" id="memberCompany"></p>
+                                <div class="flex gap-2 mt-2">
+                                    <div class="badge badge-primary" id="memberStatus"></div>
+                                    <div class="badge" id="memberPresence"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4 mb-6">
+                            <div class="text-center p-4 bg-base-200 rounded-lg">
+                                <div class="text-2xl font-bold text-primary" id="memberConferences">0</div>
+                                <div class="text-sm text-base-content/70">المؤتمرات</div>
+                            </div>
+                            <div class="text-center p-4 bg-base-200 rounded-lg">
+                                <div class="text-2xl font-bold text-info" id="memberHours">0</div>
+                                <div class="text-sm text-base-content/70">إجمالي الساعات</div>
+                            </div>
+                        </div>
+
+                        <div class="space-y-3 mb-6">
+                            <div class="flex justify-between">
+                                <span class="text-base-content/70">البريد الإلكتروني:</span>
+                                <span id="memberEmail"></span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-base-content/70">الهاتف:</span>
+                                <span id="memberPhone"></span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-base-content/70">معرف NFC:</span>
+                                <span id="memberNFC" class="font-mono"></span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-base-content/70">آخر نشاط:</span>
+                                <span id="memberLastActivity"></span>
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="grid grid-cols-1 gap-3">
+                            <button class="btn btn-success btn-lg" id="checkInBtn" onclick="checkIn()" style="display: none;">
+                                <i class="fas fa-sign-in-alt ml-2"></i>تسجيل الحضور
+                            </button>
+                            <button class="btn btn-warning btn-lg" id="checkOutBtn" onclick="checkOut()" style="display: none;">
+                                <i class="fas fa-sign-out-alt ml-2"></i>تسجيل الخروج
+                            </button>
+                            <div class="flex gap-2">
+                                <button class="btn btn-outline flex-1" onclick="viewMemberDetails()">
+                                    <i class="fas fa-eye ml-2"></i>عرض التفاصيل
+                                </button>
+                                <button class="btn btn-outline flex-1" onclick="editMember()">
+                                    <i class="fas fa-edit ml-2"></i>تعديل الملف
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Error State -->
+                    <div id="errorState" class="hidden text-center py-12">
+                        <div class="text-6xl text-error mb-4">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-2 text-error">العضو غير موجود</h3>
+                        <p class="text-base-content/70" id="errorMessage">رمز QR الممسوح أو معرف NFC غير معترف به.</p>
+                        <button class="btn btn-outline mt-4" onclick="resetScanner()">
+                            <i class="fas fa-sync-alt ml-2"></i>حاول مرة أخرى
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Scans -->
+        <div class="card bg-base-100 shadow-lg mt-8">
+            <div class="card-body">
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="card-title">
+                        <i class="fas fa-history ml-2 text-info"></i>
+                        عمليات المسح الأخيرة
+                    </h2>
+                    <div class="flex gap-2">
+                        <button class="btn btn-outline btn-sm" onclick="clearHistory()">
+                            <i class="fas fa-trash ml-2"></i>مسح السجل
+                        </button>
+                        <button class="btn btn-outline btn-sm" onclick="exportHistory()">
+                            <i class="fas fa-download ml-2"></i>تصدير
+                        </button>
+                    </div>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="table table-zebra">
+                        <thead>
+                            <tr>
+                                <th>الوقت</th>
+                                <th>العضو</th>
+                                <th>الإجراء</th>
+                                <th>الطريقة</th>
+                                <th>المؤتمر</th>
+                                <th>الحالة</th>
+                            </tr>
+                        </thead>
+                        <tbody id="recentScans">
+                            <!-- Recent scans will be populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Conference Selection Modal -->
+    <dialog id="conferenceModal" class="modal">
+        <div class="modal-box">
+            <form method="dialog">
+                <button class="btn btn-sm btn-circle btn-ghost absolute left-2 top-2">✕</button>
+            </form>
+            <h3 class="font-bold text-lg mb-4">اختيار المؤتمر</h3>
+            
+            <div class="space-y-3">
+                <div class="form-control">
+                    <label class="cursor-pointer flex items-start gap-3 p-3 border border-dashed rounded-lg hover:bg-base-200">
+                        <input type="radio" name="conference" value="techconf" class="radio radio-primary mt-1" />
+                        <div class="flex-1">
+                            <div class="font-semibold">مؤتمر التقنية 2024</div>
+                            <div class="text-sm text-base-content/70">مؤتمر التكنولوجيا والابتكار</div>
+                            <div class="text-xs text-success">نشط • 89/120 حاضر</div>
+                        </div>
+                    </label>
+                </div>
+                
+                <div class="form-control">
+                    <label class="cursor-pointer flex items-start gap-3 p-3 border border-dashed rounded-lg hover:bg-base-200">
+                        <input type="radio" name="conference" value="devsummit" class="radio radio-primary mt-1" />
+                        <div class="flex-1">
+                            <div class="font-semibold">قمة المطورين 2024</div>
+                            <div class="text-sm text-base-content/70">قمة المطورين والتواصل</div>
+                            <div class="text-xs text-warning">يبدأ في 14:00</div>
+                        </div>
+                    </label>
+                </div>
+
+                <div class="form-control">
+                    <label class="cursor-pointer flex items-start gap-3 p-3 border border-dashed rounded-lg hover:bg-base-200">
+                        <input type="radio" name="conference" value="aiworkshop" class="radio radio-primary mt-1" />
+                        <div class="flex-1">
+                            <div class="font-semibold">ورشة الذكاء الاصطناعي</div>
+                            <div class="text-sm text-base-content/70">ورشة عمل التعلم الآلي</div>
+                            <div class="text-xs text-info">قيد التنفيذ • 45/50 حاضر</div>
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            <div class="modal-action">
+                <form method="dialog" class="flex gap-3">
+                    <button class="btn btn-outline">إلغاء</button>
+                    <button type="button" class="btn btn-primary" onclick="confirmConferenceSelection()">
+                        اختيار المؤتمر
+                    </button>
+                </form>
+            </div>
+        </div>
+    </dialog>
+
+    <!-- Toast -->
+    <div class="toast toast-top toast-start" id="toast" style="display: none;">
+        <div class="alert alert-success">
+            <i class="fas fa-check-circle"></i>
+            <span>تم تنفيذ الإجراء بنجاح!</span>
+        </div>
+    </div>
+
+    <script>
+        // Sample member data for demo (Arabic version)
+        const memberDatabase = {
+            'NFC-A1B2C3D4E': {
+                id: 1,
+                name: 'أحمد محمد',
+                email: 'ahmed.mohamed@techsolutions.com',
+                phone: '+966 50 123 4567',
+                company: 'شركة الحلول التقنية',
+                position: 'مطور برمجيات أول',
+                nfcId: 'NFC-A1B2C3D4E',
+                status: 'active',
+                isPresent: false,
+                lastActivity: '2024-12-14 16:30',
+                conferences: 12,
+                totalHours: 146,
+                avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face'
+            },
+            'NFC-B2C3D4E5F': {
+                id: 2,
+                name: 'فاطمة أحمد',
+                email: 'fatima.ahmed@innovationlabs.com',
+                phone: '+966 55 234 5678',
+                company: 'مختبرات الابتكار',
+                position: 'مدير منتج',
+                nfcId: 'NFC-B2C3D4E5F',
+                status: 'active',
+                isPresent: true,
+                lastActivity: '2024-12-15 09:15',
+                conferences: 8,
+                totalHours: 98,
+                avatar: 'https://images.unsplash.com/photo-1494790108755-2616b6d4b5d1?w=150&h=150&fit=crop&crop=face'
+            }
+        };
+
+        let currentMember = null;
+        let selectedConference = null;
+        let scanHistory = [];
+        let video = null;
+        let canvas = null;
+        let context = null;
+        let scannerActive = false;
+
+        // Theme toggle functionality
+        const themeController = document.querySelector('.theme-controller');
+        const html = document.documentElement;
+        
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        html.setAttribute('data-theme', savedTheme);
+        if (savedTheme === 'dark') {
+            themeController.checked = true;
+        }
+        
+        themeController.addEventListener('change', function() {
+            const theme = this.checked ? 'dark' : 'light';
+            html.setAttribute('data-theme', theme);
+            localStorage.setItem('theme', theme);
+        });
+
+        // Camera functions
+        async function startCamera() {
+            try {
+                video = document.getElementById('video');
+                canvas = document.getElementById('canvas');
+                context = canvas.getContext('2d');
+
+                const stream = await navigator.mediaDevices.getUserMedia({
+                    video: { 
+                        facingMode: 'environment',
+                        width: { ideal: 1280 },
+                        height: { ideal: 720 }
+                    }
+                });
+
+                video.srcObject = stream;
+                video.play();
+
+                document.getElementById('startCamera').disabled = true;
+                document.getElementById('stopCamera').disabled = false;
+                scannerActive = true;
+
+                video.addEventListener('loadedmetadata', () => {
+                    canvas.width = video.videoWidth;
+                    canvas.height = video.videoHeight;
+                    scanQRCode();
+                });
+
+                showToast('تم تشغيل الكاميرا بنجاح', 'success');
+            } catch (error) {
+                console.error('Error starting camera:', error);
+                showToast('فشل في تشغيل الكاميرا: ' + error.message, 'error');
+            }
+        }
+
+        function stopCamera() {
+            if (video && video.srcObject) {
+                const tracks = video.srcObject.getTracks();
+                tracks.forEach(track => track.stop());
+                video.srcObject = null;
+            }
+
+            document.getElementById('startCamera').disabled = false;
+            document.getElementById('stopCamera').disabled = true;
+            scannerActive = false;
+
+            showToast('تم إيقاف الكاميرا', 'info');
+        }
+
+        function scanQRCode() {
+            if (!scannerActive || !video || video.videoWidth === 0) {
+                if (scannerActive) {
+                    requestAnimationFrame(scanQRCode);
+                }
+                return;
+            }
+
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+            const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+            
+            if (typeof jsQR !== 'undefined') {
+                const code = jsQR(imageData.data, imageData.width, imageData.height);
+                if (code) {
+                    processScan(code.data, 'QR');
+                    return;
+                }
+            }
+
+            requestAnimationFrame(scanQRCode);
+        }
+
+        // Scanner control functions
+        function toggleScanner() {
+            if (scannerActive) {
+                stopCamera();
+                document.getElementById('scannerToggleText').textContent = 'تشغيل الماسح';
+            } else {
+                startCamera();
+                document.getElementById('scannerToggleText').textContent = 'إيقاف الماسح';
+            }
+        }
+
+        function switchCamera() {
+            showToast('جاري تبديل الكاميرا...', 'info');
+        }
+
+        function toggleFlashlight() {
+            showToast('تشغيل الفلاش غير مدعوم في متصفحات الويب', 'warning');
+        }
+
+        function adjustSettings() {
+            showToast('ستفتح لوحة إعدادات الماسح هنا', 'info');
+        }
+
+        // NFC processing
+        function processNFC() {
+            const nfcInput = document.getElementById('nfcInput');
+            const nfcId = nfcInput.value.trim();
+            
+            if (!nfcId) {
+                showToast('الرجاء إدخال معرف بطاقة NFC', 'warning');
+                return;
+            }
+
+            processScan(nfcId, 'NFC');
+            nfcInput.value = '';
+        }
+
+        // Main scan processing
+        function processScan(data, method) {
+            console.log('Processing scan:', data, method);
+            
+            const member = memberDatabase[data];
+            
+            if (!member) {
+                showError('العضو غير موجود', `${method === 'QR' ? 'رمز QR' : 'معرف NFC'} "${data}" غير معترف به في النظام.`);
+                return;
+            }
+
+            if (method === 'QR' && scannerActive) {
+                stopCamera();
+            }
+
+            currentMember = member;
+            displayMember(member);
+            
+            addToScanHistory(member, method, 'بحث');
+        }
+
+        // Display functions
+        function displayMember(member) {
+            document.getElementById('defaultState').classList.add('hidden');
+            document.getElementById('errorState').classList.add('hidden');
+            document.getElementById('memberProfile').classList.remove('hidden');
+
+            document.getElementById('memberAvatar').src = member.avatar;
+            document.getElementById('memberName').textContent = member.name;
+            document.getElementById('memberPosition').textContent = member.position;
+            document.getElementById('memberCompany').textContent = member.company;
+            document.getElementById('memberEmail').textContent = member.email;
+            document.getElementById('memberPhone').textContent = member.phone;
+            document.getElementById('memberNFC').textContent = member.nfcId;
+            document.getElementById('memberLastActivity').textContent = member.lastActivity;
+            document.getElementById('memberConferences').textContent = member.conferences;
+            document.getElementById('memberHours').textContent = member.totalHours + 'س';
+
+            const statusBadge = document.getElementById('memberStatus');
+            statusBadge.textContent = member.status === 'active' ? 'نشط' : 'غير نشط';
+            statusBadge.className = `badge ${member.status === 'active' ? 'badge-success' : 'badge-error'}`;
+
+            const presenceBadge = document.getElementById('memberPresence');
+            presenceBadge.textContent = member.isPresent ? 'حاضر' : 'غائب';
+            presenceBadge.className = `badge ${member.isPresent ? 'badge-warning' : 'badge-ghost'}`;
+
+            const checkInBtn = document.getElementById('checkInBtn');
+            const checkOutBtn = document.getElementById('checkOutBtn');
+            
+            if (member.isPresent) {
+                checkInBtn.style.display = 'none';
+                checkOutBtn.style.display = 'block';
+            } else {
+                checkInBtn.style.display = 'block';
+                checkOutBtn.style.display = 'none';
+            }
+        }
+
+        function showError(title, message) {
+            document.getElementById('defaultState').classList.add('hidden');
+            document.getElementById('memberProfile').classList.add('hidden');
+            document.getElementById('errorState').classList.remove('hidden');
+            document.getElementById('errorMessage').textContent = message;
+        }
+
+        function resetScanner() {
+            document.getElementById('defaultState').classList.remove('hidden');
+            document.getElementById('memberProfile').classList.add('hidden');
+            document.getElementById('errorState').classList.add('hidden');
+            currentMember = null;
+        }
+
+        // Action functions
+        function checkIn() {
+            if (!currentMember) return;
+            document.getElementById('conferenceModal').showModal();
+        }
+
+        function checkOut() {
+            if (!currentMember) return;
+
+            currentMember.isPresent = false;
+            currentMember.lastActivity = new Date().toLocaleString('ar-SA');
+            
+            displayMember(currentMember);
+            addToScanHistory(currentMember, 'يدوي', 'تسجيل خروج');
+            showToast(`تم تسجيل خروج ${currentMember.name} بنجاح`, 'success');
+        }
+
+        function confirmConferenceSelection() {
+            const selectedRadio = document.querySelector('input[name="conference"]:checked');
+            if (!selectedRadio) {
+                showToast('الرجاء اختيار مؤتمر', 'warning');
+                return;
+            }
+
+            selectedConference = selectedRadio.value;
+            document.getElementById('conferenceModal').close();
+
+            if (currentMember) {
+                currentMember.isPresent = true;
+                currentMember.lastActivity = new Date().toLocaleString('ar-SA');
+                
+                displayMember(currentMember);
+                addToScanHistory(currentMember, 'يدوي', 'تسجيل حضور');
+                showToast(`تم تسجيل حضور ${currentMember.name} في ${getConferenceName(selectedConference)}`, 'success');
+            }
+        }
+
+        function getConferenceName(conferenceId) {
+            const conferences = {
+                'techconf': 'مؤتمر التقنية 2024',
+                'devsummit': 'قمة المطورين 2024',
+                'aiworkshop': 'ورشة الذكاء الاصطناعي'
+            };
+            return conferences[conferenceId] || 'مؤتمر غير معروف';
+        }
+
+        function viewMemberDetails() {
+            if (currentMember) {
+                showToast(`عرض الملف الشخصي الكامل لـ ${currentMember.name}`, 'info');
+            }
+        }
+
+        function editMember() {
+            if (currentMember) {
+                showToast(`فتح محرر الملف الشخصي لـ ${currentMember.name}`, 'info');
+            }
+        }
+
+        // History functions
+        function addToScanHistory(member, method, action) {
+            const historyItem = {
+                time: new Date().toLocaleTimeString('ar-SA'),
+                member: member.name,
+                action: action,
+                method: method,
+                conference: selectedConference ? getConferenceName(selectedConference) : 'غير محدد',
+                status: 'نجح'
+            };
+
+            scanHistory.unshift(historyItem);
+            if (scanHistory.length > 50) {
+                scanHistory = scanHistory.slice(0, 50);
+            }
+
+            updateHistoryDisplay();
+        }
+
+        function updateHistoryDisplay() {
+            const tbody = document.getElementById('recentScans');
+            tbody.innerHTML = '';
+
+            scanHistory.slice(0, 10).forEach(item => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td class="font-mono text-sm">${item.time}</td>
+                    <td class="font-medium">${item.member}</td>
+                    <td>
+                        <span class="badge ${item.action === 'تسجيل حضور' ? 'badge-success' : item.action === 'تسجيل خروج' ? 'badge-warning' : 'badge-info'} badge-sm">
+                            ${item.action}
+                        </span>
+                    </td>
+                    <td>
+                        <span class="badge badge-outline badge-sm">
+                            <i class="fas ${item.method === 'QR' ? 'fa-qrcode' : item.method === 'NFC' ? 'fa-credit-card' : 'fa-hand-pointer'} ml-1"></i>
+                            ${item.method}
+                        </span>
+                    </td>
+                    <td class="text-sm">${item.conference}</td>
+                    <td>
+                        <span class="badge ${item.status === 'نجح' ? 'badge-success' : 'badge-error'} badge-xs">
+                            ${item.status}
+                        </span>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        function clearHistory() {
+            if (confirm('مسح جميع سجلات المسح؟ لا يمكن التراجع عن هذا الإجراء.')) {
+                scanHistory = [];
+                updateHistoryDisplay();
+                showToast('تم مسح سجل المسح', 'success');
+            }
+        }
+
+        function exportHistory() {
+            if (scanHistory.length === 0) {
+                showToast('لا يوجد سجل للتصدير', 'warning');
+                return;
+            }
+
+            showToast('جاري تصدير سجل المسح...', 'info');
+        }
+
+        // Utility functions
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            const alert = toast.querySelector('.alert');
+            
+            alert.className = `alert alert-${type}`;
+            alert.querySelector('span').textContent = message;
+            
+            const icon = alert.querySelector('i');
+            if (type === 'success') {
+                icon.className = 'fas fa-check-circle';
+            } else if (type === 'error') {
+                icon.className = 'fas fa-exclamation-circle';
+            } else if (type === 'warning') {
+                icon.className = 'fas fa-exclamation-triangle';
+            } else if (type === 'info') {
+                icon.className = 'fas fa-info-circle';
+            }
+            
+            toast.style.display = 'block';
+            
+            setTimeout(() => {
+                toast.style.display = 'none';
+            }, 3000);
+        }
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                resetScanner();
+            } else if (e.key === 'Enter' && document.activeElement === document.getElementById('nfcInput')) {
+                processNFC();
+            } else if (e.key === ' ' && !document.activeElement.matches('input')) {
+                e.preventDefault();
+                if (scannerActive) {
+                    stopCamera();
+                } else {
+                    startCamera();
+                }
+            }
+        });
+
+        // Auto-focus NFC input when typing
+        document.addEventListener('keypress', function(e) {            
+            if (!document.activeElement.matches('input') && e.key.match(/[a-zA-Z0-9]/)) {
+                const nfcInput = document.getElementById('nfcInput');
+                nfcInput.focus();
+                nfcInput.value = e.key;
+            }
+
+            if (input.value.length >= 8) { 
+                processNFC();
+            }
+        });
+
+        const input = document.getElementById('nfcInput');
+
+        input.addEventListener('input', () => {
+            // If the card ID has the expected length or format, trigger processing
+            // You can change the condition based on actual expected input
+            if (input.value.length >= 8) { 
+                processNFC();
+            }
+        });
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            updateHistoryDisplay();
+            
+            // Add some sample history for demo
+            setTimeout(() => {
+                addToScanHistory(
+                    { name: 'أحمد محمد' }, 
+                    'QR', 
+                    'تسجيل حضور'
+                );
+                addToScanHistory(
+                    { name: 'فاطمة أحمد' }, 
+                    'NFC', 
+                    'تسجيل خروج'
+                );
+            }, 1000);
+        });
+
+        // Cleanup on page unload
+        window.addEventListener('beforeunload', function() {
+            if (video && video.srcObject) {
+                const tracks = video.srcObject.getTracks();
+                tracks.forEach(track => track.stop());
+            }
+        });
+    </script>
+</body>
+</html>

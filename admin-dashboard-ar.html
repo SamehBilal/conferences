@@ -1,15 +1,32 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light">
+<html lang="ar" dir="rtl" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard - Conference Attendance System</title>
+    <title>لوحة التحكم الإدارية - نظام حضور المؤتمرات</title>
     <link href="https://cdn.jsdelivr.net/npm/daisyui@4.4.24/dist/full.min.css" rel="stylesheet" type="text/css" />
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200..1000&display=swap" rel="stylesheet">
+    <style>
+        * {
+            font-family: 'Cairo', sans-serif;
+        }
+        /* RTL Adjustments */
+        .dropdown-end {
+            left: 0;
+            right: auto;
+        }
+        .dropdown-start {
+            right: 0;
+            left: auto;
+        }
+    </style>
 </head>
-<body class="min-h-screen bg-base-200">
+<body class="min-h-screen bg-base-200" style="font-family: 'Cairo', 'Arial', sans-serif;">
     <!-- Navigation -->
     <div class="navbar bg-base-100 shadow-lg">
         <div class="navbar-start">
@@ -18,27 +35,27 @@
                     <i class="fas fa-bars w-5 h-5"></i>
                 </div>
                 <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
-                    <li><a href="admin-dashboard.html">Dashboard</a></li>
-                    <li><a href="admin-members.html">Members</a></li>
-                    <li><a href="admin-scanner.html">Scanner</a></li>
-                    <li><a href="admin-conferences.html">Conferences</a></li>
-                    <li><a href="admin-reports.html">Reports</a></li>
-                    <li><a href="admin-timeline.html">Timeline</a></li>
+                    <li><a href="admin-dashboard-ar.html" class="active">لوحة التحكم</a></li>
+                    <li><a href="admin-members-ar.html">الأعضاء</a></li>
+                    <li><a href="admin-scanner-ar.html">الماسح الضوئي</a></li>
+                    <li><a href="admin-conferences-ar.html">المؤتمرات</a></li>
+                    <li><a href="admin-reports-ar.html">التقارير</a></li>
+                    <li><a href="admin-timeline-ar.html">الجدول الزمني</a></li>
                 </ul>
             </div>
-            <a href="admin-dashboard.html" class="btn btn-ghost text-xl">
-                <i class="fas fa-calendar-check mr-2"></i>
-                ConfTrack Admin
+            <a href="admin-dashboard-ar.html" class="btn btn-ghost text-xl">
+                <i class="fas fa-calendar-check ml-2 text-primary"></i>
+                <span class="gradient-text">كونف تراك</span>
             </a>
         </div>
         <div class="navbar-center hidden lg:flex">
             <ul class="menu menu-horizontal px-1">
-                <li><a href="admin-dashboard.html" class="active">Dashboard</a></li>
-                <li><a href="admin-members.html">Members</a></li>
-                <li><a href="admin-scanner.html">Scanner</a></li>
-                <li><a href="admin-conferences.html">Conferences</a></li>
-                <li><a href="admin-reports.html">Reports</a></li>
-                <li><a href="admin-timeline.html">Timeline</a></li>
+                <li><a href="admin-dashboard-ar.html" class="active">لوحة التحكم</a></li>
+                <li><a href="admin-members-ar.html">الأعضاء</a></li>
+                <li><a href="admin-scanner-ar.html">الماسح الضوئي</a></li>
+                <li><a href="admin-conferences-ar.html">المؤتمرات</a></li>
+                <li><a href="admin-reports-ar.html">التقارير</a></li>
+                <li><a href="admin-timeline-ar.html">الجدول الزمني</a></li>
             </ul>
         </div>
         <div class="navbar-end gap-2">
@@ -46,7 +63,7 @@
             <div class="form-control">
                 <label class="cursor-pointer flex items-center gap-2">
                     <input type="checkbox" class="toggle toggle-primary toggle-sm" id="autoRefresh" checked />
-                    <span class="text-sm">Auto Refresh</span>
+                    <span class="text-sm">تحديث تلقائي</span>
                 </label>
             </div>
             <!-- Theme Toggle -->
@@ -55,17 +72,21 @@
                 <i class="fas fa-sun swap-off fill-current w-6 h-6"></i>
                 <i class="fas fa-moon swap-on fill-current w-6 h-6"></i>
             </label>
+            <!-- Language Toggle -->
+            <a href="admin-dashboard.html" class="btn btn-ghost btn-sm">
+                <i class="fas fa-globe mr-1"></i>English
+            </a>
             <!-- Admin Menu -->
-            <div class="dropdown dropdown-end">
+            <div class="dropdown dropdown-start">
                 <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar">
                     <div class="w-10 rounded-full">
-                        <img alt="Admin" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face" />
+                        <img alt="المدير" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face" />
                     </div>
                 </div>
                 <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
-                    <li><a href="#"><i class="fas fa-user mr-2"></i>Profile</a></li>
-                    <li><a href="#"><i class="fas fa-cog mr-2"></i>Settings</a></li>
-                    <li><a href="auth-login.html"><i class="fas fa-sign-out-alt mr-2"></i>Logout</a></li>
+                    <li><a href="#"><i class="fas fa-user ml-2"></i>الملف الشخصي</a></li>
+                    <li><a href="#"><i class="fas fa-cog ml-2"></i>الإعدادات</a></li>
+                    <li><a href="auth-login.html"><i class="fas fa-sign-out-alt ml-2"></i>تسجيل الخروج</a></li>
                 </ul>
             </div>
         </div>
@@ -76,11 +97,11 @@
         <div class="container mx-auto px-4">
             <div class="flex items-center justify-between">
                 <div>
-                    <h1 class="text-3xl font-bold mb-2">Dashboard Overview</h1>
-                    <p class="opacity-90">Monitor conference attendance and manage your events</p>
+                    <h1 class="text-3xl font-bold mb-2">نظرة عامة على لوحة التحكم</h1>
+                    <p class="opacity-90">مراقبة حضور المؤتمرات وإدارة الفعاليات</p>
                 </div>
                 <div class="text-center">
-                    <div class="text-sm opacity-75">Last Updated</div>
+                    <div class="text-sm opacity-75">آخر تحديث</div>
                     <div class="text-lg font-semibold" id="lastUpdated">--</div>
                 </div>
             </div>
@@ -94,36 +115,36 @@
                 <div class="stat-figure text-primary">
                     <i class="fas fa-users text-3xl"></i>
                 </div>
-                <div class="stat-title">Total Members</div>
+                <div class="stat-title">إجمالي الأعضاء</div>
                 <div class="stat-value text-primary">2,847</div>
-                <div class="stat-desc">↗︎ 12% more than last month</div>
+                <div class="stat-desc">↗︎ 12% أكثر من الشهر الماضي</div>
             </div>
 
             <div class="stat bg-base-100 rounded-lg shadow hover:shadow-lg transition-all duration-200">
                 <div class="stat-figure text-secondary">
                     <i class="fas fa-user-check text-3xl"></i>
                 </div>
-                <div class="stat-title">Currently Present</div>
+                <div class="stat-title">الحضور الحالي</div>
                 <div class="stat-value text-secondary">156</div>
-                <div class="stat-desc">↗︎ 23 checked in recently</div>
+                <div class="stat-desc">↗︎ 23 سجلوا الحضور مؤخراً</div>
             </div>
 
             <div class="stat bg-base-100 rounded-lg shadow hover:shadow-lg transition-all duration-200">
                 <div class="stat-figure text-accent">
                     <i class="fas fa-calendar-check text-3xl"></i>
                 </div>
-                <div class="stat-title">Active Conferences</div>
+                <div class="stat-title">المؤتمرات النشطة</div>
                 <div class="stat-value text-accent">3</div>
-                <div class="stat-desc">2 ending today</div>
+                <div class="stat-desc">2 تنتهي اليوم</div>
             </div>
 
             <div class="stat bg-base-100 rounded-lg shadow hover:shadow-lg transition-all duration-200">
                 <div class="stat-figure text-info">
                     <i class="fas fa-chart-line text-3xl"></i>
                 </div>
-                <div class="stat-title">Attendance Rate</div>
+                <div class="stat-title">معدل الحضور</div>
                 <div class="stat-value text-info">89%</div>
-                <div class="stat-desc">↗︎ 4% above average</div>
+                <div class="stat-desc">↗︎ 4% أعلى من المتوسط</div>
             </div>
         </div>
 
@@ -134,12 +155,12 @@
                 <div class="card-body">
                     <div class="flex items-center justify-between mb-4">
                         <h2 class="card-title">
-                            <i class="fas fa-bolt mr-2 text-warning"></i>
-                            Real-time Activity
+                            <i class="fas fa-bolt ml-2 text-warning"></i>
+                            النشاط المباشر
                         </h2>
                         <div class="flex items-center gap-2">
                             <div class="w-3 h-3 bg-success rounded-full animate-pulse"></div>
-                            <span class="text-sm text-success">Live</span>
+                            <span class="text-sm text-success">مباشر</span>
                         </div>
                     </div>
 
@@ -149,7 +170,7 @@
 
                     <div class="text-center mt-4">
                         <button class="btn btn-outline btn-sm" onclick="loadMoreActivity()">
-                            <i class="fas fa-sync-alt mr-2"></i>Load More
+                            <i class="fas fa-sync-alt ml-2"></i>تحميل المزيد
                         </button>
                     </div>
                 </div>
@@ -160,13 +181,13 @@
                 <div class="card-body">
                     <div class="flex items-center justify-between mb-4">
                         <h2 class="card-title">
-                            <i class="fas fa-chart-area mr-2 text-info"></i>
-                            Today's Attendance
+                            <i class="fas fa-chart-area ml-2 text-info"></i>
+                            حضور اليوم
                         </h2>
                         <select class="select select-bordered select-sm">
-                            <option>Today</option>
-                            <option>This Week</option>
-                            <option>This Month</option>
+                            <option>اليوم</option>
+                            <option>هذا الأسبوع</option>
+                            <option>هذا الشهر</option>
                         </select>
                     </div>
                     <div class="h-64">
@@ -181,15 +202,15 @@
             <div class="card-body">
                 <div class="flex items-center justify-between mb-6">
                     <h2 class="card-title text-2xl">
-                        <i class="fas fa-calendar-alt mr-2 text-primary"></i>
-                        Active Conferences
+                        <i class="fas fa-calendar-alt ml-2 text-primary"></i>
+                        المؤتمرات النشطة
                     </h2>
                     <div class="flex gap-2">
-                        <button class="btn btn-primary btn-sm" onclick="window.location.href='admin-conferences.html'">
-                            <i class="fas fa-plus mr-2"></i>New Conference
+                        <button class="btn btn-primary btn-sm" onclick="window.location.href='admin-conferences-ar.html'">
+                            <i class="fas fa-plus ml-2"></i>مؤتمر جديد
                         </button>
                         <button class="btn btn-outline btn-sm" onclick="refreshConferences()">
-                            <i class="fas fa-sync-alt mr-2"></i>Refresh
+                            <i class="fas fa-sync-alt ml-2"></i>تحديث
                         </button>
                     </div>
                 </div>
@@ -199,61 +220,22 @@
                     <div class="card bg-gradient-to-br from-primary/10 to-primary/5 border border-primary/20 hover:shadow-lg transition-all duration-200">
                         <div class="card-body">
                             <div class="flex items-start justify-between mb-3">
-                                <h3 class="card-title text-lg">DevSummit 2024</h3>
-                                <div class="badge badge-warning badge-sm">Starting Soon</div>
+                                <h3 class="card-title text-lg">مؤتمر التقنية 2024</h3>
+                                <div class="badge badge-success badge-sm">نشط</div>
                             </div>
-                            <p class="text-base-content/70 mb-4">Developer Summit & Networking</p>
+                            <p class="text-base-content/70 mb-4">مؤتمر التكنولوجيا والابتكار</p>
                             
                             <div class="space-y-2 mb-4">
                                 <div class="flex justify-between text-sm">
-                                    <span>Registered:</span>
-                                    <span class="font-semibold text-info">156/200</span>
-                                </div>
-                                <div class="flex justify-between text-sm">
-                                    <span>Pre-checked:</span>
-                                    <span class="font-semibold">12</span>
-                                </div>
-                                <div class="flex justify-between text-sm">
-                                    <span>Starts:</span>
-                                    <span class="font-semibold">14:00 Today</span>
-                                </div>
-                            </div>
-
-                            <div class="progress progress-warning w-full h-2 mb-4">
-                                <div class="progress-value" style="width: 78%"></div>
-                            </div>
-
-                            <div class="flex gap-2">
-                                <button class="btn btn-secondary btn-xs flex-1" onclick="viewConference(2)">
-                                    <i class="fas fa-eye mr-1"></i>View
-                                </button>
-                                <button class="btn btn-outline btn-xs flex-1" onclick="manageConference(2)">
-                                    <i class="fas fa-cog mr-1"></i>Manage
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Conference 2 -->
-                    <div class="card bg-gradient-to-br from-secondary/10 to-secondary/5 border border-secondary/20 hover:shadow-lg transition-all duration-200">
-                        <div class="card-body">
-                            <div class="flex items-start justify-between mb-3">
-                                <h3 class="card-title text-lg">TechConf 2024</h3>
-                                <div class="badge badge-success badge-sm">Active</div>
-                            </div>
-                            <p class="text-base-content/70 mb-4">Technology & Innovation Conference</p>
-                            
-                            <div class="space-y-2 mb-4">
-                                <div class="flex justify-between text-sm">
-                                    <span>Present:</span>
+                                    <span>الحضور:</span>
                                     <span class="font-semibold text-success">89/120</span>
                                 </div>
                                 <div class="flex justify-between text-sm">
-                                    <span>Attendance Rate:</span>
+                                    <span>معدل الحضور:</span>
                                     <span class="font-semibold">74.2%</span>
                                 </div>
                                 <div class="flex justify-between text-sm">
-                                    <span>Duration:</span>
+                                    <span>المدة:</span>
                                     <span class="font-semibold">09:00 - 17:00</span>
                                 </div>
                             </div>
@@ -264,37 +246,74 @@
 
                             <div class="flex gap-2">
                                 <button class="btn btn-primary btn-xs flex-1" onclick="viewConference(1)">
-                                    <i class="fas fa-eye mr-1"></i>View
+                                    <i class="fas fa-eye ml-1"></i>عرض
                                 </button>
                                 <button class="btn btn-outline btn-xs flex-1" onclick="manageConference(1)">
-                                    <i class="fas fa-cog mr-1"></i>Manage
+                                    <i class="fas fa-cog ml-1"></i>إدارة
                                 </button>
                             </div>
                         </div>
                     </div>
 
-                    
+                    <!-- Conference 2 -->
+                    <div class="card bg-gradient-to-br from-secondary/10 to-secondary/5 border border-secondary/20 hover:shadow-lg transition-all duration-200">
+                        <div class="card-body">
+                            <div class="flex items-start justify-between mb-3">
+                                <h3 class="card-title text-lg">قمة المطورين 2024</h3>
+                                <div class="badge badge-warning badge-sm">سيبدأ قريباً</div>
+                            </div>
+                            <p class="text-base-content/70 mb-4">قمة المطورين والتواصل</p>
+                            
+                            <div class="space-y-2 mb-4">
+                                <div class="flex justify-between text-sm">
+                                    <span>المسجلون:</span>
+                                    <span class="font-semibold text-info">156/200</span>
+                                </div>
+                                <div class="flex justify-between text-sm">
+                                    <span>التسجيل المسبق:</span>
+                                    <span class="font-semibold">12</span>
+                                </div>
+                                <div class="flex justify-between text-sm">
+                                    <span>يبدأ:</span>
+                                    <span class="font-semibold">14:00 اليوم</span>
+                                </div>
+                            </div>
+
+                            <div class="progress progress-warning w-full h-2 mb-4">
+                                <div class="progress-value" style="width: 78%"></div>
+                            </div>
+
+                            <div class="flex gap-2">
+                                <button class="btn btn-secondary btn-xs flex-1" onclick="viewConference(2)">
+                                    <i class="fas fa-eye ml-1"></i>عرض
+                                </button>
+                                <button class="btn btn-outline btn-xs flex-1" onclick="manageConference(2)">
+                                    <i class="fas fa-cog ml-1"></i>إدارة
+                                </button>
+                            </div>
+                        </div>
+                    </div>
 
                     <!-- Conference 3 -->
                     <div class="card bg-gradient-to-br from-accent/10 to-accent/5 border border-accent/20 hover:shadow-lg transition-all duration-200">
                         <div class="card-body">
                             <div class="flex items-start justify-between mb-3">
-                                <h3 class="card-title text-lg">AI Workshop</h3>
-                                <div class="badge badge-info badge-sm">In Progress</div>
+                                <h3 class="card-title text-lg">ورشة الذكاء الاصطناعي</h3>
+                                <div class="badge badge-info badge-sm">قيد التنفيذ</div>
                             </div>
-                            <p class="text-base-content/70 mb-4">Machine Learning Workshop</p>
+                            <p class="text-base-content/70 mb-4">ورشة عمل التعلم الآلي</p>
                             
                             <div class="space-y-2 mb-4">
                                 <div class="flex justify-between text-sm">
-                                    <span>Present:</span>
+                                    <span>الحضور:</span>
                                     <span class="font-semibold text-success">45/50</span>
                                 </div>
                                 <div class="flex justify-between text-sm">
-                                    <span>Attendance Rate:</span>
+                                    <span>معدل الحضور:</span>
                                     <span class="font-semibold">90%</span>
                                 </div>
                                 <div class="flex justify-between text-sm">
-                                    <span>Ends:</span>
+                                    <span>ينتهي:</span>
                                     <span class="font-semibold">16:30</span>
                                 </div>
                             </div>
@@ -305,10 +324,10 @@
 
                             <div class="flex gap-2">
                                 <button class="btn btn-accent btn-xs flex-1" onclick="viewConference(3)">
-                                    <i class="fas fa-eye mr-1"></i>View
+                                    <i class="fas fa-eye ml-1"></i>عرض
                                 </button>
                                 <button class="btn btn-outline btn-xs flex-1" onclick="manageConference(3)">
-                                    <i class="fas fa-cog mr-1"></i>Manage
+                                    <i class="fas fa-cog ml-1"></i>إدارة
                                 </button>
                             </div>
                         </div>
@@ -323,54 +342,54 @@
             <div class="card bg-base-100 shadow-lg">
                 <div class="card-body">
                     <h2 class="card-title mb-6">
-                        <i class="fas fa-bolt mr-2 text-warning"></i>
-                        Quick Actions
+                        <i class="fas fa-bolt ml-2 text-warning"></i>
+                        إجراءات سريعة
                     </h2>
 
                     <div class="grid grid-cols-2 gap-4">
-                        <button class="btn btn-primary btn-lg" onclick="window.location.href='admin-scanner.html'">
-                            <i class="fas fa-qrcode mr-2"></i>
-                            <div class="text-left">
-                                <div class="font-bold">Scan QR</div>
-                                <div class="text-xs opacity-75">Quick check-in</div>
+                        <button class="btn btn-primary btn-lg" onclick="window.location.href='admin-scanner-ar.html'">
+                            <i class="fas fa-qrcode ml-2"></i>
+                            <div class="text-right">
+                                <div class="font-bold">مسح QR</div>
+                                <div class="text-xs opacity-75">تسجيل حضور سريع</div>
                             </div>
                         </button>
 
-                        <button class="btn btn-secondary btn-lg" onclick="window.location.href='admin-members.html'">
-                            <i class="fas fa-user-plus mr-2"></i>
-                            <div class="text-left">
-                                <div class="font-bold">Add Member</div>
-                                <div class="text-xs opacity-75">New registration</div>
+                        <button class="btn btn-secondary btn-lg" onclick="window.location.href='admin-members-ar.html'">
+                            <i class="fas fa-user-plus ml-2"></i>
+                            <div class="text-right">
+                                <div class="font-bold">إضافة عضو</div>
+                                <div class="text-xs opacity-75">تسجيل جديد</div>
                             </div>
                         </button>
 
-                        <button class="btn btn-accent btn-lg" onclick="window.location.href='admin-reports.html'">
-                            <i class="fas fa-file-export mr-2"></i>
-                            <div class="text-left">
-                                <div class="font-bold">Export Report</div>
-                                <div class="text-xs opacity-75">Generate CSV</div>
+                        <button class="btn btn-accent btn-lg" onclick="window.location.href='admin-reports-ar.html'">
+                            <i class="fas fa-file-export ml-2"></i>
+                            <div class="text-right">
+                                <div class="font-bold">تصدير تقرير</div>
+                                <div class="text-xs opacity-75">إنشاء CSV</div>
                             </div>
                         </button>
 
-                        <button class="btn btn-info btn-lg" onclick="window.location.href='admin-timeline.html'">
-                            <i class="fas fa-history mr-2"></i>
-                            <div class="text-left">
-                                <div class="font-bold">View Timeline</div>
-                                <div class="text-xs opacity-75">Activity log</div>
+                        <button class="btn btn-info btn-lg" onclick="window.location.href='admin-timeline-ar.html'">
+                            <i class="fas fa-history ml-2"></i>
+                            <div class="text-right">
+                                <div class="font-bold">عرض الجدول الزمني</div>
+                                <div class="text-xs opacity-75">سجل الأنشطة</div>
                             </div>
                         </button>
                     </div>
 
                     <!-- Emergency Actions -->
-                    <div class="divider">Emergency Actions</div>
+                    <div class="divider">إجراءات طوارئ</div>
                     <div class="grid grid-cols-1 gap-2">
                         <button class="btn btn-error btn-outline btn-sm" onclick="emergencyCheckout()">
-                            <i class="fas fa-exclamation-triangle mr-2"></i>
-                            Mass Check-out All
+                            <i class="fas fa-exclamation-triangle ml-2"></i>
+                            تسجيل خروج جماعي للجميع
                         </button>
                         <button class="btn btn-warning btn-outline btn-sm" onclick="sendAlert()">
-                            <i class="fas fa-bullhorn mr-2"></i>
-                            Send Alert to All Present
+                            <i class="fas fa-bullhorn ml-2"></i>
+                            إرسال تنبيه لجميع الحاضرين
                         </button>
                     </div>
                 </div>
@@ -381,11 +400,11 @@
                 <div class="card-body">
                     <div class="flex items-center justify-between mb-6">
                         <h2 class="card-title">
-                            <i class="fas fa-user-clock mr-2 text-info"></i>
-                            Recent Check-ins
+                            <i class="fas fa-user-clock ml-2 text-info"></i>
+                            آخر عمليات تسجيل الحضور
                         </h2>
-                        <button class="btn btn-ghost btn-sm" onclick="window.location.href='admin-members.html'">
-                            View All
+                        <button class="btn btn-ghost btn-sm" onclick="window.location.href='admin-members-ar.html'">
+                            عرض الكل
                         </button>
                     </div>
 
@@ -400,33 +419,33 @@
         <div class="card bg-base-100 shadow-lg mt-8">
             <div class="card-body">
                 <h2 class="card-title mb-6">
-                    <i class="fas fa-server mr-2 text-success"></i>
-                    System Status
+                    <i class="fas fa-server ml-2 text-success"></i>
+                    حالة النظام
                 </h2>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                     <div class="text-center">
                         <div class="radial-progress text-success mb-2" style="--value:98;" role="progressbar">98%</div>
-                        <div class="text-sm font-semibold">Server Uptime</div>
-                        <div class="text-xs text-base-content/60">Last 30 days</div>
+                        <div class="text-sm font-semibold">وقت تشغيل الخادم</div>
+                        <div class="text-xs text-base-content/60">آخر 30 يوم</div>
                     </div>
                     
                     <div class="text-center">
                         <div class="radial-progress text-info mb-2" style="--value:85;" role="progressbar">85%</div>
-                        <div class="text-sm font-semibold">Database Health</div>
-                        <div class="text-xs text-base-content/60">Optimal</div>
+                        <div class="text-sm font-semibold">صحة قاعدة البيانات</div>
+                        <div class="text-xs text-base-content/60">مثلى</div>
                     </div>
                     
                     <div class="text-center">
                         <div class="radial-progress text-warning mb-2" style="--value:92;" role="progressbar">92%</div>
-                        <div class="text-sm font-semibold">Scanner Response</div>
-                        <div class="text-xs text-base-content/60">Average 120ms</div>
+                        <div class="text-sm font-semibold">استجابة الماسح الضوئي</div>
+                        <div class="text-xs text-base-content/60">متوسط 120ms</div>
                     </div>
                     
                     <div class="text-center">
                         <div class="radial-progress text-primary mb-2" style="--value:94;" role="progressbar">94%</div>
-                        <div class="text-sm font-semibold">API Performance</div>
-                        <div class="text-xs text-base-content/60">Good</div>
+                        <div class="text-sm font-semibold">أداء API</div>
+                        <div class="text-xs text-base-content/60">جيد</div>
                     </div>
                 </div>
             </div>
@@ -434,14 +453,32 @@
     </div>
 
     <!-- Toast for notifications -->
-    <div class="toast toast-top toast-end" id="toast" style="display: none;">
+    <div class="toast toast-top toast-start" id="toast" style="display: none;">
         <div class="alert alert-success">
             <i class="fas fa-check-circle"></i>
-            <span>Action completed successfully!</span>
+            <span>تم تنفيذ الإجراء بنجاح!</span>
         </div>
     </div>
 
     <script>
+        // Sample data for Arabic version
+        const sampleActivities = [
+            { type: 'checkin', user: 'أحمد محمد', event: 'مؤتمر التقنية 2024', time: 'الآن', id: 'NFC-A1B2C3D4E' },
+            { type: 'checkout', user: 'فاطمة أحمد', event: 'قمة المطورين 2024', time: 'منذ دقيقتين', id: 'NFC-B2C3D4E5F' },
+            { type: 'checkin', user: 'محمد علي', event: 'ورشة الذكاء الاصطناعي', time: 'منذ 3 دقائق', id: 'NFC-C3D4E5F6G' },
+            { type: 'admin', user: 'مدير النظام', action: 'إضافة عضو جديد', time: 'منذ 5 دقائق' },
+            { type: 'checkin', user: 'سارة محمود', event: 'مؤتمر التقنية 2024', time: 'منذ 7 دقائق', id: 'NFC-D4E5F6G7H' },
+            { type: 'checkout', user: 'حسام عبدالله', event: 'ورشة الذكاء الاصطناعي', time: 'منذ 10 دقائق', id: 'NFC-E5F6G7H8I' },
+        ];
+
+        const sampleMembers = [
+            { name: 'أحمد محمد', company: 'شركة الحلول التقنية', checkin: '09:15 صباحاً', event: 'مؤتمر التقنية 2024', avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face' },
+            { name: 'فاطمة أحمد', company: 'مختبرات الابتكار', checkin: '09:12 صباحاً', event: 'مؤتمر التقنية 2024', avatar: 'photo.png' },
+            { name: 'محمد علي', company: 'شركة البداية', checkin: '09:08 صباحاً', event: 'ورشة الذكاء الاصطناعي', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face' },
+            { name: 'سارة محمود', company: 'شركة تقنيات البيانات', checkin: '09:05 صباحاً', event: 'مؤتمر التقنية 2024', avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&crop=face' },
+            { name: 'حسام عبدالله', company: 'شركة الأنظمة السحابية', checkin: '09:02 صباحاً', event: 'قمة المطورين 2024', avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop&crop=face' },
+        ];
+
         // Theme toggle functionality
         const themeController = document.querySelector('.theme-controller');
         const html = document.documentElement;
@@ -463,7 +500,7 @@
         const autoRefreshToggle = document.getElementById('autoRefresh');
 
         function updateLastUpdated() {
-            document.getElementById('lastUpdated').textContent = new Date().toLocaleTimeString();
+            document.getElementById('lastUpdated').textContent = new Date().toLocaleTimeString('ar-SA');
         }
 
         function startAutoRefresh() {
@@ -471,8 +508,8 @@
                 updateActivityFeed();
                 updateRecentMembers();
                 updateLastUpdated();
-                showToast('Data refreshed', 'info');
-            }, 30000); // 30 seconds
+                showToast('تم تحديث البيانات', 'info');
+            }, 30000);
         }
 
         function stopAutoRefresh() {
@@ -489,24 +526,6 @@
             }
         });
 
-        // Sample data for real-time activity
-        const sampleActivities = [
-            { type: 'checkin', user: 'John Doe', event: 'TechConf 2024', time: 'Just now', id: 'NFC-A1B2C3D4E' },
-            { type: 'checkout', user: 'Jane Smith', event: 'DevSummit 2024', time: '2 min ago', id: 'NFC-B2C3D4E5F' },
-            { type: 'checkin', user: 'Mike Johnson', event: 'AI Workshop', time: '3 min ago', id: 'NFC-C3D4E5F6G' },
-            { type: 'admin', user: 'Admin User', action: 'Added new member', time: '5 min ago' },
-            { type: 'checkin', user: 'Sarah Wilson', event: 'TechConf 2024', time: '7 min ago', id: 'NFC-D4E5F6G7H' },
-            { type: 'checkout', user: 'Bob Brown', event: 'AI Workshop', time: '10 min ago', id: 'NFC-E5F6G7H8I' },
-        ];
-
-        const sampleMembers = [
-            { name: 'John Doe', company: 'Tech Solutions Inc.', checkin: '09:15 AM', event: 'TechConf 2024', avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face' },
-            { name: 'Jane Smith', company: 'Innovation Labs', checkin: '09:12 AM', event: 'TechConf 2024', avatar: 'photo.png' },
-            { name: 'Mike Johnson', company: 'StartupCorp', checkin: '09:08 AM', event: 'AI Workshop', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face' },
-            { name: 'Sarah Wilson', company: 'DataTech Ltd.', checkin: '09:05 AM', event: 'TechConf 2024', avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&crop=face' },
-            { name: 'Bob Brown', company: 'CloudSys Inc.', checkin: '09:02 AM', event: 'DevSummit 2024', avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop&crop=face' },
-        ];
-
         // Update activity feed
         function updateActivityFeed() {
             const feed = document.getElementById('activityFeed');
@@ -520,11 +539,11 @@
                 if (activity.type === 'checkin') {
                     icon = 'fa-sign-in-alt';
                     color = 'text-success';
-                    text = `${activity.user} checked in to ${activity.event}`;
+                    text = `${activity.user} سجل حضوره في ${activity.event}`;
                 } else if (activity.type === 'checkout') {
                     icon = 'fa-sign-out-alt';
                     color = 'text-warning';
-                    text = `${activity.user} checked out from ${activity.event}`;
+                    text = `${activity.user} سجل خروجه من ${activity.event}`;
                 } else {
                     icon = 'fa-cog';
                     color = 'text-info';
@@ -569,9 +588,9 @@
                         <div class="text-sm text-base-content/70">${member.company}</div>
                         <div class="text-xs text-base-content/50">${member.event}</div>
                     </div>
-                    <div class="text-right">
+                    <div class="text-left">
                         <div class="text-sm font-medium">${member.checkin}</div>
-                        <div class="badge badge-success badge-xs">Present</div>
+                        <div class="badge badge-success badge-xs">حاضر</div>
                     </div>
                 `;
                 
@@ -590,14 +609,14 @@
                 data: {
                     labels: ['08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00'],
                     datasets: [{
-                        label: 'Check-ins',
+                        label: 'تسجيل الحضور',
                         data: [12, 45, 67, 89, 92, 78, 134, 145, 156, 134],
                         borderColor: 'rgb(34, 197, 94)',
                         backgroundColor: 'rgba(34, 197, 94, 0.1)',
                         tension: 0.4,
                         fill: true
                     }, {
-                        label: 'Check-outs',
+                        label: 'تسجيل الخروج',
                         data: [0, 2, 8, 15, 25, 34, 12, 28, 45, 67],
                         borderColor: 'rgb(239, 68, 68)',
                         backgroundColor: 'rgba(239, 68, 68, 0.1)',
@@ -624,41 +643,34 @@
 
         // Action functions
         function viewConference(id) {
-            showToast(`Viewing conference ${id}`, 'info');
-            // In real implementation, navigate to conference details
+            showToast(`عرض المؤتمر ${id}`, 'info');
         }
 
         function manageConference(id) {
-            showToast(`Managing conference ${id}`, 'info');
-            // In real implementation, open management panel
+            showToast(`إدارة المؤتمر ${id}`, 'info');
         }
 
         function refreshConferences() {
-            showToast('Refreshing conference data...', 'info');
-            // In real implementation, reload conference data
+            showToast('تحديث بيانات المؤتمرات...', 'info');
         }
 
         function loadMoreActivity() {
-            showToast('Loading more activity...', 'info');
-            // In real implementation, load additional activity items
+            showToast('تحميل المزيد من الأنشطة...', 'info');
         }
 
         function viewMember(name) {
-            showToast(`Viewing ${name}'s profile`, 'info');
-            // In real implementation, navigate to member profile
+            showToast(`عرض ملف ${name} الشخصي`, 'info');
         }
 
         function emergencyCheckout() {
-            if (confirm('This will check out ALL currently present members. Are you sure?')) {
-                showToast('Emergency check-out initiated', 'warning');
-                // In real implementation, perform mass check-out
+            if (confirm('هذا سيقوم بتسجيل خروج جميع الحاضرين حالياً. هل أنت متأكد؟')) {
+                showToast('تم بدء تسجيل الخروج الطارئ', 'warning');
             }
         }
 
         function sendAlert() {
-            if (confirm('Send alert message to all present members?')) {
-                showToast('Alert sent to all present members', 'success');
-                // In real implementation, send alert
+            if (confirm('إرسال رسالة تنبيه لجميع الحاضرين؟')) {
+                showToast('تم إرسال التنبيه لجميع الحاضرين', 'success');
             }
         }
 
@@ -695,19 +707,16 @@
             initializeChart();
             updateLastUpdated();
             
-            // Start auto-refresh if enabled
             if (autoRefreshToggle.checked) {
                 startAutoRefresh();
             }
         });
 
-        // Update activity feed periodically to simulate real-time updates
+        // Update activity feed periodically
         setInterval(() => {
-            // Randomly shuffle activities for demo
             sampleActivities.unshift(sampleActivities.pop());
             updateActivityFeed();
         }, 5000);
     </script>
 </body>
 </html>
-                                

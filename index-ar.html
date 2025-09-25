@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="ar" data-theme="light" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>كونف تراك - نظام إدارة حضور المؤتمرات</title>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.4.24/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200..1000&display=swap" rel="stylesheet">
+    <style>
+        * {
+            font-family: 'Cairo', sans-serif;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+        .float-animation { animation: float 3s ease-in-out infinite; }
+        
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .fade-in-up { animation: fadeInUp 0.8s ease-out; }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, hsl(var(--p)) 0%, hsl(var(--s)) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .hero-pattern {
+            background-image: 
+                radial-gradient(circle at 25% 25%, hsl(var(--p) / 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 75% 75%, hsl(var(--s) / 0.1) 0%, transparent 50%);
+        }
+        
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-8px);
+        }
+
+        /* RTL specific styles */
+        .navbar-start {
+            flex: none;
+            width: 40%;
+        }
+        
+        .navbar-end {
+            flex: 1;
+            justify-content: flex-start;
+        }
+        
+        .navbar-center {
+            flex: none;
+            width: 43%;
+        }
+
+        /* Flip icons for RTL */
+        .fa-arrow-right:before {
+            content: "\f060"; /* arrow-left */
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-base-200">
+    <!-- Navigation -->
+    <div class="navbar bg-base-100/95 backdrop-blur-sm shadow-lg sticky top-0 z-50">
+        <div class="navbar-start">
+            <div class="dropdown">
+                <div tabindex="0" role="button" class="btn btn-ghost lg:hidden">
+                    <i class="fas fa-bars w-5 h-5"></i>
+                </div>
+                <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow-lg bg-base-100 rounded-box w-52 border border-base-300">
+                    <li><a href="#features" class="hover:bg-primary/10">
+                        <i class="fas fa-star ml-2"></i>المميزات</a></li>
+                    <li><a href="#demo" class="hover:bg-primary/10">
+                        <i class="fas fa-play ml-2"></i>التجربة</a></li>
+                    <li><a href="#pricing" class="hover:bg-primary/10">
+                        <i class="fas fa-tag ml-2"></i>الأسعار</a></li>
+                    <li><a href="#contact" class="hover:bg-primary/10">
+                        <i class="fas fa-envelope ml-2"></i>تواصل معنا</a></li>
+                </ul>
+            </div>
+            <a class="btn btn-ghost text-xl font-bold">
+                <i class="fas fa-calendar-check ml-2 text-primary"></i>
+                <span class="gradient-text">كونف تراك</span>
+            </a>
+        </div>
+        <div class="navbar-center hidden lg:flex">
+            <ul class="menu menu-horizontal px-1">
+                <li><a href="#features" class="hover:bg-primary/10">
+                    <i class="fas fa-star ml-2"></i>المميزات</a></li>
+                <li><a href="#demo" class="hover:bg-primary/10">
+                    <i class="fas fa-play ml-2"></i>التجربة</a></li>
+                <li><a href="#pricing" class="hover:bg-primary/10">
+                    <i class="fas fa-tag ml-2"></i>الأسعار</a></li>
+                <li><a href="#contact" class="hover:bg-primary/10">
+                    <i class="fas fa-envelope ml-2"></i>تواصل معنا</a></li>
+            </ul>
+        </div>
+        <div class="navbar-end gap-2">
+            <!-- Theme Toggle -->
+            <label class="swap swap-rotate">
+                <input type="checkbox" class="theme-controller" value="dark" />
+                <i class="fas fa-sun swap-off fill-current w-6 h-6"></i>
+                <i class="fas fa-moon swap-on fill-current w-6 h-6"></i>
+            </label>
+            <a href="auth-login-ar.html" class="btn btn-ghost">
+                <i class="fas fa-sign-in-alt ml-2"></i>تسجيل الدخول</a>
+            <a href="auth-register-ar.html" class="btn btn-primary">
+                <i class="fas fa-user-plus ml-2"></i>ابدأ الآن</a>
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <div class="hero min-h-screen hero-pattern relative overflow-hidden">
+        <!-- Background Elements -->
+        <div class="absolute inset-0 overflow-hidden pointer-events-none">
+            <div class="absolute top-20 right-10 w-20 h-20 bg-primary/10 rounded-full blur-xl"></div>
+            <div class="absolute top-40 left-20 w-32 h-32 bg-secondary/10 rounded-full blur-xl"></div>
+            <div class="absolute bottom-20 right-1/4 w-24 h-24 bg-accent/10 rounded-full blur-xl"></div>
+        </div>
+
+        <div class="hero-content text-center relative z-10">
+            <div class="max-w-4xl">
+                <div class="mb-8 float-animation">
+                    <div class="relative">
+                        <i class="fas fa-qrcode text-8xl text-primary mb-4 drop-shadow-lg"></i>
+                        <div class="absolute -top-2 -left-2 w-6 h-6 bg-success rounded-full animate-pulse"></div>
+                    </div>
+                </div>
+                
+                <h1 class="text-6xl md:text-7xl font-bold mb-6 fade-in-up">
+                    <span class="gradient-text">إدارة حضور المؤتمرات</span><br>
+                    <span class="text-base-content">الذكية</span>
+                </h1>
+                
+                <p class="text-xl md:text-2xl mb-8 text-base-content/80 max-w-3xl mx-auto leading-relaxed">
+                    ثورة في إدارة الفعاليات باستخدام أحدث تقنيات NFC ورموز QR. 
+                    تحليلات فورية، تسجيل دخول سلس، وتقارير شاملة في منصة واحدة.
+                </p>
+                
+                <!-- Stats Bar -->
+                <div class="stats shadow-lg mb-8 bg-base-100/90 backdrop-blur-sm">
+                    <div class="stat">
+                        <div class="stat-figure text-primary">
+                            <i class="fas fa-users text-2xl"></i>
+                        </div>
+                        <div class="stat-title">المستخدمون النشطون</div>
+                        <div class="stat-value text-primary">2.8K+</div>
+                    </div>
+                    
+                    <div class="stat">
+                        <div class="stat-figure text-secondary">
+                            <i class="fas fa-calendar text-2xl"></i>
+                        </div>
+                        <div class="stat-title">الفعاليات المُدارة</div>
+                        <div class="stat-value text-secondary">150+</div>
+                    </div>
+                    
+                    <div class="stat">
+                        <div class="stat-figure text-accent">
+                            <i class="fas fa-clock text-2xl"></i>
+                        </div>
+                        <div class="stat-title">الوقت المُوفَّر</div>
+                        <div class="stat-value text-accent">90%</div>
+                    </div>
+                </div>
+                
+                <div class="flex flex-col sm:flex-row gap-4 justify-center mb-8">
+                    <a href="user-profile-ar.html" class="btn btn-primary btn-lg shadow-lg hover:shadow-xl transition-all duration-300">
+                        <i class="fas fa-user ml-2"></i>
+                        بوابة المستخدم
+                        <i class="fas fa-arrow-right mr-2"></i>
+                    </a>
+                    <a href="admin-dashboard-ar.html" class="btn btn-secondary btn-lg shadow-lg hover:shadow-xl transition-all duration-300">
+                        <i class="fas fa-cog ml-2"></i>
+                        لوحة الإدارة
+                        <i class="fas fa-external-link-alt mr-2"></i>
+                    </a>
+                </div>
+
+                <div class="flex flex-wrap justify-center gap-6 text-base-content/60">
+                    <div class="flex items-center gap-2">
+                        <i class="fas fa-check-circle text-success"></i>
+                        <span>بدون رسوم إعداد</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <i class="fas fa-shield-alt text-primary"></i>
+                        <span>أمان متقدم</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <i class="fas fa-headset text-secondary"></i>
+                        <span>دعم 24/7</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scroll Indicator -->
+        <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
+            <a href="#features" class="text-base-content/60 hover:text-primary transition-colors">
+                <i class="fas fa-chevron-down text-2xl"></i>
+            </a>
+        </div>
+    </div>
+
+    <!-- Features Section -->
+    <section id="features" class="py-20 bg-base-100">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16">
+                <div class="badge badge-primary badge-lg mb-4">
+                    <i class="fas fa-star ml-2"></i>المميزات
+                </div>
+                <h2 class="text-4xl md:text-5xl font-bold mb-6">
+                    كل ما تحتاجه لفعاليات
+                    <span class="gradient-text">مثالية</span>
+                </h2>
+                <p class="text-xl text-base-content/70 max-w-3xl mx-auto">
+                    أدوات شاملة مصممة لجعل إدارة المؤتمرات سهلة وتتبع الحضور سلساً
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Feature 1 -->
+                <div class="card bg-gradient-to-br from-primary/5 to-primary/10 shadow-xl hover:shadow-2xl card-hover border border-primary/20">
+                    <div class="card-body text-center">
+                        <div class="text-5xl text-primary mb-4">
+                            <i class="fas fa-qrcode"></i>
+                        </div>
+                        <h3 class="card-title justify-center text-xl">مسح رموز QR و NFC</h3>
+                        <p class="text-base-content/70">تسجيل دخول سريع بدون لمس باستخدام رموز QR وتقنية NFC. لا مزيد من الطوابير الطويلة أو التسجيل اليدوي.</p>
+                        <div class="badge badge-primary badge-outline">وصول فوري</div>
+                    </div>
+                </div>
+
+                <!-- Feature 2 -->
+                <div class="card bg-gradient-to-br from-secondary/5 to-secondary/10 shadow-xl hover:shadow-2xl card-hover border border-secondary/20">
+                    <div class="card-body text-center">
+                        <div class="text-5xl text-secondary mb-4">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <h3 class="card-title justify-center text-xl">لوحة تحليلات مباشرة</h3>
+                        <p class="text-base-content/70">رؤى فورية مع تصورات جميلة، تتبع الحضور، وأدوات تقارير شاملة.</p>
+                        <div class="badge badge-secondary badge-outline">بيانات فورية</div>
+                    </div>
+                </div>
+
+                <!-- Feature 3 -->
+                <div class="card bg-gradient-to-br from-accent/5 to-accent/10 shadow-xl hover:shadow-2xl card-hover border border-accent/20">
+                    <div class="card-body text-center">
+                        <div class="text-5xl text-accent mb-4">
+                            <i class="fas fa-users-cog"></i>
+                        </div>
+                        <h3 class="card-title justify-center text-xl">إدارة أعضاء ذكية</h3>
+                        <p class="text-base-content/70">إدارة ملفات شخصية كاملة مع الصور، التفاصيل المهنية، وأنظمة التواصل الآلي.</p>
+                        <div class="badge badge-accent badge-outline">نظام CRM متقدم</div>
+                    </div>
+                </div>
+
+                <!-- Feature 4 -->
+                <div class="card bg-gradient-to-br from-info/5 to-info/10 shadow-xl hover:shadow-2xl card-hover border border-info/20">
+                    <div class="card-body text-center">
+                        <div class="text-5xl text-info mb-4">
+                            <i class="fas fa-history"></i>
+                        </div>
+                        <h3 class="card-title justify-center text-xl">تتبع الجدول الزمني الكامل</h3>
+                        <p class="text-base-content/70">مسار تدقيق كامل لجميع الأنشطة مع الطوابع الزمنية، إجراءات المستخدمين، وسجلات إدارية للامتثال.</p>
+                        <div class="badge badge-info badge-outline">جاهز للتدقيق</div>
+                    </div>
+                </div>
+
+                <!-- Feature 5 -->
+                <div class="card bg-gradient-to-br from-success/5 to-success/10 shadow-xl hover:shadow-2xl card-hover border border-success/20">
+                    <div class="card-body text-center">
+                        <div class="text-5xl text-success mb-4">
+                            <i class="fas fa-file-export"></i>
+                        </div>
+                        <h3 class="card-title justify-center text-xl">تقارير متقدمة</h3>
+                        <p class="text-base-content/70">إنشاء تقارير مفصلة بتنسيقات متعددة تشمل PDF وExcel وCSV للتحليل الشامل.</p>
+                        <div class="badge badge-success badge-outline">تنسيقات متعددة</div>
+                    </div>
+                </div>
+
+                <!-- Feature 6 -->
+                <div class="card bg-gradient-to-br from-warning/5 to-warning/10 shadow-xl hover:shadow-2xl card-hover border border-warning/20">
+                    <div class="card-body text-center">
+                        <div class="text-5xl text-warning mb-4">
+                            <i class="fas fa-mobile-alt"></i>
+                        </div>
+                        <h3 class="card-title justify-center text-xl">تصميم متجاوب للجوال</h3>
+                        <p class="text-base-content/70">واجهة متجاوبة تماماً تعمل بلا عيوب على جميع الأجهزة، من الهواتف الذكية إلى أجهزة سطح المكتب.</p>
+                        <div class="badge badge-warning badge-outline">متعدد المنصات</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Demo Section -->
+    <section id="demo" class="py-20 bg-base-200">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16">
+                <div class="badge badge-secondary badge-lg mb-4">
+                    <i class="fas fa-play ml-2"></i>تجربة مباشرة
+                </div>
+                <h2 class="text-4xl md:text-5xl font-bold mb-6">
+                    شاهد كونف تراك <span class="gradient-text">أثناء العمل</span>
+                </h2>
+                <p class="text-xl text-base-content/70 max-w-3xl mx-auto">
+                    اختبر قوة منصتنا من خلال تجارب تفاعلية للميزات الرئيسية
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <div class="space-y-6">
+                    <div class="card bg-base-100 shadow-lg">
+                        <div class="card-body">
+                            <h3 class="card-title text-primary">
+                                <i class="fas fa-qrcode ml-2"></i>
+                                تجربة ماسح رموز QR
+                            </h3>
+                            <p class="text-base-content/70">جرب نظام مسح رموز QR السريع الخاص بنا</p>
+                            <div class="card-actions">
+                                <button class="btn btn-primary" onclick="openScanner()">
+                                    <i class="fas fa-camera ml-2"></i>فتح الماسح
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card bg-base-100 shadow-lg">
+                        <div class="card-body">
+                            <h3 class="card-title text-secondary">
+                                <i class="fas fa-chart-bar ml-2"></i>
+                                لوحة التحليلات
+                            </h3>
+                            <p class="text-base-content/70">استكشف أدوات التحليلات والتقارير الفورية</p>
+                            <div class="card-actions">
+                                <a href="admin-dashboard-ar.html" class="btn btn-secondary">
+                                    <i class="fas fa-external-link-alt ml-2"></i>عرض اللوحة
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card bg-base-100 shadow-lg">
+                        <div class="card-body">
+                            <h3 class="card-title text-accent">
+                                <i class="fas fa-users ml-2"></i>
+                                بوابة الأعضاء
+                            </h3>
+                            <p class="text-base-content/70">تحقق من تجربة المستخدم من منظور المشارك</p>
+                            <div class="card-actions">
+                                <a href="user-profile-ar.html" class="btn btn-accent">
+                                    <i class="fas fa-user ml-2"></i>بوابة المستخدم
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mockup-browser bg-base-300 border shadow-2xl">
+                    <div class="mockup-browser-toolbar">
+                        <div class="input border border-base-300" dir="ltr">https://conftrack.example.com</div>
+                    </div>
+                    <div class="bg-base-200 flex justify-center px-4 py-16">
+                        <div class="text-center">
+                            <i class="fas fa-chart-line text-6xl text-primary mb-4"></i>
+                            <h4 class="text-2xl font-bold mb-2">معاينة اللوحة المباشرة</h4>
+                            <p class="text-base-content/70">تحليلات وتقارير فورية</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section id="pricing" class="py-20 bg-base-100">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16">
+                <div class="badge badge-accent badge-lg mb-4">
+                    <i class="fas fa-tag ml-2"></i>الأسعار
+                </div>
+                <h2 class="text-4xl md:text-5xl font-bold mb-6">
+                    أسعار بسيطة <span class="gradient-text">وشفافة</span>
+                </h2>
+                <p class="text-xl text-base-content/70 max-w-3xl mx-auto">
+                    اختر الخطة التي تناسب حجم فعاليتك ومتطلباتك
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Starter Plan -->
+                <div class="card bg-base-200 shadow-lg hover:shadow-xl card-hover">
+                    <div class="card-body">
+                        <h3 class="card-title text-2xl mb-4">المبتدئ</h3>
+                        <div class="text-4xl font-bold text-primary mb-4">
+                            مجاني
+                        </div>
+                        <p class="text-base-content/70 mb-6">مثالي للفعاليات الصغيرة والتجربة</p>
+                        <ul class="space-y-2 mb-8">
+                            <li class="flex items-center gap-2">
+                                <i class="fas fa-check text-success"></i>
+                                حتى 50 مشارك
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <i class="fas fa-check text-success"></i>
+                                مسح رموز QR
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <i class="fas fa-check text-success"></i>
+                                تقارير أساسية
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <i class="fas fa-check text-success"></i>
+                                دعم بريد إلكتروني
+                            </li>
+                        </ul>
+                        <button class="btn btn-outline btn-primary">ابدأ الآن</button>
+                    </div>
+                </div>
+
+                <!-- Professional Plan -->
+                <div class="card bg-primary shadow-lg hover:shadow-xl card-hover text-primary-content relative">
+                    <div class="badge badge-accent absolute -top-3 left-1/2 transform -translate-x-1/2">
+                        الأكثر شيوعاً
+                    </div>
+                    <div class="card-body">
+                        <h3 class="card-title text-2xl mb-4">المحترف</h3>
+                        <div class="text-4xl font-bold mb-4">
+                            $49<span class="text-xl">/شهر</span>
+                        </div>
+                        <p class="opacity-90 mb-6">مثالي للمؤتمرات متوسطة الحجم</p>
+                        <ul class="space-y-2 mb-8">
+                            <li class="flex items-center gap-2">
+                                <i class="fas fa-check"></i>
+                                حتى 500 مشارك
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <i class="fas fa-check"></i>
+                                مسح QR و NFC
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <i class="fas fa-check"></i>
+                                تحليلات متقدمة
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <i class="fas fa-check"></i>
+                                فعاليات متعددة
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <i class="fas fa-check"></i>
+                                دعم أولوية
+                            </li>
+                        </ul>
+                        <button class="btn btn-accent">تجربة مجانية</button>
+                    </div>
+                </div>
+
+                <!-- Enterprise Plan -->
+                <div class="card bg-base-200 shadow-lg hover:shadow-xl card-hover">
+                    <div class="card-body">
+                        <h3 class="card-title text-2xl mb-4">المؤسسات</h3>
+                        <div class="text-4xl font-bold text-primary mb-4">
+                            مخصص
+                        </div>
+                        <p class="text-base-content/70 mb-6">للفعاليات الكبيرة والمؤسسات</p>
+                        <ul class="space-y-2 mb-8">
+                            <li class="flex items-center gap-2">
+                                <i class="fas fa-check text-success"></i>
+                                مشاركين غير محدودين
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <i class="fas fa-check text-success"></i>
+                                الوصول الكامل للميزات
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <i class="fas fa-check text-success"></i>
+                                تكاملات مخصصة
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <i class="fas fa-check text-success"></i>
+                                دعم مخصص
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <i class="fas fa-check text-success"></i>
+                                نشر محلي
+                            </li>
+                        </ul>
+                        <button class="btn btn-outline btn-primary">تواصل معنا</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="py-20 bg-gradient-to-r from-primary to-secondary text-primary-content">
+        <div class="container mx-auto px-4 text-center">
+            <h2 class="text-4xl md:text-5xl font-bold mb-6">
+                هل أنت مستعد لتحويل فعالياتك؟
+            </h2>
+            <p class="text-xl mb-8 max-w-2xl mx-auto opacity-90">
+                انضم إلى آلاف منظمي الفعاليات الذين يثقون بـ كونف تراك لإدارة الحضور السلسة
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a href="auth-register-ar.html" class="btn btn-accent btn-lg shadow-lg">
+                    <i class="fas fa-rocket ml-2"></i>
+                    تجربة مجانية
+                </a>
+                <a href="#contact" class="btn btn-outline btn-lg text-white border-white hover:bg-white hover:text-primary">
+                    <i class="fas fa-calendar ml-2"></i>
+                    جدولة عرض توضيحي
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-20 bg-base-100">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16">
+
+                <div class="badge badge-primary badge-lg mb-4">
+                    <i class="fas fa-envelope ml-2"></i>تواصل معنا
+                </div>
+                <h2 class="text-4xl md:text-5xl font-bold mb-6">
+                    تواصل <span class="gradient-text">معنا</span>
+                </h2>
+                <p class="text-xl text-base-content/70 max-w-3xl mx-auto">
+                    هل لديك أسئلة؟ نحن هنا لمساعدتك في جعل فعاليتك القادمة نجاحاً
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                <div class="space-y-8">
+                    <div class="card bg-base-200 shadow-lg">
+                        <div class="card-body">
+                            <div class="flex items-center gap-4">
+                                <div class="text-3xl text-primary">
+                                    <i class="fas fa-envelope"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-bold">راسلنا</h3>
+                                    <p class="text-base-content/70">hello@conftrack.com</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card bg-base-200 shadow-lg">
+                        <div class="card-body">
+                            <div class="flex items-center gap-4">
+                                <div class="text-3xl text-secondary">
+                                    <i class="fas fa-phone"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-bold">اتصل بنا</h3>
+                                    <p class="text-base-content/70">+1 (555) 123-4567</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card bg-base-200 shadow-lg">
+                        <div class="card-body">
+                            <div class="flex items-center gap-4">
+                                <div class="text-3xl text-accent">
+                                    <i class="fas fa-clock"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-bold">ساعات الدعم</h3>
+                                    <p class="text-base-content/70">دعم أونلاين 24/7</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card bg-base-200 shadow-lg">
+                    <div class="card-body">
+                        <h3 class="card-title text-2xl mb-6">أرسل لنا رسالة</h3>
+                        <form class="space-y-4">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="form-control">
+                                    <input type="text" placeholder="الاسم الأول" class="input input-bordered" required />
+                                </div>
+                                <div class="form-control">
+                                    <input type="text" placeholder="الاسم الأخير" class="input input-bordered" required />
+                                </div>
+                            </div>
+                            <div class="form-control">
+                                <input type="email" placeholder="البريد الإلكتروني" class="input input-bordered" required />
+                            </div>
+                            <div class="form-control">
+                                <input type="text" placeholder="الشركة (اختياري)" class="input input-bordered" />
+                            </div>
+                            <div class="form-control">
+                                <textarea class="textarea textarea-bordered h-32" placeholder="رسالتك" required></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary w-full">
+                                <i class="fas fa-paper-plane ml-2"></i>
+                                إرسال الرسالة
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer footer-center p-10 bg-base-300 text-base-content">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 w-full max-w-6xl">
+            <div>
+                <div class="text-3xl font-bold mb-4">
+                    <i class="fas fa-calendar-check ml-2 text-primary"></i>
+                    <span class="gradient-text">كونف تراك</span>
+                </div>
+                <p class="text-base-content/70 mb-4">
+                    الحل الشامل لإدارة حضور المؤتمرات
+                </p>
+                <div class="flex justify-center gap-4">
+                    <a class="text-2xl hover:text-primary transition-colors" aria-label="تويتر">
+                        <i class="fab fa-twitter"></i>
+                    </a> 
+                    <a class="text-2xl hover:text-primary transition-colors" aria-label="لينكد إن">
+                        <i class="fab fa-linkedin"></i>
+                    </a> 
+                    <a class="text-2xl hover:text-primary transition-colors" aria-label="جيت هب">
+                        <i class="fab fa-github"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div>
+                <h4 class="font-bold text-lg mb-4">روابط سريعة</h4>
+                <div class="grid grid-cols-2 gap-2">
+                    <a href="#features" class="hover:text-primary transition-colors">المميزات</a>
+                    <a href="#demo" class="hover:text-primary transition-colors">التجربة</a>
+                    <a href="#pricing" class="hover:text-primary transition-colors">الأسعار</a>
+                    <a href="#contact" class="hover:text-primary transition-colors">تواصل معنا</a>
+                    <a href="auth-login-ar.html" class="hover:text-primary transition-colors">تسجيل الدخول</a>
+                    <a href="auth-register-ar.html" class="hover:text-primary transition-colors">التسجيل</a>
+                </div>
+            </div>
+
+            <div>
+                <h4 class="font-bold text-lg mb-4">الموارد</h4>
+                <div class="grid grid-cols-2 gap-2">
+                    <a href="#" class="hover:text-primary transition-colors">التوثيق</a>
+                    <a href="#" class="hover:text-primary transition-colors">دليل API</a>
+                    <a href="#" class="hover:text-primary transition-colors">الدعم</a>
+                    <a href="#" class="hover:text-primary transition-colors">المدونة</a>
+                    <a href="#" class="hover:text-primary transition-colors">الخصوصية</a>
+                    <a href="#" class="hover:text-primary transition-colors">الشروط</a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="divider"></div>
+        
+        <div>
+            <p class="text-base-content/70">
+                جميع الحقوق محفوظة © 2024 كونف تراك.
+            </p>
+        </div>
+    </footer>
+
+    <!-- Scanner Modal -->
+    <dialog id="scannerModal" class="modal">
+        <div class="modal-box">
+            <form method="dialog">
+                <button class="btn btn-sm btn-circle btn-ghost absolute left-2 top-2">✕</button>
+            </form>
+            <h3 class="font-bold text-lg mb-4">تجربة ماسح رموز QR</h3>
+            
+            <div class="mockup-phone">
+                <div class="camera"></div>
+                <div class="display">
+                    <div class="artboard artboard-demo phone-1 bg-base-200 flex items-center justify-center">
+                        <div class="text-center">
+                            <i class="fas fa-qrcode text-6xl text-primary mb-4"></i>
+                            <p class="text-base-content/70">وجّه الكاميرا نحو رمز QR</p>
+                            <div class="loading loading-ring loading-lg text-primary mt-4"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="modal-action">
+                <form method="dialog">
+                    <button class="btn">إغلاق</button>
+                    <button class="btn btn-primary mr-2">
+                        <i class="fas fa-camera ml-2"></i>
+                        تفعيل الكاميرا
+                    </button>
+                </form>
+            </div>
+        </div>
+    </dialog>
+
+    <script>
+        // Theme toggle functionality
+        const themeController = document.querySelector('.theme-controller');
+        const html = document.documentElement;
+        
+        // Check for saved theme or default to light
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        html.setAttribute('data-theme', savedTheme);
+        if (savedTheme === 'dark') {
+            themeController.checked = true;
+        }
+        
+        themeController.addEventListener('change', function() {
+            const theme = this.checked ? 'dark' : 'light';
+            html.setAttribute('data-theme', theme);
+            localStorage.setItem('theme', theme);
+        });
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Scanner modal function
+        function openScanner() {
+            document.getElementById('scannerModal').showModal();
+        }
+
+        // Intersection Observer for animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observe elements for scroll animations
+        document.addEventListener('DOMContentLoaded', () => {
+            const animatedElements = document.querySelectorAll('.card, .stat');
+            animatedElements.forEach(el => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(20px)';
+                el.style.transition = 'all 0.6s ease-out';
+                observer.observe(el);
+            });
+        });
+
+        // Form submission handler
+        document.querySelector('form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Show success message
+            const button = this.querySelector('button[type="submit"]');
+            const originalText = button.innerHTML;
+            
+            button.innerHTML = '<span class="loading loading-spinner loading-sm"></span> جاري الإرسال...';
+            button.disabled = true;
+            
+            setTimeout(() => {
+                button.innerHTML = '<i class="fas fa-check ml-2"></i> تم الإرسال!';
+                button.className = 'btn btn-success w-full';
+                
+                setTimeout(() => {
+                    button.innerHTML = originalText;
+                    button.className = 'btn btn-primary w-full';
+                    button.disabled = false;
+                    this.reset();
+                }, 2000);
+            }, 1500);
+        });
+
+        // Statistics counter animation
+        function animateStats() {
+            const stats = document.querySelectorAll('.stat-value');
+            stats.forEach(stat => {
+                const target = parseInt(stat.textContent.replace(/[^\d]/g, ''));
+                const suffix = stat.textContent.replace(/[\d]/g, '');
+                let current = 0;
+                const increment = target / 50;
+                const timer = setInterval(() => {
+                    current += increment;
+                    if (current >= target) {
+                        current = target;
+                        clearInterval(timer);
+                    }
+                    stat.textContent = Math.floor(current) + suffix;
+                }, 30);
+            });
+        }
+
+        // Trigger stats animation when hero section is visible
+        const heroObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    setTimeout(() => animateStats(), 1000);
+                    heroObserver.unobserve(entry.target);
+                }
+            });
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const heroSection = document.querySelector('.hero');
+            if (heroSection) {
+                heroObserver.observe(heroSection);
+            }
+        });
+    </script>
+</body>
+</html>
+                
