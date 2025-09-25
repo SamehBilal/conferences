@@ -197,7 +197,7 @@
                                     <i class="fas fa-credit-card text-base-content/40"></i>
                                 </div>
                                 <input type="text" placeholder="Enter NFC Card ID (e.g., NFC-A1B2C3D4E)" 
-                                       class="input input-bordered w-full pl-10" id="nfcInput" />
+                                       class="input input-bordered w-full pl-10" id="nfcInput" autofocus  />
                             </div>
                         </div>
                         <button class="btn btn-secondary" onclick="processNFC()">
@@ -833,6 +833,10 @@
                 const nfcInput = document.getElementById('nfcInput');
                 nfcInput.focus();
                 nfcInput.value = e.key;
+
+                if (nfcInput.value.length >= 8) { 
+                    processNFC();
+                }
             }
         });
 
