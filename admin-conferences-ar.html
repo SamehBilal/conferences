@@ -1,0 +1,1052 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>المؤتمرات - نظام حضور المؤتمرات</title>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.4.24/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200..1000&display=swap" rel="stylesheet">
+    <style>
+        * {
+            font-family: 'Cairo', sans-serif;
+        }
+        .rtl-flip { transform: scaleX(-1); }
+    </style>
+</head>
+<body class="min-h-screen bg-base-200">
+    <!-- Navigation -->
+    <div class="navbar bg-base-100 shadow-lg">
+        <div class="navbar-start">
+            <div class="dropdown">
+                <div tabindex="0" role="button" class="btn btn-ghost lg:hidden">
+                    <i class="fas fa-bars w-5 h-5"></i>
+                </div>
+                <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
+                    <li><a href="admin-dashboard-ar.html">لوحة التحكم</a></li>
+                    <li><a href="admin-members-ar.html">الأعضاء</a></li>
+                    <li><a href="admin-scanner-ar.html">الماسح</a></li>
+                    <li><a href="admin-conferences-ar.html" class="active">المؤتمرات</a></li>
+                    <li><a href="admin-reports-ar.html">التقارير</a></li>
+                    <li><a href="admin-timeline-ar.html">الجدول الزمني</a></li>
+                </ul>
+            </div>
+            <a href="admin-dashboard-ar.html" class="btn btn-ghost text-xl">
+                <i class="fas fa-calendar-check ml-2 text-primary"></i>
+                <span class="gradient-text">كونف تراك</span>
+            </a>
+        </div>
+        <div class="navbar-center hidden lg:flex">
+            <ul class="menu menu-horizontal px-1">
+                <li><a href="admin-dashboard-ar.html">لوحة التحكم</a></li>
+                <li><a href="admin-members-ar.html">الأعضاء</a></li>
+                <li><a href="admin-scanner-ar.html">الماسح</a></li>
+                <li><a href="admin-conferences-ar.html" class="active">المؤتمرات</a></li>
+                <li><a href="admin-reports-ar.html">التقارير</a></li>
+                <li><a href="admin-timeline-ar.html">الجدول الزمني</a></li>
+            </ul>
+        </div>
+        <div class="navbar-end gap-2">
+            <!-- Theme Toggle -->
+            <label class="swap swap-rotate">
+                <input type="checkbox" class="theme-controller" value="dark" />
+                <i class="fas fa-sun swap-off fill-current w-6 h-6"></i>
+                <i class="fas fa-moon swap-on fill-current w-6 h-6"></i>
+            </label>
+            <!-- Admin Menu -->
+            <div class="dropdown dropdown-end">
+                <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar">
+                    <div class="w-10 rounded-full">
+                        <img alt="المدير" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face" />
+                    </div>
+                </div>
+                <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
+                    <li><a href="#"><i class="fas fa-user ml-2"></i>الملف الشخصي</a></li>
+                    <li><a href="#"><i class="fas fa-cog ml-2"></i>الإعدادات</a></li>
+                    <li><a href="auth-login-ar.html"><i class="fas fa-sign-out-alt ml-2"></i>تسجيل الخروج</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hero Header -->
+    <div class="bg-gradient-to-l from-primary to-secondary text-primary-content py-8">
+        <div class="container mx-auto px-4">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h1 class="text-3xl font-bold mb-2">إدارة المؤتمرات</h1>
+                    <p class="opacity-90">إنشاء وإدارة ومراقبة مؤتمراتك</p>
+                </div>
+                <div class="flex gap-3">
+                    <button class="btn btn-neutral" onclick="importConferences()">
+                        <i class="fas fa-upload ml-2"></i>استيراد
+                    </button>
+                    <button class="btn btn-neutral" onclick="exportConferences()">
+                        <i class="fas fa-download ml-2"></i>تصدير
+                    </button>
+                    <button class="btn btn-neutral" onclick="createConference()">
+                        <i class="fas fa-plus ml-2"></i>مؤتمر جديد
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container mx-auto px-4 py-8">
+        <!-- Statistics Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div class="stat bg-base-100 rounded-lg shadow hover:shadow-lg transition-all duration-200">
+                <div class="stat-figure text-primary">
+                    <i class="fas fa-calendar-alt text-3xl"></i>
+                </div>
+                <div class="stat-title">إجمالي المؤتمرات</div>
+                <div class="stat-value text-primary">24</div>
+                <div class="stat-desc">↗️ 3 جديدة هذا الشهر</div>
+            </div>
+
+            <div class="stat bg-base-100 rounded-lg shadow hover:shadow-lg transition-all duration-200">
+                <div class="stat-figure text-success">
+                    <i class="fas fa-play-circle text-3xl"></i>
+                </div>
+                <div class="stat-title">نشطة الآن</div>
+                <div class="stat-value text-success">3</div>
+                <div class="stat-desc">قيد التشغيل حالياً</div>
+            </div>
+
+            <div class="stat bg-base-100 rounded-lg shadow hover:shadow-lg transition-all duration-200">
+                <div class="stat-figure text-warning">
+                    <i class="fas fa-clock text-3xl"></i>
+                </div>
+                <div class="stat-title">قادمة</div>
+                <div class="stat-value text-warning">8</div>
+                <div class="stat-desc">خلال 30 يوم القادمة</div>
+            </div>
+
+            <div class="stat bg-base-100 rounded-lg shadow hover:shadow-lg transition-all duration-200">
+                <div class="stat-figure text-info">
+                    <i class="fas fa-users text-3xl"></i>
+                </div>
+                <div class="stat-title">إجمالي الحضور</div>
+                <div class="stat-value text-info">2,847</div>
+                <div class="stat-desc">عبر جميع الأحداث</div>
+            </div>
+        </div>
+
+        <!-- Search and Filters -->
+        <div class="card bg-base-100 shadow-lg mb-8 border border-dashed border-base-content/10">
+            <div class="card-body">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-4">
+                    <!-- Search -->
+                    <div class="form-control">
+                        <div class="relative">
+                            <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                                <i class="fas fa-search text-base-content/40"></i>
+                            </div>
+                            <input type="text" placeholder="البحث في المؤتمرات..." class="input input-bordered w-full pr-10" id="searchInput" />
+                        </div>
+                    </div>
+
+                    <!-- Status Filter -->
+                    <div class="form-control">
+                        <select class="select select-bordered w-full" id="statusFilter">
+                            <option value="all">جميع الحالات</option>
+                            <option value="active">نشطة</option>
+                            <option value="upcoming">قادمة</option>
+                            <option value="completed">مكتملة</option>
+                            <option value="cancelled">ملغية</option>
+                        </select>
+                    </div>
+
+                    <!-- Date Range -->
+                    <div class="form-control">
+                        <select class="select select-bordered w-full" id="dateFilter">
+                            <option value="all">جميع الأوقات</option>
+                            <option value="today">اليوم</option>
+                            <option value="week">هذا الأسبوع</option>
+                            <option value="month">هذا الشهر</option>
+                            <option value="year">هذا العام</option>
+                        </select>
+                    </div>
+
+                    <!-- Category -->
+                    <div class="form-control">
+                        <select class="select select-bordered w-full" id="categoryFilter">
+                            <option value="all">جميع الفئات</option>
+                            <option value="technology">تقنية</option>
+                            <option value="business">أعمال</option>
+                            <option value="education">تعليم</option>
+                            <option value="healthcare">صحة</option>
+                        </select>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="form-control">
+                        <div class="flex gap-2">
+                            <button class="btn btn-outline btn-sm flex-1" onclick="clearFilters()">
+                                <i class="fas fa-times ml-2"></i>مسح
+                            </button>
+                            <button class="btn btn-primary btn-sm flex-1" onclick="applyFilters()">
+                                <i class="fas fa-filter ml-2"></i>تصفية
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Results Info -->
+                <div class="flex items-center justify-between">
+                    <div class="text-sm text-base-content/70">
+                        عرض <span class="font-semibold" id="resultCount">8</span> مؤتمر
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <div class="flex items-center gap-2">
+                            <span class="text-sm">ترتيب حسب:</span>
+                            <select class="select select-bordered select-sm w-32" id="sortBy">
+                                <option value="date">التاريخ</option>
+                                <option value="name">الاسم</option>
+                                <option value="attendees">الحضور</option>
+                                <option value="status">الحالة</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bulk Actions -->
+        <div class="card bg-base-100 shadow-lg mb-8" id="bulkActions" style="display: none;">
+            <div class="card-body py-4">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-4">
+                        <span class="text-sm font-medium">
+                            <span id="selectedCount">0</span> مؤتمر محدد
+                        </span>
+                        <button class="btn btn-ghost btn-sm" onclick="clearSelection()">مسح التحديد</button>
+                    </div>
+                    <div class="flex gap-2">
+                        <button class="btn btn-error btn-sm" onclick="bulkDelete()">
+                            <i class="fas fa-trash ml-2"></i>حذف
+                        </button>
+                        <button class="btn btn-warning btn-sm" onclick="bulkCancel()">
+                            <i class="fas fa-times-circle ml-2"></i>إلغاء
+                        </button>
+                        <button class="btn btn-success btn-sm" onclick="bulkActivate()">
+                            <i class="fas fa-play-circle ml-2"></i>تفعيل
+                        </button>
+                        <button class="btn btn-info btn-sm" onclick="bulkExport()">
+                            <i class="fas fa-download ml-2"></i>تصدير المحدد
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- View Toggle Tabs -->
+        <div class="card bg-base-100 shadow-lg mb-8">
+            <div class="card-body p-0">
+                <!-- Tab Headers -->
+                <div class="tabs tabs-boxed bg-base-200 justify-center mx-6 mt-6 mb-0">
+                    <a class="tab tab-active" id="activeTabBtn" onclick="switchTab('active')">
+                        <i class="fas fa-play-circle w-4 h-4 ml-2"></i>
+                        النشطة (3)
+                    </a>
+                    <a class="tab" id="upcomingTabBtn" onclick="switchTab('upcoming')">
+                        <i class="fas fa-clock w-4 h-4 ml-2"></i>
+                        القادمة (3)
+                    </a>
+                    <a class="tab" id="completedTabBtn" onclick="switchTab('completed')">
+                        <i class="fas fa-check-circle w-4 h-4 ml-2"></i>
+                        المكتملة (2)
+                    </a>
+                    <a class="tab" id="allTabBtn" onclick="switchTab('all')">
+                        <i class="fas fa-list w-4 h-4 ml-2"></i>
+                        جميع المؤتمرات
+                    </a>
+                </div>
+
+                <!-- Tab Content -->
+                <div class="p-6">
+                    <!-- Active Conferences -->
+                    <div id="activeTabContent" class="tab-content" style="display: block;">
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="activeConferences">
+                            <!-- Active conferences will be populated by JavaScript -->
+                        </div>
+                    </div>
+
+                    <!-- Upcoming Conferences -->
+                    <div id="upcomingTabContent" class="tab-content" style="display: none;">
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="upcomingConferences">
+                            <!-- Upcoming conferences will be populated by JavaScript -->
+                        </div>
+                    </div>
+
+                    <!-- Completed Conferences -->
+                    <div id="completedTabContent" class="tab-content" style="display: none;">
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="completedConferences">
+                            <!-- Completed conferences will be populated by JavaScript -->
+                        </div>
+                    </div>
+
+                    <!-- All Conferences Table -->
+                    <div id="allTabContent" class="tab-content" style="display: none;">
+                        <div class="overflow-x-auto">
+                            <table class="table table-pin-rows border border-dashed border-base-content/20 rounded-lg overflow-hidden">
+                                <thead class="bg-primary/10">
+                                    <tr class="border-b border-dashed border-base-content/20">
+                                        <th class="bg-primary/10 border-r border-dashed border-base-content/20">
+                                            <label>
+                                                <input type="checkbox" class="checkbox checkbox-primary checkbox-sm" id="selectAll" />
+                                            </label>
+                                        </th>
+                                        <th class="bg-primary/10 border-r border-dashed border-base-content/20">
+                                            <div class="flex items-center gap-2">
+                                                <i class="fas fa-calendar-alt text-primary"></i>
+                                                <span class="font-bold">المؤتمر</span>
+                                            </div>
+                                        </th>
+                                        <th class="bg-primary/10 border-r border-dashed border-base-content/20">
+                                            <div class="flex items-center gap-2">
+                                                <i class="fas fa-clock text-secondary"></i>
+                                                <span class="font-bold">التاريخ والوقت</span>
+                                            </div>
+                                        </th>
+                                        <th class="bg-primary/10 border-r border-dashed border-base-content/20">
+                                            <div class="flex items-center gap-2">
+                                                <i class="fas fa-users text-info"></i>
+                                                <span class="font-bold">الحضور</span>
+                                            </div>
+                                        </th>
+                                        <th class="bg-primary/10 border-r border-dashed border-base-content/20">
+                                            <div class="flex items-center gap-2">
+                                                <i class="fas fa-check-circle text-success"></i>
+                                                <span class="font-bold">الحالة</span>
+                                            </div>
+                                        </th>
+                                        <th class="bg-primary/10 border-r border-dashed border-base-content/20">
+                                            <div class="flex items-center gap-2">
+                                                <i class="fas fa-tag text-warning"></i>
+                                                <span class="font-bold">الفئة</span>
+                                            </div>
+                                        </th>
+                                        <th class="bg-primary/10">
+                                            <div class="flex items-center gap-2">
+                                                <i class="fas fa-cogs text-base-content/70"></i>
+                                                <span class="font-bold">الإجراءات</span>
+                                            </div>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody id="allConferencesTable">
+                                    <!-- Table rows will be populated by JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pagination -->
+        <div class="flex justify-center">
+            <div class="join">
+                <button class="join-item btn btn-outline">«</button>
+                <button class="join-item btn btn-outline btn-active">1</button>
+                <button class="join-item btn btn-outline">2</button>
+                <button class="join-item btn btn-outline">3</button>
+                <button class="join-item btn btn-outline">4</button>
+                <button class="join-item btn btn-outline">»</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create/Edit Conference Modal -->
+    <dialog id="conferenceModal" class="modal">
+        <div class="modal-box w-11/12 max-w-4xl">
+            <form method="dialog">
+                <button class="btn btn-sm btn-circle btn-ghost absolute left-2 top-2">✕</button>
+            </form>
+            <h3 class="font-bold text-lg mb-6" id="modalTitle">إنشاء مؤتمر جديد</h3>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Basic Information -->
+                <div class="space-y-4">
+                    <h4 class="font-semibold text-base-content/80 border-b pb-2">المعلومات الأساسية</h4>
+                    
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text">اسم المؤتمر</span>
+                        </label>
+                        <input type="text" placeholder="مثل: مؤتمر التقنية 2025" class="input input-bordered" required />
+                    </div>
+
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text">الوصف</span>
+                        </label>
+                        <textarea class="textarea textarea-bordered h-24" placeholder="وصف مختصر للمؤتمر..."></textarea>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="form-control">
+                            <label class="label">
+                                <span class="label-text">الفئة</span>
+                            </label>
+                            <select class="select select-bordered">
+                                <option disabled selected>اختر الفئة</option>
+                                <option value="technology">تقنية</option>
+                                <option value="business">أعمال</option>
+                                <option value="education">تعليم</option>
+                                <option value="healthcare">صحة</option>
+                            </select>
+                        </div>
+                        <div class="form-control">
+                            <label class="label">
+                                <span class="label-text">أقصى عدد حضور</span>
+                            </label>
+                            <input type="number" placeholder="200" class="input input-bordered" min="1" />
+                        </div>
+                    </div>
+
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text">الموقع</span>
+                        </label>
+                        <input type="text" placeholder="مركز المؤتمرات، المدينة" class="input input-bordered" />
+                    </div>
+                </div>
+
+                <!-- Date & Time -->
+                <div class="space-y-4">
+                    <h4 class="font-semibold text-base-content/80 border-b pb-2">التاريخ والوقت</h4>
+                    
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="form-control">
+                            <label class="label">
+                                <span class="label-text">تاريخ البدء</span>
+                            </label>
+                            <input type="date" class="input input-bordered" required />
+                        </div>
+                        <div class="form-control">
+                            <label class="label">
+                                <span class="label-text">تاريخ الانتهاء</span>
+                            </label>
+                            <input type="date" class="input input-bordered" required />
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="form-control">
+                            <label class="label">
+                                <span class="label-text">وقت البدء</span>
+                            </label>
+                            <input type="time" class="input input-bordered" required />
+                        </div>
+                        <div class="form-control">
+                            <label class="label">
+                                <span class="label-text">وقت الانتهاء</span>
+                            </label>
+                            <input type="time" class="input input-bordered" required />
+                        </div>
+                    </div>
+
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text">المنطقة الزمنية</span>
+                        </label>
+                        <select class="select select-bordered">
+                            <option selected>UTC+03:00 (توقيت السعودية)</option>
+                            <option>UTC+02:00 (توقيت القاهرة)</option>
+                            <option>UTC+04:00 (توقيت الإمارات)</option>
+                            <option>UTC+00:00 (توقيت غرينتش)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text">الموعد النهائي للتسجيل</span>
+                        </label>
+                        <input type="datetime-local" class="input input-bordered" />
+                    </div>
+                </div>
+
+                <!-- Settings -->
+                <div class="space-y-4 md:col-span-2">
+                    <h4 class="font-semibold text-base-content/80 border-b pb-2">إعدادات المؤتمر</h4>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <label class="cursor-pointer flex items-center gap-3">
+                            <input type="checkbox" class="checkbox checkbox-primary" checked />
+                            <span class="label-text">السماح بالتسجيل المتأخر</span>
+                        </label>
+                        <label class="cursor-pointer flex items-center gap-3">
+                            <input type="checkbox" class="checkbox checkbox-primary" checked />
+                            <span class="label-text">إرسال رسائل ترحيب</span>
+                        </label>
+                        <label class="cursor-pointer flex items-center gap-3">
+                            <input type="checkbox" class="checkbox checkbox-primary" />
+                            <span class="label-text">يتطلب موافقة</span>
+                        </label>
+                        <label class="cursor-pointer flex items-center gap-3">
+                            <input type="checkbox" class="checkbox checkbox-primary" checked />
+                            <span class="label-text">تفعيل تسجيل الحضور بـ QR</span>
+                        </label>
+                        <label class="cursor-pointer flex items-center gap-3">
+                            <input type="checkbox" class="checkbox checkbox-primary" checked />
+                            <span class="label-text">تتبع الحضور</span>
+                        </label>
+                        <label class="cursor-pointer flex items-center gap-3">
+                            <input type="checkbox" class="checkbox checkbox-primary" />
+                            <span class="label-text">مؤتمر عام</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-action">
+                <form method="dialog" class="flex gap-3">
+                    <button class="btn btn-outline">إلغاء</button>
+                    <button type="button" class="btn btn-primary" onclick="saveConference()">
+                        <i class="fas fa-save ml-2"></i>حفظ المؤتمر
+                    </button>
+                </form>
+            </div>
+        </div>
+    </dialog>
+
+    <!-- Import Modal -->
+    <dialog id="importModal" class="modal">
+        <div class="modal-box">
+            <form method="dialog">
+                <button class="btn btn-sm btn-circle btn-ghost absolute left-2 top-2">✕</button>
+            </form>
+            <h3 class="font-bold text-lg mb-4">استيراد المؤتمرات</h3>
+            
+            <div class="space-y-4">
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle"></i>
+                    <div>
+                        <div class="font-semibold">الصيغ المدعومة: CSV، Excel</div>
+                        <div class="text-sm">حمّل قالبنا للحصول على الصيغة الصحيحة</div>
+                    </div>
+                </div>
+
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text">اختر الملف</span>
+                    </label>
+                    <input type="file" class="file-input file-input-bordered w-full" accept=".csv,.xlsx,.xls" />
+                </div>
+
+                <div class="form-control">
+                    <label class="cursor-pointer flex items-center gap-3">
+                        <input type="checkbox" class="checkbox" />
+                        <span class="label-text">تخطي المكررات (بناءً على الاسم والتاريخ)</span>
+                    </label>
+                </div>
+
+                <div class="form-control">
+                    <label class="cursor-pointer flex items-center gap-3">
+                        <input type="checkbox" class="checkbox" />
+                        <span class="label-text">تفعيل المؤتمرات المستوردة تلقائياً</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="modal-action">
+                <form method="dialog" class="flex gap-3">
+                    <button class="btn btn-outline">إلغاء</button>
+                    <button class="btn btn-ghost" onclick="downloadTemplate()">
+                        <i class="fas fa-download ml-2"></i>تحميل القالب
+                    </button>
+                    <button type="button" class="btn btn-primary" onclick="startImport()">
+                        <i class="fas fa-upload ml-2"></i>استيراد
+                    </button>
+                </form>
+            </div>
+        </div>
+    </dialog>
+
+    <!-- Toast -->
+    <div class="toast toast-top toast-start" id="toast" style="display: none;">
+        <div class="alert alert-success">
+            <i class="fas fa-check-circle"></i>
+            <span>تم إكمال العملية بنجاح!</span>
+        </div>
+    </div>
+
+    <script>
+        // Sample conference data in Arabic
+        const sampleConferences = [
+            {
+                id: 1,
+                name: 'مؤتمر التقنية 2025',
+                description: 'المؤتمر التقني السنوي يعرض أحدث الابتكارات في الذكاء الاصطناعي وتقنية البلوك تشين والحوسبة السحابية',
+                category: 'تقنية',
+                location: 'مركز سان فرانسيسكو للمؤتمرات',
+                startDate: '2025-03-15',
+                endDate: '2025-03-17',
+                startTime: '09:00',
+                endTime: '18:00',
+                status: 'active',
+                maxAttendees: 500,
+                currentAttendees: 342,
+                checkedIn: 89,
+                registrationDeadline: '2025-03-10T23:59',
+                organizer: 'شركة التقنية المحدودة',
+                image: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=400&h=200&fit=crop'
+            },
+            {
+                id: 2,
+                name: 'قمة الأعمال العالمية',
+                description: 'تجمع قادة الأعمال الدوليين لمناقشة اتجاهات السوق والاستراتيجيات المستقبلية',
+                category: 'أعمال',
+                location: 'مركز نيويورك للأعمال',
+                startDate: '2025-04-22',
+                endDate: '2025-04-24',
+                startTime: '08:30',
+                endTime: '17:30',
+                status: 'upcoming',
+                maxAttendees: 300,
+                currentAttendees: 178,
+                checkedIn: 0,
+                registrationDeadline: '2025-04-15T23:59',
+                organizer: 'شبكة الأعمال العالمية',
+                image: 'https://images.unsplash.com/photo-1559136555-9303baea8ebd?w=400&h=200&fit=crop'
+            },
+            {
+                id: 3,
+                name: 'منتدى الابتكار الصحي',
+                description: 'استكشاف مستقبل الرعاية الصحية من خلال التقنية وطرق العلاج المبتكرة',
+                category: 'صحة',
+                location: 'المركز الطبي في بوسطن',
+                startDate: '2025-05-08',
+                endDate: '2025-05-09',
+                startTime: '10:00',
+                endTime: '16:00',
+                status: 'upcoming',
+                maxAttendees: 200,
+                currentAttendees: 89,
+                checkedIn: 0,
+                registrationDeadline: '2025-05-01T23:59',
+                organizer: 'تحالف التقنية الصحية',
+                image: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?w=400&h=200&fit=crop'
+            }
+        ];
+
+        let selectedConferences = [];
+        let filteredConferences = [...sampleConferences];
+        let currentView = 'active';
+
+        // Theme toggle functionality
+        const themeController = document.querySelector('.theme-controller');
+        const html = document.documentElement;
+        
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        html.setAttribute('data-theme', savedTheme);
+        if (savedTheme === 'dark') {
+            themeController.checked = true;
+        }
+        
+        themeController.addEventListener('change', function() {
+            const theme = this.checked ? 'dark' : 'light';
+            html.setAttribute('data-theme', theme);
+            localStorage.setItem('theme', theme);
+        });
+
+        // Render functions for different views
+        function renderActiveConferences() {
+            const container = document.getElementById('activeConferences');
+            const activeConfs = filteredConferences.filter(conf => conf.status === 'active');
+            renderConferenceCards(container, activeConfs);
+        }
+
+        function renderUpcomingConferences() {
+            const container = document.getElementById('upcomingConferences');
+            const upcomingConfs = filteredConferences.filter(conf => conf.status === 'upcoming');
+            renderConferenceCards(container, upcomingConfs);
+        }
+
+        function renderCompletedConferences() {
+            const container = document.getElementById('completedConferences');
+            const completedConfs = filteredConferences.filter(conf => conf.status === 'completed');
+            renderConferenceCards(container, completedConfs);
+        }
+
+        function renderConferenceCards(container, conferences) {
+            container.innerHTML = '';
+
+            if (conferences.length === 0) {
+                container.innerHTML = '<div class="col-span-full text-center py-8"><p class="text-base-content/50">لم يتم العثور على مؤتمرات</p></div>';
+                return;
+            }
+
+            conferences.forEach(conf => {
+                const attendanceRate = conf.maxAttendees > 0 ? Math.round((conf.currentAttendees / conf.maxAttendees) * 100) : 0;
+                const checkInRate = conf.currentAttendees > 0 ? Math.round((conf.checkedIn / conf.currentAttendees) * 100) : 0;
+                
+                const card = document.createElement('div');
+                card.className = 'card bg-base-100 shadow hover:shadow-lg transition-all duration-300 border border-dashed border-base-content/20 hover:border-primary/50';
+                card.innerHTML = `
+                    <figure class="h-48 relative overflow-hidden">
+                        <img src="${conf.image}" alt="${conf.name}" class="w-full h-full object-cover" />
+                        <div class="absolute top-2 left-2">
+                            <span class="badge ${getStatusBadgeClass(conf.status)} badge-lg">
+                                <i class="fas fa-${getStatusIcon(conf.status)} ml-1"></i>
+                                ${getStatusArabic(conf.status)}
+                            </span>
+                        </div>
+                        <div class="absolute top-2 right-2">
+                            <span class="badge badge-neutral badge-sm">
+                                <i class="fas fa-tag ml-1"></i>
+                                ${conf.category}
+                            </span>
+                        </div>
+                    </figure>
+                    
+                    <div class="card-body p-6">
+                        <div class="flex items-start justify-between mb-4">
+                            <label class="flex items-center">
+                                <input type="checkbox" class="checkbox checkbox-primary checkbox-sm" 
+                                       onchange="toggleSelection(${conf.id}, this.checked)" 
+                                       ${selectedConferences.includes(conf.id) ? 'checked' : ''} />
+                            </label>
+                            <div class="dropdown dropdown-end">
+                                <div tabindex="0" role="button" class="btn btn-ghost btn-sm hover:bg-base-200 rounded-full">
+                                    <i class="fas fa-ellipsis-v text-base-content/60"></i>
+                                </div>
+                                <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52 border border-dashed border-base-content/20">
+                                    <li><a onclick="viewConference(${conf.id})" class="hover:bg-primary/10"><i class="fas fa-eye ml-2 text-primary"></i>عرض التفاصيل</a></li>
+                                    <li><a onclick="editConference(${conf.id})" class="hover:bg-secondary/10"><i class="fas fa-edit ml-2 text-secondary"></i>تحرير</a></li>
+                                    <li><a onclick="duplicateConference(${conf.id})" class="hover:bg-info/10"><i class="fas fa-copy ml-2 text-info"></i>تكرار</a></li>
+                                    <li><a onclick="deleteConference(${conf.id})" class="hover:bg-error/10"><i class="fas fa-trash ml-2 text-error"></i>حذف</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <h3 class="font-bold text-lg text-base-content mb-2">${conf.name}</h3>
+                            <p class="text-sm text-base-content/70 mb-3 line-clamp-2">${conf.description}</p>
+                            
+                            <div class="space-y-2 text-sm">
+                                <div class="flex items-center gap-2 text-base-content/60">
+                                    <i class="fas fa-calendar text-primary"></i>
+                                    <span>${formatDate(conf.startDate)} - ${formatDate(conf.endDate)}</span>
+                                </div>
+                                <div class="flex items-center gap-2 text-base-content/60">
+                                    <i class="fas fa-clock text-secondary"></i>
+                                    <span>${conf.startTime} - ${conf.endTime}</span>
+                                </div>
+                                <div class="flex items-center gap-2 text-base-content/60">
+                                    <i class="fas fa-map-marker-alt text-warning"></i>
+                                    <span class="truncate">${conf.location}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="space-y-3 mb-6">
+                            <!-- Attendance Progress -->
+                            <div class="bg-base-200/50 p-3 rounded-lg">
+                                <div class="flex justify-between items-center mb-2">
+                                    <span class="text-sm font-medium">التسجيل</span>
+                                    <span class="text-sm text-base-content/70">${conf.currentAttendees}/${conf.maxAttendees}</span>
+                                </div>
+                                <progress class="progress progress-primary w-full" value="${attendanceRate}" max="100"></progress>
+                                <div class="text-xs text-base-content/50 mt-1">${attendanceRate}% من السعة</div>
+                            </div>
+                            
+                            ${conf.status === 'active' ? `
+                            <!-- Check-in Progress -->
+                            <div class="bg-base-200/50 p-3 rounded-lg">
+                                <div class="flex justify-between items-center mb-2">
+                                    <span class="text-sm font-medium">تسجيل الحضور</span>
+                                    <span class="text-sm text-base-content/70">${conf.checkedIn}/${conf.currentAttendees}</span>
+                                </div>
+                                <progress class="progress progress-success w-full" value="${checkInRate}" max="100"></progress>
+                                <div class="text-xs text-base-content/50 mt-1">${checkInRate}% سجلوا الحضور</div>
+                            </div>
+                            ` : ''}
+                        </div>
+
+                        <div class="card-actions justify-between">
+                            <button class="btn btn-primary btn-sm flex-1 ml-2" onclick="viewConference(${conf.id})">
+                                <i class="fas fa-eye ml-2"></i>عرض التفاصيل
+                            </button>
+                            <div class="form-control">
+                                <label class="cursor-pointer flex items-center gap-2">
+                                    <span class="text-xs text-base-content/60">نشط</span>
+                                    <input type="checkbox" class="toggle toggle-success toggle-sm" 
+                                           ${conf.status === 'active' ? 'checked' : ''} 
+                                           onchange="toggleConferenceStatus(${conf.id}, this.checked)" />
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // Utility functions
+        function getStatusBadgeClass(status) {
+            switch(status) {
+                case 'active': return 'badge-success';
+                case 'upcoming': return 'badge-warning';
+                case 'completed': return 'badge-info';
+                case 'cancelled': return 'badge-error';
+                default: return 'badge-ghost';
+            }
+        }
+
+        function getStatusIcon(status) {
+            switch(status) {
+                case 'active': return 'play-circle';
+                case 'upcoming': return 'clock';
+                case 'completed': return 'check-circle';
+                case 'cancelled': return 'times-circle';
+                default: return 'question-circle';
+            }
+        }
+
+        function getStatusArabic(status) {
+            switch(status) {
+                case 'active': return 'نشط';
+                case 'upcoming': return 'قادم';
+                case 'completed': return 'مكتمل';
+                case 'cancelled': return 'ملغي';
+                default: return 'غير محدد';
+            }
+        }
+
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('ar-SA', { 
+                year: 'numeric', 
+                month: 'short', 
+                day: 'numeric' 
+            });
+        }
+
+        // Rest of JavaScript functions would continue here...
+        // Including all the toggle, selection, filtering, and modal functions
+        // with Arabic translations
+
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            const alert = toast.querySelector('.alert');
+            
+            alert.className = `alert alert-${type}`;
+            alert.querySelector('span').textContent = message;
+            
+            const icon = alert.querySelector('i');
+            if (type === 'success') {
+                icon.className = 'fas fa-check-circle';
+            } else if (type === 'error') {
+                icon.className = 'fas fa-exclamation-circle';
+            } else if (type === 'warning') {
+                icon.className = 'fas fa-exclamation-triangle';
+            } else if (type === 'info') {
+                icon.className = 'fas fa-info-circle';
+            }
+            
+            toast.style.display = 'block';
+            
+            setTimeout(() => {
+                toast.style.display = 'none';
+            }, 3000);
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            switchTab('active');
+        });
+
+        // Simplified functions for demo
+        function switchTab(view) {
+            // Tab switching logic
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('tab-active'));
+            document.getElementById(view + 'TabBtn').classList.add('tab-active');
+            
+            // Hide all content
+            document.querySelectorAll('.tab-content').forEach(content => content.style.display = 'none');
+            
+            // Show selected content
+            if (view === 'active') {
+                document.getElementById('activeTabContent').style.display = 'block';
+                renderActiveConferences();
+            }
+
+            // Show selected content
+            if (view === 'upcoming') {
+                document.getElementById('upcomingTabContent').style.display = 'block';
+                renderUpcomingConferences();
+            }
+
+            // Show selected content
+            if (view === 'completed') {
+                document.getElementById('completedTabContent').style.display = 'block';
+                renderCompletedConferences();
+            }
+
+            // Show selected content
+            if (view === 'all') {
+                document.getElementById('allTabContent').style.display = 'block';
+                renderAllConferencesTable();
+            }
+        }
+
+         function renderAllConferencesTable() {
+            const container = document.getElementById('allConferencesTable');
+            container.innerHTML = '';
+
+            filteredConferences.forEach(conf => {
+                const attendanceRate = conf.maxAttendees > 0 ? Math.round((conf.currentAttendees / conf.maxAttendees) * 100) : 0;
+                
+                const row = document.createElement('tr');
+                row.className = 'hover hover:bg-base-200/50 transition-all duration-200 border-b border-dashed border-base-content/10';
+                row.innerHTML = `
+                    <td class="w-12">
+                        <label>
+                            <input type="checkbox" class="checkbox checkbox-primary checkbox-sm" 
+                                   onchange="toggleSelection(${conf.id}, this.checked)" 
+                                   ${selectedConferences.includes(conf.id) ? 'checked' : ''} />
+                        </label>
+                    </td>
+                    <td class="py-4">
+                        <div class="flex items-center gap-4">
+                            <div class="avatar">
+                                <div class="w-16 h-12 rounded ring-2 ring-base-300 ring-offset-base-100 ring-offset-1">
+                                    <img src="${conf.image}" alt="${conf.name}" class="object-cover" />
+                                </div>
+                            </div>
+                            <div>
+                                <div class="font-bold text-base-content">${conf.name}</div>
+                                <div class="text-sm text-base-content/60 max-w-xs truncate">${conf.description}</div>
+                                <div class="text-xs text-primary">${conf.organizer}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="py-4">
+                        <div class="bg-base-200/30 p-3 rounded-lg border border-dashed border-base-content/10">
+                            <div class="text-sm font-medium text-base-content">
+                                <i class="fas fa-calendar mr-1 text-primary"></i>
+                                ${formatDate(conf.startDate)}
+                            </div>
+                            <div class="text-xs text-base-content/60 mt-1">
+                                <i class="fas fa-clock mr-1"></i>
+                                ${conf.startTime} - ${conf.endTime}
+                            </div>
+                            <div class="text-xs text-base-content/50 mt-1">
+                                <i class="fas fa-map-marker-alt mr-1"></i>
+                                ${conf.location}
+                            </div>
+                        </div>
+                    </td>
+                    <td class="py-4">
+                        <div class="text-center bg-info/10 p-3 rounded-lg border border-dashed border-info/30">
+                            <div class="flex items-center justify-center gap-2 mb-2">
+                                <i class="fas fa-users text-info"></i>
+                                <span class="font-bold text-info text-lg">${conf.currentAttendees}</span>
+                                <span class="text-xs text-info/70">/ ${conf.maxAttendees}</span>
+                            </div>
+                            <progress class="progress progress-info progress-xs w-full mb-1" value="${attendanceRate}" max="100"></progress>
+                            <div class="text-xs text-info/70">${attendanceRate}% capacity</div>
+                        </div>
+                    </td>
+                    <td class="py-4">
+                        <div class="flex flex-col gap-2">
+                            <span class="badge ${getStatusBadgeClass(conf.status)} badge-sm">
+                                <i class="fas fa-${getStatusIcon(conf.status)} mr-1 text-xs"></i>
+                                ${conf.status}
+                            </span>
+                            ${conf.status === 'active' ? 
+                                `<span class="badge badge-success badge-sm">
+                                    <i class="fas fa-user-check mr-1"></i>
+                                    ${conf.checkedIn} checked in
+                                </span>` : 
+                                ''
+                            }
+                        </div>
+                    </td>
+                    <td class="py-4">
+                        <div class="bg-base-200/30 p-2 rounded-lg text-center border border-dashed border-base-content/10">
+                            <div class="flex items-center justify-center gap-2">
+                                <i class="fas fa-tag text-warning"></i>
+                                <span class="text-sm font-medium capitalize">${conf.category}</span>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="py-4">
+                        <div class="flex items-center gap-3">
+                            <div class="form-control">
+                                <label class="cursor-pointer flex flex-col items-center gap-1">
+                                    <span class="text-xs text-base-content/60">Active</span>
+                                    <input type="checkbox" class="toggle toggle-success toggle-xs" 
+                                           ${conf.status === 'active' ? 'checked' : ''} 
+                                           onchange="toggleConferenceStatus(${conf.id}, this.checked)" />
+                                </label>
+                            </div>
+                            
+                            <div class="flex gap-1">
+                                <button class="btn btn-primary btn-xs" onclick="viewConference(${conf.id})" title="View Details">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button class="btn btn-secondary btn-xs" onclick="editConference(${conf.id})" title="Edit Conference">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <div class="dropdown dropdown-end">
+                                    <div tabindex="0" role="button" class="btn btn-ghost btn-xs hover:bg-base-200" title="More Actions">
+                                        <i class="fas fa-ellipsis-v"></i>
+                                    </div>
+                                    <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-48 border border-dashed border-base-content/20">
+                                        <li><a onclick="viewConference(${conf.id})" class="text-xs hover:bg-primary/10">
+                                            <i class="fas fa-eye mr-2 text-primary"></i>View Details
+                                        </a></li>
+                                        <li><a onclick="editConference(${conf.id})" class="text-xs hover:bg-secondary/10">
+                                            <i class="fas fa-edit mr-2 text-secondary"></i>Edit Conference
+                                        </a></li>
+                                        <li class="menu-title"><span class="text-xs">Actions</span></li>
+                                        <li><a onclick="duplicateConference(${conf.id})" class="text-xs hover:bg-info/10">
+                                            <i class="fas fa-copy mr-2 text-info"></i>Duplicate
+                                        </a></li>
+                                        <li><a onclick="exportConference(${conf.id})" class="text-xs hover:bg-warning/10">
+                                            <i class="fas fa-download mr-2 text-warning"></i>Export Data
+                                        </a></li>
+                                        <div class="divider"></div>
+                                        <li><a onclick="deleteConference(${conf.id})" class="text-xs hover:bg-error/10">
+                                            <i class="fas fa-trash mr-2 text-error"></i>Delete
+                                        </a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                `;
+                container.appendChild(row);
+            });
+        }
+
+
+        function toggleSelection() {}
+        function clearSelection() {}
+        function applyFilters() { showToast('تم تطبيق المرشحات', 'success'); }
+        function clearFilters() { showToast('تم مسح المرشحات', 'info'); }
+        function createConference() { document.getElementById('conferenceModal').showModal(); }
+        function viewConference() { showToast('عرض تفاصيل المؤتمر', 'info'); }
+        function editConference() { showToast('تحرير المؤتمر', 'info'); }
+        function deleteConference() { showToast('حذف المؤتمر', 'success'); }
+        function saveConference() { 
+            document.getElementById('conferenceModal').close();
+            showToast('تم حفظ المؤتمر بنجاح!', 'success');
+        }
+        function importConferences() { document.getElementById('importModal').showModal(); }
+        function exportConferences() { showToast('جاري تصدير المؤتمرات...', 'info'); }
+        function downloadTemplate() { showToast('جاري تحميل القالب...', 'info'); }
+        function startImport() { 
+            document.getElementById('importModal').close();
+            showToast('بدء عملية الاستيراد...', 'info');
+        }
+    </script>
+</body>
+</html>

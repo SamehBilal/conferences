@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الجدول الزمني - نظام حضور المؤتمرات</title>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.4.24/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200..1000&display=swap" rel="stylesheet">
+    <style>
+        * {
+            font-family: 'Cairo', sans-serif;
+        }
+        .rtl-flip { transform: scaleX(-1); }
+    </style>
+</head>
+<body class="min-h-screen bg-base-200">
+    <!-- Navigation -->
+    <div class="navbar bg-base-100 shadow-lg">
+        <div class="navbar-start">
+            <div class="dropdown">
+                <div tabindex="0" role="button" class="btn btn-ghost lg:hidden">
+                    <i class="fas fa-bars w-5 h-5"></i>
+                </div>
+                <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
+                    <li><a href="admin-dashboard-ar.html">لوحة التحكم</a></li>
+                    <li><a href="admin-members-ar.html">الأعضاء</a></li>
+                    <li><a href="admin-scanner-ar.html">الماسح</a></li>
+                    <li><a href="admin-conferences-ar.html">المؤتمرات</a></li>
+                    <li><a href="admin-reports-ar.html">التقارير</a></li>
+                    <li><a href="admin-timeline-ar.html" class="active">الجدول الزمني</a></li>
+                </ul>
+            </div>
+            <a href="admin-dashboard-ar.html" class="btn btn-ghost text-xl">
+                <i class="fas fa-calendar-check ml-2 text-primary"></i>
+                <span class="gradient-text">كونف تراك</span>
+            </a>
+        </div>
+        <div class="navbar-center hidden lg:flex">
+            <ul class="menu menu-horizontal px-1">
+                <li><a href="admin-dashboard-ar.html">لوحة التحكم</a></li>
+                <li><a href="admin-members-ar.html">الأعضاء</a></li>
+                <li><a href="admin-scanner-ar.html">الماسح</a></li>
+                <li><a href="admin-conferences-ar.html">المؤتمرات</a></li>
+                <li><a href="admin-reports-ar.html">التقارير</a></li>
+                <li><a href="admin-timeline-ar.html" class="active">الجدول الزمني</a></li>
+            </ul>
+        </div>
+        <div class="navbar-end gap-2">
+            <!-- Auto Refresh Toggle -->
+            <div class="form-control">
+                <label class="cursor-pointer flex items-center gap-2">
+                    <input type="checkbox" class="toggle toggle-primary toggle-sm" id="autoRefresh" checked />
+                    <span class="text-sm">مباشر</span>
+                </label>
+            </div>
+            <!-- Theme Toggle -->
+            <label class="swap swap-rotate">
+                <input type="checkbox" class="theme-controller" value="dark" />
+                <i class="fas fa-sun swap-off fill-current w-6 h-6"></i>
+                <i class="fas fa-moon swap-on fill-current w-6 h-6"></i>
+            </label>
+            <!-- Admin Menu -->
+            <div class="dropdown dropdown-end">
+                <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar">
+                    <div class="w-10 rounded-full">
+                        <img alt="المدير" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face" />
+                    </div>
+                </div>
+                <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
+                    <li><a href="#"><i class="fas fa-user ml-2"></i>الملف الشخصي</a></li>
+                    <li><a href="#"><i class="fas fa-cog ml-2"></i>الإعدادات</a></li>
+                    <li><a href="auth-login-ar.html"><i class="fas fa-sign-out-alt ml-2"></i>تسجيل الخروج</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hero Header -->
+    <div class="bg-gradient-to-l from-primary to-secondary text-primary-content py-8">
+        <div class="container mx-auto px-4">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h1 class="text-3xl font-bold mb-2">الجدول الزمني للأنشطة</h1>
+                    <p class="opacity-90">سجل الأنشطة المباشرة مع مسار تدقيق مفصل</p>
+                </div>
+                <div class="text-center">
+                    <div class="text-sm opacity-75">آخر تحديث</div>
+                    <div class="text-lg font-semibold" id="lastUpdated">--</div>
+                    <div class="flex items-center justify-center gap-2 mt-1">
+                        <div class="w-2 h-2 bg-success rounded-full animate-pulse"></div>
+                        <span class="text-sm">البث المباشر</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container mx-auto px-4 py-8">
+        <!-- Quick Stats -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div class="stat bg-base-100 rounded-lg shadow hover:shadow-lg transition-all duration-200">
+                <div class="stat-figure text-success">
+                    <i class="fas fa-sign-in-alt text-3xl"></i>
+                </div>
+                <div class="stat-title">تسجيلات الحضور اليوم</div>
+                <div class="stat-value text-success">234</div>
+                <div class="stat-desc">↗️ 23 في الساعة الماضية</div>
+            </div>
+
+            <div class="stat bg-base-100 rounded-lg shadow hover:shadow-lg transition-all duration-200">
+                <div class="stat-figure text-warning">
+                    <i class="fas fa-sign-out-alt text-3xl"></i>
+                </div>
+                <div class="stat-title">تسجيلات المغادرة اليوم</div>
+                <div class="stat-value text-warning">89</div>
+                <div class="stat-desc">↗️ 8 في الساعة الماضية</div>
+            </div>
+
+            <div class="stat bg-base-100 rounded-lg shadow hover:shadow-lg transition-all duration-200">
+                <div class="stat-figure text-info">
+                    <i class="fas fa-cogs text-3xl"></i>
+                </div>
+                <div class="stat-title">إجراءات المدير</div>
+                <div class="stat-value text-info">45</div>
+                <div class="stat-desc">إجمالي اليوم</div>
+            </div>
+
+            <div class="stat bg-base-100 rounded-lg shadow hover:shadow-lg transition-all duration-200">
+                <div class="stat-figure text-error">
+                    <i class="fas fa-exclamation-triangle text-3xl"></i>
+                </div>
+                <div class="stat-title">المحاولات الفاشلة</div>
+                <div class="stat-value text-error">3</div>
+                <div class="stat-desc">معدل خطأ 0.9%</div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+            <!-- Timeline Filters -->
+            <div class="lg:col-span-1">
+                <div class="card bg-base-100 shadow-lg sticky top-8">
+                    <div class="card-body">
+                        <h2 class="card-title mb-4">
+                            <i class="fas fa-filter ml-2 text-primary"></i>
+                            المرشحات
+                        </h2>
+
+                        <div class="space-y-4">
+                            <!-- Time Filter -->
+                            <div class="form-control">
+                                <label class="label">
+                                    <span class="label-text font-semibold">الفترة الزمنية</span>
+                                </label>
+                                <select class="select select-bordered select-sm" id="timeFilter">
+                                    <option value="live" selected>مباشر (آخر 5 دقائق)</option>
+                                    <option value="hour">الساعة الماضية</option>
+                                    <option value="today">اليوم</option>
+                                    <option value="week">هذا الأسبوع</option>
+                                    <option value="month">هذا الشهر</option>
+                                    <option value="custom">فترة مخصصة</option>
+                                </select>
+                            </div>
+
+                            <!-- Activity Type Filter -->
+                            <div class="form-control">
+                                <label class="label">
+                                    <span class="label-text font-semibold">نوع النشاط</span>
+                                </label>
+                                <div class="space-y-2">
+                                    <label class="cursor-pointer flex items-center gap-2">
+                                        <input type="checkbox" class="checkbox checkbox-success checkbox-sm" checked />
+                                        <span class="text-sm">تسجيلات الحضور</span>
+                                    </label>
+                                    <label class="cursor-pointer flex items-center gap-2">
+                                        <input type="checkbox" class="checkbox checkbox-warning checkbox-sm" checked />
+                                        <span class="text-sm">تسجيلات المغادرة</span>
+                                    </label>
+                                    <label class="cursor-pointer flex items-center gap-2">
+                                        <input type="checkbox" class="checkbox checkbox-info checkbox-sm" checked />
+                                        <span class="text-sm">إجراءات المدير</span>
+                                    </label>
+                                    <label class="cursor-pointer flex items-center gap-2">
+                                        <input type="checkbox" class="checkbox checkbox-secondary checkbox-sm" checked />
+                                        <span class="text-sm">أحداث النظام</span>
+                                    </label>
+                                    <label class="cursor-pointer flex items-center gap-2">
+                                        <input type="checkbox" class="checkbox checkbox-error checkbox-sm" checked />
+                                        <span class="text-sm">الأخطاء</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- Conference Filter -->
+                            <div class="form-control">
+                                <label class="label">
+                                    <span class="label-text font-semibold">المؤتمر</span>
+                                </label>
+                                <select class="select select-bordered select-sm">
+                                    <option value="all" selected>جميع المؤتمرات</option>
+                                    <option value="techconf">مؤتمر التقنية 2024</option>
+                                    <option value="devsummit">قمة المطورين 2024</option>
+                                    <option value="aiworkshop">ورشة الذكاء الاصطناعي</option>
+                                </select>
+                            </div>
+
+                            <!-- Admin Filter -->
+                            <div class="form-control">
+                                <label class="label">
+                                    <span class="label-text font-semibold">مستخدم الإدارة</span>
+                                </label>
+                                <select class="select select-bordered select-sm">
+                                    <option value="all" selected>جميع المديرين</option>
+                                    <option value="admin1">مستخدم إداري</option>
+                                    <option value="scanner1">مشغل الماسح</option>
+                                    <option value="system">النظام</option>
+                                </select>
+                            </div>
+
+                            <!-- Search -->
+                            <div class="form-control">
+                                <label class="label">
+                                    <span class="label-text font-semibold">البحث</span>
+                                </label>
+                                <input type="text" placeholder="البحث في الأنشطة..." class="input input-bordered input-sm" />
+                            </div>
+                        </div>
+
+                        <div class="divider"></div>
+
+                        <div class="flex gap-2">
+                            <button class="btn btn-outline btn-sm flex-1" onclick="clearFilters()">
+                                <i class="fas fa-times ml-1"></i>مسح
+                            </button>
+                            <button class="btn btn-primary btn-sm flex-1" onclick="applyFilters()">
+                                <i class="fas fa-filter ml-1"></i>تطبيق
+                            </button>
+                        </div>
+
+                        <!-- Export Options -->
+                        <div class="mt-4 space-y-2">
+                            <button class="btn btn-secondary btn-sm w-full" onclick="exportTimeline()">
+                                <i class="fas fa-download ml-2"></i>تصدير الجدول الزمني
+                            </button>
+                            <button class="btn btn-outline btn-sm w-full" onclick="printTimeline()">
+                                <i class="fas fa-print ml-2"></i>طباعة التقرير
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Timeline Content -->
+            <div class="lg:col-span-3">
+                <div class="card bg-base-100 shadow-lg">
+                    <div class="card-body">
+                        <div class="flex items-center justify-between mb-6">
+                            <h2 class="card-title">
+                                <i class="fas fa-history ml-2 text-info"></i>
+                                الجدول الزمني للأنشطة
+                            </h2>
+                            <div class="flex items-center gap-4">
+                                <div class="text-sm text-base-content/70">
+                                    عرض <span id="activityCount">156</span> نشاط
+                                </div>
+                                <div class="flex gap-2">
+                                    <button class="btn btn-ghost btn-sm" onclick="pauseTimeline()" id="pauseBtn">
+                                        <i class="fas fa-pause ml-2"></i>إيقاف مؤقت
+                                    </button>
+                                    <button class="btn btn-ghost btn-sm" onclick="refreshTimeline()">
+                                        <i class="fas fa-sync-alt ml-2"></i>تحديث
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Timeline Container -->
+                        <div class="relative">
+                            <div class="absolute right-8 top-0 bottom-0 w-0.5 bg-base-300"></div>
+                            <div class="space-y-4" id="timelineContainer">
+                                <!-- Timeline items will be populated by JavaScript -->
+                            </div>
+                        </div>
+
+                        <!-- Load More Button -->
+                        <div class="text-center mt-8">
+                            <button class="btn btn-outline" onclick="loadMoreActivities()">
+                                <i class="fas fa-chevron-down ml-2"></i>تحميل المزيد من الأنشطة
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Activity Detail Modal -->
+    <dialog id="activityModal" class="modal">
+        <div class="modal-box w-11/12 max-w-2xl">
+            <form method="dialog">
+                <button class="btn btn-sm btn-circle btn-ghost absolute left-2 top-2">✕</button>
+            </form>
+            <h3 class="font-bold text-lg mb-4" id="modalTitle">تفاصيل النشاط</h3>
+            
+            <div class="space-y-4" id="modalContent">
+                <!-- Activity details will be populated by JavaScript -->
+            </div>
+
+            <div class="modal-action">
+                <form method="dialog">
+                    <button class="btn btn-outline">إغلاق</button>
+                </form>
+            </div>
+        </div>
+    </dialog>
+
+    <!-- Toast -->
+    <div class="toast toast-top toast-start" id="toast" style="display: none;">
+        <div class="alert alert-success">
+            <i class="fas fa-check-circle"></i>
+            <span>تم إكمال العملية بنجاح!</span>
+        </div>
+    </div>
+
+    <script>
+        // Sample timeline data in Arabic
+        const timelineData = [
+            {
+                id: 1,
+                time: new Date(Date.now() - 2 * 60000).toLocaleTimeString('ar-SA'),
+                type: 'checkin',
+                title: 'محمد أحمد سجل الحضور',
+                description: 'تسجيل حضور لمؤتمر التقنية 2024',
+                user: 'محمد أحمد',
+                admin: 'مشغل الماسح',
+                conference: 'مؤتمر التقنية 2024',
+                method: 'رمز QR',
+                details: {
+                    memberId: 'NFC-A1B2C3D4E',
+                    location: 'المدخل الرئيسي',
+                    device: 'ماسح رقم 1',
+                    ipAddress: '192.168.1.105',
+                    sessionId: 'sess_abc123'
+                }
+            },
+            {
+                id: 2,
+                time: new Date(Date.now() - 5 * 60000).toLocaleTimeString('ar-SA'),
+                type: 'admin',
+                title: 'تمت إضافة عضو جديد',
+                description: 'تم إضافة فاطمة محمد إلى النظام',
+                user: 'فاطمة محمد',
+                admin: 'مستخدم إداري',
+                conference: 'غير متاح',
+                method: 'إدخال يدوي',
+                details: {
+                    memberId: 'NFC-F6G7H8I9J',
+                    action: 'CREATE_MEMBER',
+                    changes: ['الاسم', 'البريد الإلكتروني', 'الشركة', 'معرف NFC'],
+                    ipAddress: '192.168.1.102'
+                }
+            },
+            {
+                id: 3,
+                time: new Date(Date.now() - 8 * 60000).toLocaleTimeString('ar-SA'),
+                type: 'checkout',
+                title: 'سارة علي سجلت المغادرة',
+                description: 'تسجيل مغادرة من قمة المطورين 2024',
+                user: 'سارة علي',
+                admin: 'مشغل الماسح',
+                conference: 'قمة المطورين 2024',
+                method: 'بطاقة NFC',
+                details: {
+                    memberId: 'NFC-B2C3D4E5F',
+                    duration: '3 ساعات و 45 دقيقة',
+                    location: 'بوابة الخروج ب',
+                    device: 'ماسح رقم 2'
+                }
+            },
+            {
+                id: 4,
+                time: new Date(Date.now() - 12 * 60000).toLocaleTimeString('ar-SA'),
+                type: 'system',
+                title: 'بدء المؤتمر',
+                description: 'بدأت جلسة ورشة الذكاء الاصطناعي',
+                user: 'النظام',
+                admin: 'النظام',
+                conference: 'ورشة الذكاء الاصطناعي',
+                method: 'تلقائي',
+                details: {
+                    eventType: 'CONFERENCE_START',
+                    expectedAttendees: 50,
+                    currentAttendees: 45,
+                    startTime: '14:00'
+                }
+            },
+            {
+                id: 5,
+                time: new Date(Date.now() - 15 * 60000).toLocaleTimeString('ar-SA'),
+                type: 'error',
+                title: 'فشل في محاولة تسجيل الحضور',
+                description: 'تم مسح رمز QR غير صالح',
+                user: 'غير معروف',
+                admin: 'مشغل الماسح',
+                conference: 'مؤتمر التقنية 2024',
+                method: 'رمز QR',
+                details: {
+                    errorCode: 'INVALID_QR_CODE',
+                    qrContent: 'INVALID_CODE_123',
+                    device: 'ماسح رقم 1',
+                    retryCount: 3
+                }
+            }
+        ];
+
+        let timelineFiltered = [...timelineData];
+        let isPaused = false;
+        let autoRefreshInterval;
+
+        // Theme toggle functionality
+        const themeController = document.querySelector('.theme-controller');
+        const html = document.documentElement;
+        
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        html.setAttribute('data-theme', savedTheme);
+        if (savedTheme === 'dark') {
+            themeController.checked = true;
+        }
+        
+        themeController.addEventListener('change', function() {
+            const theme = this.checked ? 'dark' : 'light';
+            html.setAttribute('data-theme', theme);
+            localStorage.setItem('theme', theme);
+        });
+
+        // Timeline rendering
+        function renderTimeline() {
+            const container = document.getElementById('timelineContainer');
+            container.innerHTML = '';
+
+            timelineFiltered.forEach((activity, index) => {
+                const item = document.createElement('div');
+                item.className = 'relative flex items-start gap-4 p-4 hover:bg-base-200 rounded-lg transition-colors cursor-pointer';
+                item.onclick = () => showActivityDetails(activity);
+
+                const iconClass = getActivityIcon(activity.type);
+                const colorClass = getActivityColor(activity.type);
+
+                item.innerHTML = `
+                    <div class="relative z-10">
+                        <div class="w-10 h-10 ${colorClass} rounded-full flex items-center justify-center">
+                            <i class="fas ${iconClass} text-white"></i>
+                        </div>
+                        ${index === 0 ? '<div class="absolute -top-2 -left-2 w-4 h-4 bg-success rounded-full animate-ping"></div>' : ''}
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <div class="flex items-center justify-between mb-1">
+                            <h3 class="font-semibold flex gap-2 text-base-content">
+                                ${activity.type === 'checkin' || activity.type === 'checkout' ? '<div tabindex="0" class=" avatar"><div class="w-6 rounded-full"><img alt="الملف الشخصي" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face" /></div></div>' : ''}
+                                ${activity.title}</h3>
+                            <span class="text-xs text-base-content/60 font-mono">${activity.time}</span>
+                        </div>
+                        <p class="text-sm text-base-content/80 mb-2">${activity.description}</p>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="badge badge-info badge-sm">
+                                <i class="fas fa-user ml-1"></i>${activity.user}
+                            </span>
+                            <span class="badge badge-ghost badge-sm">
+                                <i class="fas fa-calendar ml-1"></i>${activity.conference}
+                            </span>
+                            <span class="badge ${activity.method === 'رمز QR' ? 'badge-primary' : activity.method === 'بطاقة NFC' ? 'badge-error' : 'badge-outline'} badge-sm">
+                                <i class="fas ${activity.method === 'رمز QR' ? 'fa-qrcode' : activity.method === 'بطاقة NFC' ? 'fa-credit-card' : 'fa-hand-pointer'} ml-1"></i>${activity.method}
+                            </span>
+                            <span class="badge badge-success badge-sm">
+                                <i class="fas fa-user-shield ml-1"></i>${activity.admin}
+                            </span>
+                        </div>
+                    </div>
+                `;
+
+                container.appendChild(item);
+            });
+
+            document.getElementById('activityCount').textContent = timelineFiltered.length;
+        }
+
+        function getActivityIcon(type) {
+            const icons = {
+                'checkin': 'fa-sign-in-alt',
+                'checkout': 'fa-sign-out-alt',
+                'admin': 'fa-cog',
+                'system': 'fa-server',
+                'error': 'fa-exclamation-triangle'
+            };
+            return icons[type] || 'fa-info';
+        }
+
+        function getActivityColor(type) {
+            const colors = {
+                'checkin': 'bg-success',
+                'checkout': 'bg-warning',
+                'admin': 'bg-info',
+                'system': 'bg-secondary',
+                'error': 'bg-error'
+            };
+            return colors[type] || 'bg-base-content';
+        }
+
+        // Activity details modal
+        function showActivityDetails(activity) {
+            const modal = document.getElementById('activityModal');
+            const title = document.getElementById('modalTitle');
+            const content = document.getElementById('modalContent');
+
+            title.textContent = activity.title;
+
+            content.innerHTML = `
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="space-y-3">
+                        <div>
+                            <label class="text-sm font-semibold text-base-content/70">الوقت</label>
+                            <div class="font-mono">${activity.time}</div>
+                        </div>
+                        <div>
+                            <label class="text-sm font-semibold text-base-content/70">المستخدم</label>
+                            <div>${activity.user}</div>
+                        </div>
+                        <div>
+                            <label class="text-sm font-semibold text-base-content/70">المدير</label>
+                            <div>${activity.admin}</div>
+                        </div>
+                        <div>
+                            <label class="text-sm font-semibold text-base-content/70">المؤتمر</label>
+                            <div>${activity.conference}</div>
+                        </div>
+                    </div>
+                    <div class="space-y-3">
+                        <div>
+                            <label class="text-sm font-semibold text-base-content/70">الطريقة</label>
+                            <div>${activity.method}</div>
+                        </div>
+                        <div>
+                            <label class="text-sm font-semibold text-base-content/70">النوع</label>
+                            <div>
+                                <span class="badge ${getActivityColor(activity.type)} text-white">
+                                    <i class="fas ${getActivityIcon(activity.type)} ml-1"></i>
+                                    ${getActivityTypeArabic(activity.type)}
+                                </span>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="text-sm font-semibold text-base-content/70">الوصف</label>
+                            <div>${activity.description}</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="divider">التفاصيل التقنية</div>
+
+                <div class="bg-base-200 rounded-lg p-4">
+                    <h4 class="font-semibold mb-3">معلومات إضافية</h4>
+                    <div class="space-y-2 text-sm">
+                        ${Object.entries(activity.details).map(([key, value]) => `
+                            <div class="flex justify-between">
+                                <span class="text-base-content/70">${translateKey(key)}:</span>
+                                <span class="font-mono">${Array.isArray(value) ? value.join(', ') : value}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+
+            modal.showModal();
+        }
+
+        function getActivityTypeArabic(type) {
+            const types = {
+                'checkin': 'تسجيل حضور',
+                'checkout': 'تسجيل مغادرة',
+                'admin': 'إداري',
+                'system': 'النظام',
+                'error': 'خطأ'
+            };
+            return types[type] || 'غير محدد';
+        }
+
+        function translateKey(key) {
+            const translations = {
+                'memberId': 'معرف العضو',
+                'location': 'الموقع',
+                'device': 'الجهاز',
+                'ipAddress': 'عنوان IP',
+                'sessionId': 'معرف الجلسة',
+                'action': 'الإجراء',
+                'changes': 'التغييرات',
+                'duration': 'المدة',
+                'eventType': 'نوع الحدث',
+                'expectedAttendees': 'الحضور المتوقع',
+                'currentAttendees': 'الحضور الحالي',
+                'startTime': 'وقت البدء',
+                'errorCode': 'رمز الخطأ',
+                'qrContent': 'محتوى QR',
+                'retryCount': 'عدد المحاولات'
+            };
+            return translations[key] || key;
+        }
+
+        // Filter functions
+        function applyFilters() {
+            showToast('تم تطبيق المرشحات', 'success');
+            renderTimeline();
+        }
+
+        function clearFilters() {
+            document.getElementById('timeFilter').value = 'live';
+            document.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+                if (!cb.classList.contains('toggle')) cb.checked = true;
+            });
+            document.querySelector('input[placeholder="البحث في الأنشطة..."]').value = '';
+            
+            timelineFiltered = [...timelineData];
+            renderTimeline();
+            showToast('تم مسح المرشحات', 'info');
+        }
+
+        // Timeline controls
+        function pauseTimeline() {
+            isPaused = !isPaused;
+            const btn = document.getElementById('pauseBtn');
+            
+            if (isPaused) {
+                btn.innerHTML = '<i class="fas fa-play ml-2"></i>استئناف';
+                stopAutoRefresh();
+                showToast('تم إيقاف الجدول الزمني مؤقتاً', 'info');
+            } else {
+                btn.innerHTML = '<i class="fas fa-pause ml-2"></i>إيقاف مؤقت';
+                startAutoRefresh();
+                showToast('تم استئناف الجدول الزمني', 'success');
+            }
+        }
+
+        function refreshTimeline() {
+            const newActivities = [
+                {
+                    id: timelineData.length + 1,
+                    time: new Date().toLocaleTimeString('ar-SA'),
+                    type: 'checkin',
+                    title: 'أحمد محمد سجل الحضور',
+                    description: 'تسجيل حضور لمؤتمر التقنية 2024',
+                    user: 'أحمد محمد',
+                    admin: 'مشغل الماسح',
+                    conference: 'مؤتمر التقنية 2024',
+                    method: 'بطاقة NFC',
+                    details: {
+                        memberId: 'NFC-C3D4E5F6G',
+                        location: 'المدخل الرئيسي',
+                        device: 'ماسح رقم 1'
+                    }
+                }
+            ];
+
+            timelineData.unshift(...newActivities);
+            timelineFiltered = [...timelineData];
+            renderTimeline();
+            updateLastUpdated();
+            showToast('تم تحديث الجدول الزمني', 'success');
+        }
+
+        function loadMoreActivities() {
+            showToast('جاري تحميل المزيد من الأنشطة...', 'info');
+            
+            setTimeout(() => {
+                showToast('تم تحميل المزيد من الأنشطة', 'success');
+            }, 1000);
+        }
+
+        // Export functions
+        function exportTimeline() {
+            showToast('جاري تصدير بيانات الجدول الزمني...', 'info');
+        }
+
+        function printTimeline() {
+            showToast('جاري تحضير تقرير الجدول الزمني للطباعة...', 'info');
+        }
+
+        // Auto-refresh functionality
+        function startAutoRefresh() {
+            if (autoRefreshInterval) return;
+            
+            autoRefreshInterval = setInterval(() => {
+                if (!isPaused) {
+                    if (Math.random() > 0.7) {
+                        refreshTimeline();
+                    } else {
+                        updateLastUpdated();
+                    }
+                }
+            }, 10000);
+        }
+
+        function stopAutoRefresh() {
+            if (autoRefreshInterval) {
+                clearInterval(autoRefreshInterval);
+                autoRefreshInterval = null;
+            }
+        }
+
+        function updateLastUpdated() {
+            document.getElementById('lastUpdated').textContent = new Date().toLocaleTimeString('ar-SA');
+        }
+
+        // Auto-refresh toggle
+        document.getElementById('autoRefresh').addEventListener('change', function() {
+            if (this.checked) {
+                startAutoRefresh();
+            } else {
+                stopAutoRefresh();
+            }
+        });
+
+        // Utility functions
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            const alert = toast.querySelector('.alert');
+            
+            alert.className = `alert alert-${type}`;
+            alert.querySelector('span').textContent = message;
+            
+            const icon = alert.querySelector('i');
+            if (type === 'success') {
+                icon.className = 'fas fa-check-circle';
+            } else if (type === 'error') {
+                icon.className = 'fas fa-exclamation-circle';
+            } else if (type === 'warning') {
+                icon.className = 'fas fa-exclamation-triangle';
+            } else if (type === 'info') {
+                icon.className = 'fas fa-info-circle';
+            }
+            
+            toast.style.display = 'block';
+            
+            setTimeout(() => {
+                toast.style.display = 'none';
+            }, 3000);
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            renderTimeline();
+            updateLastUpdated();
+            
+            if (document.getElementById('autoRefresh').checked) {
+                startAutoRefresh();
+            }
+        });
+
+        window.addEventListener('beforeunload', function() {
+            stopAutoRefresh();
+        });
+    </script>
+</body>
+</html>
+                
